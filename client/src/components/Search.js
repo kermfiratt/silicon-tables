@@ -21,7 +21,7 @@ const Search = () => {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search companies" 
         />
-        <button type="submit">Search</button>
+        <button className='sidebar-item' type="submit">Search</button>
       </form>
       <ul>
         {results.map((result, index) => (

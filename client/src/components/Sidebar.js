@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaChartLine, FaBuilding, FaStream, FaListAlt, FaChartPie, FaSearch } from 'react-icons/fa'; // Import FaSearch
 import './Sidebar.css';
-import { FaChartLine, FaBuilding, FaStream, FaListAlt, FaChartPie } from 'react-icons/fa';
 
 const Sidebar = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,13 +17,8 @@ const Sidebar = () => {
       </div>
 
       <div className="search-bar">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Search company..."
-        />
         <Link to={`/company/${searchQuery}`} className="search-button">
+          <FaSearch className="icon" /> {/* Magnifying glass icon */}
           Search
         </Link>
       </div>

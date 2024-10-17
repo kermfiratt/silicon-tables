@@ -17,7 +17,12 @@ const CompanyDetails = () => {
         financials: {
           revenue: '274.5B',
           marketCap: '2.3T',
-          employees: '147,000'
+          employees: '147,000',
+          establishYear: 1976,
+          ceo: 'Tim Cook',
+          headquarters: 'Cupertino, California',
+          industry: 'Technology',
+          website: 'https://www.apple.com'
         },
         quarterlySales: [120, 130, 140, 150],
         quarterlyProfit: [40, 60, 80, 100],
@@ -30,6 +35,10 @@ const CompanyDetails = () => {
           { title: 'Apple iPhone 15 Released', date: '2023-09-20' },
           { title: 'Apple Stock Reaches New High', date: '2023-10-10' },
           { title: 'Apple Plans Major Investments in AI', date: '2023-11-01' }
+        ],
+        upcomingEvents: [
+          { title: 'Apple Developer Conference', date: '2024-06-05' },
+          { title: 'New Product Launch', date: '2024-09-10' }
         ]
       }
     };
@@ -76,16 +85,16 @@ const CompanyDetails = () => {
     ]
   };
 
-  // Options to show the labels inside the chart
+  // Options for pie chart
   const pieOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Disable default aspect ratio to allow custom width/height
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
-        position: 'bottom', // Display the legend at the bottom
+        position: 'bottom',
         labels: {
-          color: 'white', // Adjust label color for better visibility
+          color: 'white',
           font: {
             size: 14
           }
@@ -100,37 +109,83 @@ const CompanyDetails = () => {
   return companyData ? (
     <div className="company-details">
       <h2>{companyData.name} Financial Overview</h2>
-      <div className="financial-summary">
-        <p><strong>Revenue:</strong> ${companyData.financials.revenue}</p>
-        <p><strong>Market Cap:</strong> ${companyData.financials.marketCap}</p>
-        <p><strong>Employees:</strong> {companyData.financials.employees}</p>
-      </div>
+      
+      {/* Block Layout */}
+      <div className="grid-container">
+        
+        {/* Block for Financial Summary */}
+        <div className="block financial-summary">
+          <h3>Company Details</h3>
+          <p><strong>Revenue:</strong> ${companyData.financials.revenue}</p>
+          <p><strong>Market Cap:</strong> ${companyData.financials.marketCap}</p>
+          <p><strong>Employees:</strong> {companyData.financials.employees}</p>
+          <p><strong>Founded:</strong> {companyData.financials.establishYear}</p>
+        </div>
 
-      <div className="charts">
-        <div className="chart">
+        {/* Block for Sales Chart */}
+        <div className="block chart-block">
+          <h3>Quarterly Sales</h3>
           <Bar ref={chartRef} data={salesData} />
         </div>
-        <div className="chart">
+
+        {/* Block for Profit Chart */}
+        <div className="block chart-block">
+          <h3>Quarterly Profit</h3>
           <Bar ref={chartRef} data={profitData} />
         </div>
-      </div>
 
-      <div className="shareholders">
-        <h3>Top Shareholders</h3>
-        <div className="chart-small"> {/* Adjusted for 1/4 size */}
-          <div style={{ width: '300px', height: '300px' }}> {/* Adjust size to 1/4 */}
+        {/* Block for Shareholders Chart */}
+        <div className="block chart-block">
+          <h3>Shareholder Distribution</h3>
+          <div style={{ height: '300px', margin: '0 auto' }}>
             <Pie data={pieData} options={pieOptions} />
           </div>
         </div>
-      </div>
 
-      <div className="news">
-        <h3>Latest News</h3>
-        <ul>
-          {companyData.news.map((newsItem, index) => (
-            <li key={index}><strong>{newsItem.date}</strong> - {newsItem.title}</li>
-          ))}
-        </ul>
+        {/* Block for CEO Information */}
+        <div className="block additional-info">
+          <h3>CEO</h3>
+          <p>{companyData.financials.ceo}</p>
+        </div>
+
+        {/* Block for Headquarters */}
+        <div className="block additional-info">
+          <h3>Headquarters</h3>
+          <p>{companyData.financials.headquarters}</p>
+        </div>
+
+        {/* Block for Industry */}
+        <div className="block additional-info">
+          <h3>Industry</h3>
+          <p>{companyData.financials.industry}</p>
+        </div>
+
+        {/* Block for Website */}
+        <div className="block additional-info">
+          <h3>Website</h3>
+          <p><a href={companyData.financials.website} target="_blank" rel="noopener noreferrer">{companyData.financials.website}</a></p>
+        </div>
+
+        {/* Block for Latest News */}
+        <div className="block news-block">
+          <h3>Latest News</h3>
+          <ul>
+            {companyData.news.map((newsItem, index) => (
+              <li key={index}><strong>{newsItem.date}</strong> - {newsItem.title}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Block for Upcoming Events */}
+        <div className="block new-block">
+          <h3>Upcoming Events</h3>
+          <ul>
+            {companyData.upcomingEvents.map((event, index) => (
+              <li key={index}><strong>{event.date}</strong> - {event.title}</li>
+            ))}
+          </ul>
+        </div>
+
       </div>
     </div>
   ) : (
