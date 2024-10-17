@@ -1,0 +1,120 @@
+.company-details {
+  margin-left: 130px; /* Adjusted for narrower sidebar */
+  padding: 20px;
+  background-color: #121212;
+  color: white;
+  min-height: 100vh;
+}
+
+h2 {
+  font-size: 28px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 22px;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.financial-summary {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  margin-bottom: 30px;
+}
+
+.financial-summary p {
+  font-size: 16px;
+  margin: 5px 0;
+  color: #e0e0e0;
+}
+
+.financial-summary p strong {
+  color: #ff7b79;
+  font-weight: bold;
+}
+
+.charts {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.chart {
+  width: 45%;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.shareholders, .news {
+  margin-top: 30px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  padding: 10px;
+  background-color: #292929;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+ul li:hover {
+  background-color: #383838;
+}
+
+.news ul li strong {
+  font-weight: bold;
+  color: #ff7b79;
+}
+
+.news ul {
+  padding-left: 0;
+}
+
+.news ul li {
+  padding: 10px;
+  background-color: #1e1e1e;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.news ul li:hover {
+  background-color: #2e2e2e;
+}
+
+/* Chart for shareholders adjusted to 1/4 size */
+.chart-small {
+  width: 300px; /* Adjusted width */
+  height: 300px; /* Adjusted height */
+  margin: auto; /* Center the chart */
+}
+
+@media (max-width: 768px) {
+  .charts {
+    flex-direction: column;
+  }
+
+  .chart {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+/* Apply hover animation to all blocks (charts, summaries, etc.) */
+.chart, .financial-summary, .shareholders, .news {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chart:hover, .financial-summary:hover, .shareholders:hover, .news:hover {
+  transform: scale(1.02); /* Subtle scaling on hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Reduced shadow for a lighter feel */
+}
