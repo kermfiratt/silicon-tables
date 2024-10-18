@@ -1,35 +1,66 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaChartLine, FaBuilding, FaStream, FaListAlt, FaChartPie, FaSearch } from 'react-icons/fa'; // Import FaSearch
+import { FaSearch, FaChartLine, FaBuilding, FaStream, FaListAlt, FaChartPie } from 'react-icons/fa';
 import './Sidebar.css';
+import './SearchBar.css';
 
 const Sidebar = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false); // State to control search popup
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+  const handleSearchClick = () => {
+    setSearchOpen(true); // Open the centered search bar when search is clicked
   };
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <h1>Silicon Numbers</h1>
+    <div>
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <h1>Silicon Numbers</h1>
+        </div>
+
+        <div className="search-bar">
+          <div className="search-button" onClick={handleSearchClick}>
+            <FaSearch className="icon" /> Search
+          </div>
+        </div>
+
+        <ul className="menu">
+          <li><Link to="/" className="sidebar-item"><FaChartLine className="icon" /> Dashboard</Link></li>
+          <li><Link to="/company/Apple" className="sidebar-item"><FaBuilding className="icon" /> Company Info</Link></li>
+          <li><Link to="/" className="sidebar-item"><FaStream className="icon" /> Flow</Link></li>
+          <li><Link to="/" className="sidebar-item"><FaListAlt className="icon" /> Report</Link></li>
+          <li><Link to="/" className="sidebar-item"><FaChartPie className="icon" /> Funds</Link></li>
+        </ul>
       </div>
 
-      <div className="search-bar">
-        <Link to={`/company/${searchQuery}`} className="search-button">
-          <FaSearch className="icon" /> {/* Magnifying glass icon */}
-          Search
-        </Link>
-      </div>
+      {searchOpen && <CenteredSearchBar setSearchOpen={setSearchOpen} />} {/* Show search bar when open */}
+    </div>
+  );
+};
 
-      <ul className="menu">
-        <li><Link to="/" className="sidebar-item"><FaChartLine className="icon" /> Dashboard</Link></li>
-        <li><Link to="/company/Apple" className="sidebar-item"><FaBuilding className="icon" /> Company Info</Link></li>
-        <li><Link to="/" className="sidebar-item"><FaStream className="icon" /> Flow</Link></li>
-        <li><Link to="/" className="sidebar-item"><FaListAlt className="icon" /> Report</Link></li>
-        <li><Link to="/" className="sidebar-item"><FaChartPie className="icon" /> Funds</Link></li>
-      </ul>
+const CenteredSearchBar = ({ setSearchOpen }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleClose = () => {
+    setSearchOpen(false); // Close search bar
+  };
+
+  return (
+    <div className="search-popup">
+      <div className="search-popup-content">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search for a company..."
+          className="centered-search-input"
+        />
+        <button className="close-button" onClick={handleClose}>Close</button>
+      </div>
     </div>
   );
 };

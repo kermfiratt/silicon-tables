@@ -30,11 +30,18 @@
   border-radius: 8px;
   width: 100%;
   max-width: 600px;
-  height: auto;
+  min-height: 300px; /* Bloklar için eşit yükseklik */
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
+}
+
+/* Grid itemlarının boyutlarını eşitlemek için */
+.block img {
+  max-width: 80px;
+  height: auto;
+  margin-bottom: 15px;
 }
 
 html, body {
@@ -51,6 +58,7 @@ html, body {
   border-radius: 8px;
   color: white;
   max-width: 600px;
+  min-height: 300px; /* Yeni blok için eşit yükseklik */
   text-align: center;
 }
 

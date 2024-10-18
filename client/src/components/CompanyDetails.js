@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import './CompanyDetalis.css';
+import CompanyOverview from './CompanyOverview'; // Importing the CompanyOverview component
 
 // Register Chart.js components
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
@@ -110,18 +111,12 @@ const CompanyDetails = () => {
     <div className="company-details">
       <h2>{companyData.name} Financial Overview</h2>
       
+      {/* Block 1: Company Overview */}
+      <CompanyOverview company={companyData} />
+
       {/* Block Layout */}
       <div className="grid-container">
         
-        {/* Block for Financial Summary */}
-        <div className="block financial-summary">
-          <h3>Company Details</h3>
-          <p><strong>Revenue:</strong> ${companyData.financials.revenue}</p>
-          <p><strong>Market Cap:</strong> ${companyData.financials.marketCap}</p>
-          <p><strong>Employees:</strong> {companyData.financials.employees}</p>
-          <p><strong>Founded:</strong> {companyData.financials.establishYear}</p>
-        </div>
-
         {/* Block for Sales Chart */}
         <div className="block chart-block">
           <h3>Quarterly Sales</h3>

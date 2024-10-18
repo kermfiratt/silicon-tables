@@ -1,67 +1,63 @@
-/* Sidebar düzeni */
 .sidebar {
-  width: 80px; /* Sidebar genişliği */
+  width: 80px; /* Sidebar is now more narrow */
   background-color: #333;
   color: white;
-  height: 100vh; /* Tam sayfa yüksekliği */
-  padding-top: 20px; /* Sidebar'ın en üstüne boşluk bırakıldı */
+  height: 100vh;
+  padding-top: 20px;
   position: fixed;
-  top: 0; /* En üstten başlat */
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
 
-/* Sidebar elemanları */
 .sidebar-header, .sidebar-item, .search-bar {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 70px; /* Kare şekli */
-  height: 70px; /* Kare şekli */
+  width: 70px; /* Consistent square shape */
+  height: 70px; /* Consistent square shape */
   background-color: #4a4a4a;
   color: white;
   border-radius: 8px;
   font-size: 12px;
-  margin-bottom: 15px; /* Eşit boşluk tüm öğeler arasında */
+  margin-bottom: 15px;
   text-align: center;
   transition: background-color 0.3s;
 }
 
-/* Sidebar hover efekti */
 .sidebar-item:hover, .search-bar:hover, .sidebar-header:hover {
-  background-color: #666;
+  background-color: #666; /* Hover effect */
 }
 
-/* Silicon Numbers - Kan kırmızısı rengi ve daha küçük boyut */
 .sidebar-header {
-  color: #8B0000; /* Blood red (Hex: #8B0000) */
-  background-color: #4a4a4a;
-  font-size: 9px; /* Daha küçük */
-  padding: 5px; /* Textin içine sığmasını sağlar */
-  line-height: 1.2; /* Satır yüksekliği daha küçük */
+  color: white; /* Red color for Silicon Numbers */
+  font-size: 6px; /* Smaller font */
 }
 
-/* Search butonunun kare şekli ve büyüteç ikonu ile */
+/* Specific margin to fix the space between Search and Dashboard */
+.search-bar {
+  margin-bottom: 3px; /* Add extra margin for space between Search and Dashboard */
+}
+
 .search-bar .search-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4a4a4a; /* Aynı renk */
+  background-color: #4a4a4a;
   width: 100%;
   height: 100%;
   border-radius: 8px;
   color: white;
   font-size: 12px;
   cursor: pointer;
-  gap: 5px; /* Text ve ikon arasındaki boşluk */
+  gap: 5px;
 }
 
-/* Search input için ikon */
 .search-bar .search-button .icon {
-  font-size: 16px; /* İkon boyutu */
+  font-size: 16px;
 }
 
 .menu {
@@ -72,9 +68,4 @@
 .sidebar-item .icon {
   font-size: 18px;
   margin-bottom: 5px;
-}
-
-.sidebar-item {
-  width: 70px;
-  height: 70px;
 }

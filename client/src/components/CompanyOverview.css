@@ -1,0 +1,25 @@
+.company-overview {
+  background-color: #4a4a4a; /* Background color */
+  padding: 15px; /* Padding around the block */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.company-logo {
+  width: 80px; /* Logo size */
+  height: auto; /* Keep aspect ratio */
+  margin-bottom: 10px; /* Space between logo and content */
+}
+
+h3 {
+  font-size: 20px; /* Smaller header size */
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 14px;
+  margin: 4px 0;
+}
