@@ -5,11 +5,17 @@ const Search = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    const response = await fetch(`http://localhost:7600/search?query=${query}`);
-    const data = await response.json();
-    setResults(data);
+    // Mock data for testing, using Apple as the only result
+    const mockData = [
+      { name: 'Apple' }
+    ];
+
+    const filteredResults = mockData.filter(company =>
+      company.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setResults(filteredResults);
   };
 
   return (

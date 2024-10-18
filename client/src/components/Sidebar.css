@@ -1,5 +1,5 @@
 .sidebar {
-  width: 80px; /* Sidebar is now more narrow */
+  width: 80px; /* Sidebar'ı daha dar tut */
   background-color: #333;
   color: white;
   height: 100vh;
@@ -12,14 +12,14 @@
   justify-content: flex-start;
 }
 
-.sidebar-header, .sidebar-item, .search-bar {
+.sidebar-header, .sidebar-item, .inactive-item, .search-bar {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 70px; /* Consistent square shape */
-  height: 70px; /* Consistent square shape */
-  background-color: #4a4a4a;
+  width: 70px;
+  height: 70px;
+  background-color: #4a4a4a; /* Hem aktif hem inaktifler için ortak stil */
   color: white;
   border-radius: 8px;
   font-size: 12px;
@@ -28,18 +28,18 @@
   transition: background-color 0.3s;
 }
 
-.sidebar-item:hover, .search-bar:hover, .sidebar-header:hover {
-  background-color: #666; /* Hover effect */
+.sidebar-item:hover, .search-bar:hover, .inactive-item:hover {
+  background-color: #666; /* Hover efekti */
+}
+
+.inactive-item {
+  color: #888; /* Inaktif butonlar için daha açık renk */
+  cursor: not-allowed; /* Tıklanamaz gösterge */
 }
 
 .sidebar-header {
-  color: white; /* Red color for Silicon Numbers */
-  font-size: 6px; /* Smaller font */
-}
-
-/* Specific margin to fix the space between Search and Dashboard */
-.search-bar {
-  margin-bottom: 3px; /* Add extra margin for space between Search and Dashboard */
+  color: white; 
+  font-size: 7px;
 }
 
 .search-bar .search-button {
@@ -65,7 +65,7 @@
   padding-left: 0;
 }
 
-.sidebar-item .icon {
+.sidebar-item .icon, .inactive-item .icon {
   font-size: 18px;
   margin-bottom: 5px;
 }

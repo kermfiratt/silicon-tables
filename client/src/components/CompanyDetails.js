@@ -12,9 +12,14 @@ const CompanyDetails = () => {
   const chartRef = useRef(null);
 
   useEffect(() => {
+    // Mock data for testing, using Apple as the test company
     const mockData = {
       Apple: {
         name: 'Apple Inc.',
+        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+        ticker: 'AAPL',
+        stockPrice: 175.56,
+        stockChange: 1.05,
         financials: {
           revenue: '274.5B',
           marketCap: '2.3T',
@@ -111,12 +116,14 @@ const CompanyDetails = () => {
     <div className="company-details">
       <h2>{companyData.name} Financial Overview</h2>
       
-      {/* Block 1: Company Overview */}
-      <CompanyOverview company={companyData} />
-
       {/* Block Layout */}
       <div className="grid-container">
         
+        {/* Block 1: Company Overview */}
+        <div className="block overview-block">
+          <CompanyOverview company={companyData} />
+        </div>
+
         {/* Block for Sales Chart */}
         <div className="block chart-block">
           <h3>Quarterly Sales</h3>
@@ -172,7 +179,7 @@ const CompanyDetails = () => {
         </div>
 
         {/* Block for Upcoming Events */}
-        <div className="block new-block">
+        <div className="block">
           <h3>Upcoming Events</h3>
           <ul>
             {companyData.upcomingEvents.map((event, index) => (

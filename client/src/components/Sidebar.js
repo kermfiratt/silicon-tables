@@ -25,11 +25,14 @@ const Sidebar = () => {
         </div>
 
         <ul className="menu">
-          <li><Link to="/" className="sidebar-item"><FaChartLine className="icon" /> Dashboard</Link></li>
+          {/* Active and clickable links */}
           <li><Link to="/company/Apple" className="sidebar-item"><FaBuilding className="icon" /> Company Info</Link></li>
-          <li><Link to="/" className="sidebar-item"><FaStream className="icon" /> Flow</Link></li>
-          <li><Link to="/" className="sidebar-item"><FaListAlt className="icon" /> Report</Link></li>
-          <li><Link to="/" className="sidebar-item"><FaChartPie className="icon" /> Funds</Link></li>
+          
+          {/* Inactive links (shown but not clickable) */}
+          <li className="inactive-item"><FaChartLine className="icon" /> Dashboard</li>
+          <li className="inactive-item"><FaStream className="icon" /> Flow</li>
+          <li className="inactive-item"><FaListAlt className="icon" /> Report</li>
+          <li className="inactive-item"><FaChartPie className="icon" /> Funds</li>
         </ul>
       </div>
 
