@@ -1,7 +1,7 @@
 .company-details {
   margin-left: 80px; /* Sidebar için ayarlandı */
   padding: 20px;
-  background-color: #121212;
+  background-color: grey;
   color: white;
   min-height: 100vh;
 }
@@ -16,7 +16,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 sütun düzeni */
-  grid-gap: 0px; /* Bloklar arasında boşluğu yok et */
+  grid-gap: 10px; /* Bloklar arasında boşluğu kaldır */
   justify-items: center;
   padding: 10px;
   box-sizing: border-box;
@@ -28,13 +28,15 @@
   border-radius: 8px;
   width: 100%;
   max-width: 600px;
-  min-height: 300px; /* Bloklar için eşit yükseklik */
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  margin-bottom: 20px; /* Bloklar arasında biraz boşluk */
+  margin: 5px; /* Margin sıfırlandı */
 }
+
+
 
 html, body {
   margin: 0;
@@ -43,31 +45,6 @@ html, body {
   background-color: #121212;
 }
 
-.new-block {
-  background-color: #292929;
-  padding: 20px;
-  border-radius: 8px;
-  color: white;
-  max-width: 600px;
-  min-height: 300px;
-  text-align: center;
-}
-
-.news-block ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.news-block ul li {
-  padding: 10px;
-  background-color: #292929;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-.news-block ul li:hover {
-  background-color: #383838;
-}
 
 a {
   color: #ff7b79;

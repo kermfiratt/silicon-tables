@@ -1,6 +1,7 @@
 .company-overview {
   background-color: #1e1e1e; /* Diğer bloklarla aynı arka plan */
   padding: 20px;
+  padding-right: 0%;
   border-radius: 8px;
   width: 100%;
   max-width: 600px;
@@ -10,30 +11,22 @@
   justify-content: center;
   text-align: center;
   color: white;
-  margin-bottom: 20px;
+  margin: 0; /* Bloklar arasındaki boşluk kaldırıldı */
 }
 
 .company-logo {
   width: 80px;
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* Logo ile içerik arasındaki boşluk ayarlandı */
 }
 
 h3 {
-  font-size: 24px; /* Diğer başlıklarla uyumlu */
-  margin-bottom: 10px;
+  font-size: 24px; /* Başlık boyutu */
+  margin-bottom: 10px; /* Başlık ve metinler arasındaki boşluk */
 }
 
 p {
   font-size: 16px;
   margin: 4px 0;
-  color: #cccccc;
-}
-
-a {
-  color: #ff7b79; /* Linklerin rengi */
-}
-
-a:hover {
-  text-decoration: underline;
+  color: #cccccc; /* Daha okunabilir hale getirildi */
 }

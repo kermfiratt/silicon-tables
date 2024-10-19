@@ -120,7 +120,7 @@ const CompanyDetails = () => {
       <div className="grid-container">
         
         {/* Block 1: Company Overview */}
-        <div className="block overview-block">
+        <div className="block">
           <CompanyOverview company={companyData} />
         </div>
 

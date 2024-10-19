@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Search from './components/Search';
-import CompanyDetails from './components/CompanyDetails';
-import Sidebar from './components/Sidebar';
+import Search from './components/Search.js';
+import CompanyDetails from './components/CompanyDetails.js';
+import Sidebar from './components/Sidebar.js';
 import './App.css';
 
 function App() {
