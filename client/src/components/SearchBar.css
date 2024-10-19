@@ -1,10 +1,16 @@
+/* Arka planı blur yapmak için, popup'a etki etmeyecek */
+.blur {
+  filter: blur(8px);
+  transition: filter 0.3s ease-in-out;
+}
+
 .search-popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  background: rgba(0, 0, 0, 0.5); /* Yarı saydam arka plan */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,11 +36,6 @@
   border-radius: 5px;
 }
 
-.maintenance-message {
-  color: #ff7b79;
-  margin-top: 10px;
-}
-
 .close-button {
   background-color: #ff7b79;
   color: white;
@@ -43,6 +44,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  margin-top: 15px;
 }
 
 .close-button:hover {
