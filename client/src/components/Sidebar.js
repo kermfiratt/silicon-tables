@@ -1,22 +1,12 @@
-import React, { useState } from 'react'; // useState hook'u eklendi
+import React, { useState } from 'react'; 
 import { Link } from 'react-router-dom';
 import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward } from 'react-icons/fa';
 import './Sidebar.css';
-import Search from './Search'; // Search popup'ı import edildi
+import Search from './Search'; 
 
 const Sidebar = () => {
-  const [searchOpen, setSearchOpen] = useState(false); // Popup kontrolü için state
-
-  const handleSearchClick = () => {
-    setSearchOpen(true); // Search popup'ı aç
-    document.body.classList.add('blur'); // Arka planı blurlamak için sınıf ekle
-  };
-
-  const closePopup = () => {
-    setSearchOpen(false); // Popup'ı kapat
-    document.body.classList.remove('blur'); // Blur sınıfını kaldır
-  };
-
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // Daha anlamlı bir state ismi
+  
   return (
     <div className="sidebar">
       <ul className="menu">
@@ -25,16 +15,25 @@ const Sidebar = () => {
             <h1>Silicon Numbers</h1>
           </div>
         </li>
+        
+        {/* Search butonu */}
         <li>
-          <div className="sidebar-item search-button" onClick={handleSearchClick}>
+          <div 
+            className="sidebar-item search-button" 
+            onClick={() => setIsSearchOpen(true)} // Popup'ı açmak için direkt fonksiyon tanımı
+          >
             <FaSearch className="icon" /> Search
           </div>
         </li>
+        
+        {/* Company Info butonu */}
         <li>
           <Link to="/company/Apple" className="sidebar-item">
             <FaBuilding className="icon" /> Company Info
           </Link>
         </li>
+
+        {/* Inactive buttons */}
         <li className="inactive-item">
           <FaSalesforce className="icon" /> Inactive Button
         </li>
@@ -46,7 +45,10 @@ const Sidebar = () => {
         </li>
       </ul>
 
-      {searchOpen && <Search setSearchOpen={closePopup} />} {/* Search popup açılacak */}
+      {/* Search popup'ı açıldığında */}
+      {isSearchOpen && (
+        <Search setSearchOpen={() => setIsSearchOpen(false)} />  // Popup'ı kapatma fonksiyonu
+      )}
     </div>
   );
 };

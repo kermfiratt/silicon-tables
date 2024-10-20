@@ -15,7 +15,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER='google chrome' react-scripts start",
+    "start-with-url": "npm start & sleep 5 && open -a 'Google Chrome' http://localhost:3000/company/apple",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

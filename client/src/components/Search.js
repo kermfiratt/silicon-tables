@@ -1,35 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import "./SearchBar.css";
 
-const Search = ({ setSearchOpen }) => {
-  const [query, setQuery] = useState('');
 
-  // useEffect to clean up the blur when the component unmounts
-  useEffect(() => {
-    // Add blur when the component is mounted (popup is shown)
-    
-    
-    // Cleanup function to remove blur when the popup is closed
-    return () => {
-      document.body.classList.remove('blur');
-    };
-  }, []);
+const Search = ({ setSearchOpen }) => {  // setSearchOpen prop olarak alınıyor
+  const [query, setQuery] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
 
     if (query.toLowerCase() === 'apple') {
-      setSearchOpen(false); // Close popup
-      document.body.classList.remove('blur'); // Remove blur
-      window.location.href = '/company/Apple'; // Redirect to Apple page
+      setSearchOpen(false); // Popup'ı kapat
+      window.location.href = '/company/Apple'; // Apple sayfasına yönlendir
     } else {
-      alert('Currently under maintenance'); // Alert for non-Apple queries
+      alert('Currently under maintenance'); // Apple dışındaki sorgular
     }
   };
 
   const handleClosePopup = () => {
-    setSearchOpen(false); // Close popup
-    
+    setSearchOpen(false); // Popup'ı kapat
   };
 
   return (
@@ -43,9 +31,11 @@ const Search = ({ setSearchOpen }) => {
             placeholder="Search companies" 
             className="centered-search-input"
           />
-          <button type="submit" className="close-button">Search</button>
+          <div className="button-container">
+            <button type="submit" className="search-button">Search</button>
+            <button type="button" className="close-button" onClick={handleClosePopup}>Close</button>
+          </div>
         </form>
-        <button className="close-button" onClick={handleClosePopup}>Close</button>
       </div>
     </div>
   );

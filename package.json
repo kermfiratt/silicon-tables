@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "BROWSER='google chrome' react-scripts start",
+  "start-with-url": "npm start & sleep 5 && open -a 'Google Chrome' http://localhost:3000/company/apple"
   },
   "keywords": [],
   "author": "",
