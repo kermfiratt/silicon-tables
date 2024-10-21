@@ -32,7 +32,7 @@ const Search = ({ setSearchOpen }) => {  // setSearchOpen prop olarak alınıyor
             className="centered-search-input"
           />
           <div className="button-container">
-            <button type="submit" className="search-button">Search</button>
+            <button type="submit" className="search-bar-button">Search</button>
             <button type="button" className="close-button" onClick={handleClosePopup}>Close</button>
           </div>
         </form>
