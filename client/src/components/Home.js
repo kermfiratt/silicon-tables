@@ -1,11 +1,16 @@
 // src/components/Home.js
 import React from 'react';
-import './Home.css'; // For styling the centered text
+import LiveDateTime from './LiveDateTime';
+import MarketData from './MarketData';
+import './Home.css';
 
 const Home = () => {
   return (
     <div className="home-container">
-      <h1 className='company-header'> Silicon Numbers </h1>
+      <div className="top-bar">
+        <LiveDateTime />
+        <MarketData />
+      </div>
     </div>
   );
 };
