@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
 import { Link } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 
@@ -14,6 +14,13 @@ const Sidebar = () => {
           <div className="sidebar-header">
             <h1>Silicon Numbers</h1>
           </div>
+        </li>
+
+
+        <li>
+          <Link to="/" className="sidebar-item">
+            <FaHome className="icon" /> Home
+          </Link>
         </li>
         
         {/* Search butonu */}

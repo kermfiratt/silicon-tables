@@ -5,7 +5,7 @@
     align-items: center;
     height: 100vh; /* Full height of the viewport */
     background-color: #f0f0f0;
-    margin-left: 250px; /* Adjust based on the sidebar width */
+    margin-left: 80px; /* Adjust based on the sidebar width */
   }
   
   .company-header {
