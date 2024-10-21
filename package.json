@@ -5,13 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "BROWSER='google chrome' react-scripts start",
-  "start-with-url": "npm start & sleep 5 && open -a 'Google Chrome' http://localhost:3000/company/apple"
+    "start-with-url": "npm start & sleep 5 && open -a 'Google Chrome' http://localhost:3000/company/apple"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.7.7",
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "react-icons": "^5.3.0"

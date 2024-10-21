@@ -1,0 +1,15 @@
+/* src/components/Home.css */
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    background-color: #f0f0f0;
+    margin-left: 250px; /* Adjust based on the sidebar width */
+  }
+  
+  .company-header {
+    font-size: 48px;
+    color: #333;
+  }
+  
