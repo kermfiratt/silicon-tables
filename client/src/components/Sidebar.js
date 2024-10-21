@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
+import logo from '../logo.webp';
 
 const Sidebar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Daha anlamlı bir state ismi
@@ -10,10 +11,12 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <ul className="menu">
+
+
         <li>
-          <div className="sidebar-header">
-            <h1>Silicon Numbers</h1>
-          </div>
+            <div className="sidebar-header">
+              <img src={logo} alt="Silicon Numbers Logo" className="sidebar-logo" />
+            </div>
         </li>
 
 
