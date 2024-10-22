@@ -7,6 +7,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   width: 35%; /* Make the block half-width */
+  height: 60%;
 }
 
 .product-hunt-left {

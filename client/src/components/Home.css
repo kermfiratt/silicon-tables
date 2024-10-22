@@ -72,6 +72,12 @@
   text-align: center;
 }
 
+.content-area {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 
 
 

@@ -4,11 +4,11 @@ import './ProductHuntTop5.css';
 const ProductHuntTop5 = () => {
   // Placeholder data for the top 5 products of the day
   const products = [
-    { id: 1, name: 'Amazing product 1', votes_count: 120 },
-    { id: 2, name: 'Revolutionary product 2', votes_count: 98 },
-    { id: 3, name: 'Innovative product 3', votes_count: 134 },
-    { id: 4, name: 'Next-gen product 4', votes_count: 90 },
-    { id: 5, name: 'Best-in-class product 5', votes_count: 110 },
+    { id: 1, name: 'AI based phone', votes_count: 120 },
+    { id: 2, name: 'Revolutionary design', votes_count: 98 },
+    { id: 3, name: 'Innovative AI', votes_count: 134 },
+    { id: 4, name: 'Next-gen writng', votes_count: 90 },
+    { id: 5, name: 'Best-in-class robot', votes_count: 110 },
   ];
 
   // Get the current date formatted (e.g., 22 October 2024)
