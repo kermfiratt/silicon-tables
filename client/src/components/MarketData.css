@@ -1,0 +1,25 @@
+/* src/components/MarketData.css */
+.market-data {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    margin-top: 30px; /* Adjust margin to suit your layout */
+  }
+  
+  .ticker-change {
+    margin-left: 8px;
+    font-weight: bold;
+  }
+  
+  .ticker-change.positive {
+    color: #4caf50; /* Green for positive change */
+  }
+  
+  .ticker-change.negative {
+    color: #f44336; /* Red for negative change */
+  }
+  
+  .strong {
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  
