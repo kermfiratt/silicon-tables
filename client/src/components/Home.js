@@ -10,16 +10,19 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="top-bar">
+        {/* Live date and time */}
         <LiveDateTime />
+        
+        {/* Market data block */}
         <MarketData />
       </div>
       
+      {/* Product Hunt Top 5 block */}
       <div className="content-area">
-        {/* Add the new block below the top bar, on the left */}
         <ProductHuntTop5 />
       </div>
 
-      {/* Add the Ticker component at the bottom of the page */}
+      {/* Ticker block for stock prices */}
       <div className="ticker-wrapper">
         <Ticker />
       </div>

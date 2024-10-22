@@ -1,52 +1,40 @@
-// src/components/ProductHuntTop5.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import './ProductHuntTop5.css';
 
 const ProductHuntTop5 = () => {
-  const [products, setProducts] = useState([]);
+  // Placeholder data for the top 5 products of the day
+  const products = [
+    { id: 1, name: 'Amazing product 1', votes_count: 120 },
+    { id: 2, name: 'Revolutionary product 2', votes_count: 98 },
+    { id: 3, name: 'Innovative product 3', votes_count: 134 },
+    { id: 4, name: 'Next-gen product 4', votes_count: 90 },
+    { id: 5, name: 'Best-in-class product 5', votes_count: 110 },
+  ];
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('https://api.producthunt.com/v1/posts', {
-          headers: {
-            Authorization: `Bearer YOUR_PRODUCT_HUNT_API_KEY`,
-          },
-          params: {
-            per_page: 5, // Fetch top 5 products
-          },
-        });
-        setProducts(response.data.posts);
-      } catch (error) {
-        console.error('Error fetching Product Hunt data:', error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  // Get the current date formatted (e.g., 22 October 2024)
+  const currentDate = new Date().toLocaleDateString('en-US', { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric' 
+  });
 
   return (
     <div className="product-hunt-container">
-      <h2>Top 5 Products on Product Hunt</h2>
-      {products.length === 0 ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="product-list">
-          {products.map((product) => (
-            <li key={product.id} className="product-item">
-              <a href={product.redirect_url} target="_blank" rel="noopener noreferrer">
-                <img src={product.thumbnail.image_url} alt={product.name} className="product-thumbnail" />
-                <div className="product-info">
-                  <h3>{product.name}</h3>
-                  <p>{product.tagline}</p>
-                  <span>{product.votes_count} votes</span>
-                </div>
-              </a>
+      <div className="product-hunt-left">
+        <span>{currentDate}</span>
+      </div>
+      <div className="product-hunt-right">
+        <h2 className="product-hunt-header">Top 5 Products of the Day</h2>
+        <ul className="product-hunt-list">
+          {products.map((product, index) => (
+            <li key={product.id} className="product-hunt-item">
+              <span className="product-rank">{index + 1}.</span>
+              <span className="product-name">{product.name}</span>
+              <span className="product-votes">{product.votes_count} votes</span>
             </li>
           ))}
         </ul>
-      )}
+      </div>
     </div>
   );
 };
