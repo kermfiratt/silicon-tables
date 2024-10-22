@@ -1,36 +1,39 @@
 /* src/components/DeveloperConferences.css */
 .developer-conferences-container {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-    color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    width: 35%; /* Same width as the ProductHuntTop5 block */
-    height: 80%; /* Make sure it matches the height */
-  }
-  
-  .developer-conferences-header {
-    font-size: 18px;
-    margin-bottom: 15px;
-    text-align: center;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-  }
-  
-  .developer-conferences-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .developer-conference-item {
-    font-size: 15px;
-    margin: 10px 0;
-    padding: 10px 0;
-    border-bottom: 1px solid #444; /* Line to separate items */
-  }
-  
-  .developer-conference-item span {
-    color: #aaa; /* Lighter color for the date and location */
-  }
-  
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  width: 35%; /* Same width as ProductHuntTop5 */
+  height: 400px; /* Adjust this to match the height of ProductHuntTop5 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.developer-conferences-header {
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.developer-conferences-list {
+  list-style: none;
+  padding: 0;
+  overflow-y: auto; /* Ensure long content scrolls */
+}
+
+.developer-conference-item {
+  font-size: 15px;
+  margin: 10px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #444; /* Line to separate items */
+}
+
+.developer-conference-item span {
+  color: #aaa; /* Lighter color for date and location */
+}

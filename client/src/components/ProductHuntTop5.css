@@ -1,3 +1,4 @@
+/* src/components/ProductHuntTop5.css */
 .product-hunt-container {
   display: flex;
   background-color: #1e1e1e;
@@ -7,7 +8,10 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   width: 35%; /* Make the block half-width */
-  height: 60%;
+  height: 400px; /* Adjust height to match DeveloperConferences */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-hunt-left {
@@ -41,6 +45,7 @@
 .product-hunt-list {
   list-style: none;
   padding: 0;
+  overflow-y: auto; /* Ensure long content scrolls */
 }
 
 .product-hunt-item {

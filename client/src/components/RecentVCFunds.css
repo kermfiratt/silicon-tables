@@ -1,0 +1,43 @@
+/* src/components/RecentVCFunds.css */
+.recent-vc-funds-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 10px;
+    width: 25%; /* Slightly smaller than the other blocks */
+    height: 80%; /* Make the height equal to the other blocks */
+  }
+  
+  .recent-vc-funds-header {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+  }
+  
+  .recent-vc-funds-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .recent-vc-funds-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    margin: 10px 0;
+    border-bottom: 1px solid #444; /* Line to separate items */
+    padding-bottom: 10px;
+  }
+  
+  .startup-name {
+    font-weight: bold;
+  }
+  
+  .fund-amount {
+    color: #00c853; /* Green for funding amount */
+  }
+  

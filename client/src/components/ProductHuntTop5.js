@@ -9,6 +9,8 @@ const ProductHuntTop5 = () => {
     { id: 3, name: 'Innovative AI', votes_count: 134 },
     { id: 4, name: 'Next-gen writng', votes_count: 90 },
     { id: 5, name: 'Best-in-class robot', votes_count: 110 },
+    { id: 6, name: 'Robotic Fabrics', votes_count: 160 },
+    { id: 7, name: 'Full Self Drive', votes_count: 172 },
   ];
 
   // Get the current date formatted (e.g., 22 October 2024)

@@ -4,6 +4,9 @@ import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
 import ProductHuntTop5 from './ProductHuntTop5';
 import DeveloperConferences from './DeveloperConferences';
+import TechNews from './TechNews';
+import StockNews from './StockNews';
+import RecentVCFunds from './RecentVCFunds'; // Import RecentVCFunds component
 import Ticker from './Ticker';
 import './Home.css';
 
@@ -17,7 +20,13 @@ const Home = () => {
       
       <div className="content-area">
         <ProductHuntTop5 />
-        <DeveloperConferences /> {/* Add the conferences next to Product Hunt block */}
+        <RecentVCFunds /> {/* New Recent VC Funds block */}
+        <DeveloperConferences />
+      </div>
+
+      <div className="news-area">
+        <TechNews />
+        <StockNews />
       </div>
 
       <div className="ticker-wrapper">
