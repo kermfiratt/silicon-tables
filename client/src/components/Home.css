@@ -69,7 +69,7 @@ html, body {
   display: flex;
   flex-direction: column;
   width: 20%; /* Matches width of main blocks */
-  gap: 10px; /* Space between VC funds and startup block */
+  gap: 5px; /* Space between VC funds and startup block */
 }
 
 .recent-vc-funds {
