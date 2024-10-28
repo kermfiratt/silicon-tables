@@ -6,7 +6,7 @@
     color: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     margin: 20px 10px;
-    width: 25%; /* Slightly smaller than the other blocks */
+    width: 80%; /* Slightly smaller than the other blocks */
     height: 80%; /* Make the height equal to the other blocks */
   }
   

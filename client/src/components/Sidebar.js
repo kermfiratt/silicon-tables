@@ -13,9 +13,12 @@ const Sidebar = () => {
       <ul className="menu">
 
 
+
         <li>
             <div className="sidebar-header">
+            <Link to="/" className="sidebar-item">
               <img src={logo} alt="Silicon Numbers Logo" className="sidebar-logo" />
+              </Link>
             </div>
         </li>
 

@@ -6,7 +6,8 @@ import ProductHuntTop5 from './ProductHuntTop5';
 import DeveloperConferences from './DeveloperConferences';
 import TechNews from './TechNews';
 import StockNews from './StockNews';
-import RecentVCFunds from './RecentVCFunds'; // Import RecentVCFunds component
+import RecentVCFunds from './RecentVCFunds';
+import HitStartupOfTheWeek from './HitStartupOfTheWeek';
 import Ticker from './Ticker';
 import './Home.css';
 
@@ -20,7 +21,12 @@ const Home = () => {
       
       <div className="content-area">
         <ProductHuntTop5 />
-        <RecentVCFunds /> {/* New Recent VC Funds block */}
+        
+        <div className="vc-startup-container">
+          <RecentVCFunds />
+          <HitStartupOfTheWeek />
+        </div>
+
         <DeveloperConferences />
       </div>
 

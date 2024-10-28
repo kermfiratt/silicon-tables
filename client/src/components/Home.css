@@ -53,7 +53,55 @@ html, body {
 .content-area {
   display: flex;
   justify-content: space-between;
+  align-items: stretch; /* Ensure blocks stretch to the same height */
   margin-top: 20px;
+  gap: 10px;
+}
+
+.product-hunt-top5, .developer-conferences {
+  width: 32%; /* Adjust width of main blocks */
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.vc-startup-container {
+  display: flex;
+  flex-direction: column;
+  width: 20%; /* Matches width of main blocks */
+  gap: 10px; /* Space between VC funds and startup block */
+}
+
+.recent-vc-funds {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hit-startup {
+  flex: 0.5; /* Half height of RecentVCFunds */
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hit-startup-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.hit-startup-amount {
+  color: #4caf50; /* Green for the dollar sign */
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .tech-news-wrapper {
@@ -75,16 +123,3 @@ html, body {
   justify-content: space-between;
   margin-top: 20px;
 }
-
-
-
-/* src/components/Home.css */
-.content-area {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch; /* Ensure blocks stretch to the same height */
-  margin-top: 20px;
-  gap: 10px;
-}
-
-
