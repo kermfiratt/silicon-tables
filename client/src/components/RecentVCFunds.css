@@ -1,11 +1,11 @@
 /* src/components/RecentVCFunds.css */
 .recent-vc-funds-container {
     background-color: #1e1e1e;
-    padding: 20px;
+    padding: 22px;
     border-radius: 8px;
     color: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px 10px;
+    margin: 20px 20px 20px 10px;
     width: 80%; /* Slightly smaller than the other blocks */
     height: 80%; /* Make the height equal to the other blocks */
   }
