@@ -1,13 +1,15 @@
+/* src/components/CompanyDetails.css */
+
 .company-details {
-  margin-left: 80px; /* Sidebar için ayarlandı */
+  margin-left: 80px;
   padding: 20px;
-  background-color: grey;
-  color: white;
+  background-color: #2a2a2a;
+  color: #e6e6e6;
   min-height: 100vh;
 }
 
 .company-details h2 {
-  font-size: 28px;
+  font-size: 32px;
   color: #ffffff;
   text-align: center;
   margin-bottom: 30px;
@@ -15,44 +17,76 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 sütun düzeni */
-  grid-gap: 10px; /* Bloklar arasında boşluğu kaldır */
-  justify-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
   padding: 10px;
-  box-sizing: border-box;
 }
 
-.block {
+.block, .news-block {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  margin: 5px; /* Margin sıfırlandı */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-color: #121212;
-}
-
-
-a {
+.block-header {
+  font-size: 22px;
   color: #ff7b79;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ff7b79;
+  padding-bottom: 5px;
+}
+
+.block-content {
+  font-size: 18px;
+  color: #d4d4d4;
+}
+
+.news-block {
+  grid-column: span 2;
+}
+
+.news-header {
+  font-size: 24px;
+  color: #ff7b79;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.news-list {
+  padding: 10px 0;
+}
+
+.news-item {
+  margin-bottom: 10px;
+}
+
+.news-title {
+  color: #ff7b79;
+  font-weight: bold;
+  font-size: 18px;
   text-decoration: none;
 }
 
-a:hover {
+.news-title:hover {
   text-decoration: underline;
+}
+
+.news-date {
+  font-size: 14px;
+  color: #aaa;
+  margin: 5px 0;
+}
+
+.news-summary {
+  font-size: 16px;
+  color: #d4d4d4;
+  margin-top: 5px;
+}
+
+.news-divider {
+  border-top: 1px solid #444;
+  margin: 10px 0;
 }
 
 @media (max-width: 768px) {
