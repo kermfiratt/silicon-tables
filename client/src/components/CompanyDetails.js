@@ -10,11 +10,18 @@ const CompanyDetails = () => {
   const [companyData, setCompanyData] = useState({});
   const [news, setNews] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null);
   const [isStockView, setIsStockView] = useState(false); // Stock görünümü için
 
   const API_KEY = process.env.REACT_APP_API_KEY;
+
+   // Her yeni şirket ziyaret edildiğinde `localStorage` güncelle
+   useEffect(() => {
+    if (symbol) {
+      localStorage.setItem('latestCompany', symbol); // Ziyaret edilen son şirketi kaydet
+    }
+  }, [symbol]);
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -46,7 +53,15 @@ const CompanyDetails = () => {
     setIsStockView((prev) => !prev);
   };
 
-  if (loading) return <p>Loading company data...</p>;
+  if (loading) {
+    return (
+      <div className="loading-animation">
+        <div className="spinner"></div>
+        <p>Loading company data...</p>
+      </div>
+    );
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -183,4 +198,3 @@ const CompanyDetails = () => {
 };
 
 export default CompanyDetails;
-

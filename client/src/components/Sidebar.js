@@ -1,27 +1,42 @@
-import React, { useState } from 'react'; 
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'; 
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
 
 const Sidebar = () => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // Daha anlamlı bir state ismi
-  
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [latestCompany, setLatestCompany] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Retrieve the latest visited company from localStorage
+    const lastVisitedCompany = localStorage.getItem('latestCompany');
+    if (lastVisitedCompany) {
+      setLatestCompany(lastVisitedCompany);
+    }
+  }, []);
+
+  const handleCompanyInfoClick = () => {
+    if (latestCompany) {
+      navigate(`/company/${latestCompany}`);
+    } else {
+      navigate(`/company/Apple`); // Default to Apple if no company has been visited yet
+    }
+  };
+
   return (
     <div className="sidebar">
       <ul className="menu">
 
-
-
         <li>
-            <div className="sidebar-header">
+          <div className="sidebar-logo">
             <Link to="/" className="sidebar-item">
               <img src={logo} alt="Silicon Numbers Logo" className="sidebar-logo" />
-              </Link>
-            </div>
+            </Link>
+          </div>
         </li>
-
 
         <li>
           <Link to="/" className="sidebar-item">
@@ -29,21 +44,21 @@ const Sidebar = () => {
           </Link>
         </li>
         
-        {/* Search butonu */}
+        {/* Search button */}
         <li>
           <div 
             className="sidebar-item search-button" 
-            onClick={() => setIsSearchOpen(true)} // Popup'ı açmak için direkt fonksiyon tanımı
+            onClick={() => setIsSearchOpen(true)}
           >
             <FaSearch className="icon" /> Search
           </div>
         </li>
         
-        {/* Company Info butonu */}
+        {/* Company Info button */}
         <li>
-          <Link to="/company/Apple" className="sidebar-item">
+          <div className="sidebar-item" onClick={handleCompanyInfoClick}>
             <FaBuilding className="icon" /> Company Info
-          </Link>
+          </div>
         </li>
 
         {/* Inactive buttons */}
@@ -58,9 +73,9 @@ const Sidebar = () => {
         </li>
       </ul>
 
-      {/* Search popup'ı açıldığında */}
+      {/* Display the Search popup if opened */}
       {isSearchOpen && (
-        <Search setSearchOpen={() => setIsSearchOpen(false)} />  // Popup'ı kapatma fonksiyonu
+        <Search setSearchOpen={() => setIsSearchOpen(false)} />
       )}
     </div>
   );

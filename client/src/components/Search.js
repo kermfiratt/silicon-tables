@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+// src/components/Search.js
+import React, { useState, useEffect } from 'react';
+import { FiSearch } from 'react-icons/fi'; // Importing a search icon from react-icons
 import "./SearchBar.css";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'; // For routing
+import { useNavigate } from 'react-router-dom';
 
 const Search = ({ setSearchOpen }) => {
   const [query, setQuery] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook to programmatically navigate
+  const [recentCompanies, setRecentCompanies] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.getElementById('search-input').focus(); // Automatically focus on the search input
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -18,9 +25,9 @@ const Search = ({ setSearchOpen }) => {
       const companyData = response.data;
 
       if (companyData && companyData.name) {
-        // If valid company data is returned, close the search popup and redirect
-        setSearchOpen(false);
-        navigate(`/company/${query.toUpperCase()}`); // Navigate to the CompanyDetails page with the symbol
+        setSearchOpen(false); // Close search popup
+        setRecentCompanies((prev) => [companyData, ...prev.slice(0, 4)]); // Store the last 5 searches
+        navigate(`/company/${query.toUpperCase()}`); // Navigate to the CompanyDetails page
       } else {
         setError('Company not found or under maintenance.');
       }
@@ -31,26 +38,47 @@ const Search = ({ setSearchOpen }) => {
   };
 
   const handleClosePopup = () => {
-    setSearchOpen(false); // Close the popup
+    setSearchOpen(false);
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target.className === "search-popup") {
+      handleClosePopup();
+    }
   };
 
   return (
-    <div className="search-popup">
+    <div className="search-popup" onClick={handleOverlayClick}>
       <div className="search-popup-content">
-        <form onSubmit={handleSearch}>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search companies"
-            className="centered-search-input"
-          />
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <div className="button-container">
-            <button type="submit" className="search-bar-button">Search</button>
-            <button type="button" className="close-button" onClick={handleClosePopup}>Close</button>
+        <form onSubmit={handleSearch} className="search-form">
+          <div className="search-input-wrapper">
+            <FiSearch className="search-icon" />
+            <input
+              id="search-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for companies..."
+              className="centered-search-input"
+            />
           </div>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
+
+        {/* Recently visited companies */}
+        {recentCompanies.length > 0 && (
+          <div className="recent-companies">
+            <h4>Frequently Searched</h4>
+            <ul>
+              {recentCompanies.map((company, index) => (
+                <li key={index} onClick={() => navigate(`/company/${company.ticker}`)}>
+                  <img src={company.logo} alt={company.name} className="company-logo" />
+                  <span>{company.ticker}</span> - {company.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,4 @@
-/* Arka planı blur yapmak için, popup'a etki etmeyecek */
-.blur {
-  filter: blur(8px);
-  transition: filter 0.3s ease-in-out;
-}
+/* src/components/SearchBar.css */
 
 .search-popup {
   position: fixed;
@@ -10,7 +6,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Yarı saydam arka plan */
+  background: rgba(0, 0, 0, 0.8); /* Darker background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,49 +14,85 @@
 }
 
 .search-popup-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  background: #2e2e2e;
+  padding: 20px; /* Outer padding for alignment */
+  border-radius: 12px;
+  width: 600px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+.search-form {
+  width: 100%;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #444;
+  border-radius: 8px;
+  padding: 10px 15px; /* Inner padding that aligns with outer padding */
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding is included in width */
 }
 
 .centered-search-input {
-  width: 300px;
+  width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.close-button {
-  background-color: #ff7b79;
-  color: white;
-  padding: 10px 15px;
+  font-size: 18px;
+  color: #fff;
+  background: transparent;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 15px;
+  outline: none;
+  margin-left: 10px; /* Space between icon and text */
+  box-sizing: border-box;
 }
 
-
-.search-bar-button {
-  background-color: orange;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 15px;
-  margin-right: 5%;
-  margin-left: 20%;
+.centered-search-input::placeholder {
+  color: #bbb;
 }
 
-.close-button:hover {
-  background-color: #e06666;
+.search-icon {
+  color: #ccc;
+  font-size: 20px;
+}
+
+.recent-companies {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.recent-companies h4 {
+  color: #ccc;
+  margin-bottom: 15px;
+  padding-left: 15px; /* Aligns with search input padding */
+}
+
+.recent-companies ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-companies li {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px; /* Aligns with search input padding */
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 6px;
+}
+
+.recent-companies li:hover {
+  background: #555;
+}
+
+.company-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 5px;
 }

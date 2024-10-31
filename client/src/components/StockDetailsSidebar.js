@@ -24,13 +24,13 @@ const StockDetailsSidebar = ({ symbol }) => {
     <div className="stock-details-sidebar">
       <h2>{fundamentalData.name || "Şirket İsmi"}</h2>
       <ul>
-        <li>Özet Rapor</li>
-        <li>Şirket Bilgileri</li>
-        <li>Akış</li>
-        <li>Karşılaştırma</li>
-        <li>Finansal Tablolar</li>
-        <li>Gelir Tablosu</li>
-        <li>Bilanço</li>
+        <li> Ownership </li>
+        <li> Fund Ownership </li>
+        <li> Financials </li>
+        <li> Revenue Breakdown </li>
+        <li> Price Metrics </li>
+        <li> Historical Market Cap </li>
+        <li> Peers </li>
         {/* Diğer temel veri başlıkları burada yer alabilir */}
       </ul>
     </div>
