@@ -1,12 +1,24 @@
 /* src/components/CompanyDetails.css */
 
+.company-details-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  margin-left: 80px; /* Ana menü genişliği */
+}
+
+.company-details-container.stock-view .company-details {
+  margin-left: 240px; /* İkinci yan menü genişliği kadar sağdan boşluk */
+}
+
 .company-details {
-  margin-left: 80px;
+  flex: 1;
   padding: 20px;
   background-color: #2a2a2a;
   color: #e6e6e6;
-  min-height: 100vh;
 }
+
+
 
 .company-details h2 {
   font-size: 32px;

@@ -1,0 +1,35 @@
+/* src/components/StockDetailsSidebar.css */
+
+.stock-details-sidebar {
+  background-color: #1e1e1e;
+  padding: 20px;
+  width: 200px; /* Genişlik azaltıldı */
+  color: #fff;
+  position: fixed;
+  left: 80px; /* Ana menü genişliği kadar sola kaydırıldı */
+  top: 0;
+  height: 100vh;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+
+.stock-details-sidebar h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.stock-details-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.stock-details-sidebar ul li {
+  padding: 10px 0;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+
+.stock-details-sidebar ul li:hover {
+  background-color: #333;
+}
