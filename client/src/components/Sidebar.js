@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome, FaDatabase, FaAngellist } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
@@ -61,13 +61,21 @@ const Sidebar = () => {
           </div>
         </li>
 
-        {/* Inactive buttons */}
-        <li className="inactive-item">
-          <FaSalesforce className="icon" /> Inactive Button
+        <li>
+          <Link to="/funds" className="sidebar-item">
+            <FaDatabase className="icon" /> Funds
+          </Link>
         </li>
-        <li className="inactive-item">
-          <FaGamepad className="icon" /> Inactive Button
+
+        
+        <li>
+          <Link to="/vcs" className="sidebar-item">
+            <FaAngellist className="icon" /> VCs
+          </Link>
         </li>
+
+
+
         <li className="inactive-item">
           <FaBackward className="icon" /> Inactive Button
         </li>

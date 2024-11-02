@@ -1,0 +1,50 @@
+/* src/components/VC.css */
+
+.vc-container {
+    padding: 20px;
+    background-color: #2a2a2a;
+    color: #e6e6e6;
+    margin-left: 80px;
+  }
+  
+  .vc-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .vc-list th, .vc-list td {
+    padding: 10px;
+    border: 1px solid #444;
+    text-align: center;
+  }
+  
+  .vc-list th {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .vc-list td {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+  }
+  
+  .vc-news {
+    margin-top: 30px;
+  }
+  
+  .vc-news h2 {
+    color: #ff7b79;
+  }
+  
+  .vc-news ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .vc-news li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #d4d4d4;
+  }
+  
