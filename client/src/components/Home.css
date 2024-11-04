@@ -1,20 +1,22 @@
-/* src/components/Home.css */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #1b1b1b; /* Ensure background is applied to full page */
+  background-color: #1b1b1b;
 }
 
 .home-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Make the container fill the height */
+  min-height: 100vh;
   background-color: #1b1b1b;
   margin-left: 80px;
   padding: 20px;
   color: #fff;
+  position: relative;
+  margin-right: 300px; /* Sağdaki watchlist için boşluk bıraktık */
 }
+
 
 .top-bar {
   display: flex;
@@ -53,13 +55,13 @@ html, body {
 .content-area {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; /* Ensure blocks stretch to the same height */
+  align-items: stretch;
   margin-top: 20px;
   gap: 10px;
 }
 
 .product-hunt-top5, .developer-conferences {
-  width: 32%; /* Adjust width of main blocks */
+  width: 32%;
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
@@ -68,8 +70,8 @@ html, body {
 .vc-startup-container {
   display: flex;
   flex-direction: column;
-  width: 20%; /* Matches width of main blocks */
-  gap: 5px; /* Space between VC funds and startup block */
+  width: 20%;
+  gap: 5px;
 }
 
 .recent-vc-funds {
@@ -82,7 +84,7 @@ html, body {
 }
 
 .hit-startup {
-  flex: 0.5; /* Half height of RecentVCFunds */
+  flex: 0.5;
   background-color: #1e1e1e;
   padding: 15px;
   border-radius: 8px;
@@ -99,7 +101,7 @@ html, body {
 }
 
 .hit-startup-amount {
-  color: #4caf50; /* Green for the dollar sign */
+  color: #4caf50;
   font-size: 24px;
   font-weight: bold;
 }
@@ -123,3 +125,4 @@ html, body {
   justify-content: space-between;
   margin-top: 20px;
 }
+

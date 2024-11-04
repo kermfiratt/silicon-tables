@@ -9,6 +9,7 @@ import StockNews from './StockNews';
 import RecentVCFunds from './RecentVCFunds';
 import HitStartupOfTheWeek from './HitStartupOfTheWeek';
 import Ticker from './Ticker';
+import Watchlist from './Watchlist';
 import './Home.css';
 
 const Home = () => {
@@ -38,6 +39,8 @@ const Home = () => {
       <div className="ticker-wrapper">
         <Ticker />
       </div>
+
+      <Watchlist /> {/* Sağ tarafa Watchlist ekledik */}
     </div>
   );
 };
