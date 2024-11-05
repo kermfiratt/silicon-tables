@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaSalesforce, FaGamepad, FaBackward, FaHome, FaDatabase, FaAngellist } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaRocket } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
@@ -29,7 +29,6 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <ul className="menu">
-
         <li>
           <div className="sidebar-logo">
             <Link to="/" className="sidebar-item">
@@ -67,14 +66,18 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        
         <li>
           <Link to="/vcs" className="sidebar-item">
             <FaAngellist className="icon" /> VCs
           </Link>
         </li>
 
-
+        {/* New Startups button */}
+        <li>
+          <Link to="/startups" className="sidebar-item">
+            <FaRocket className="icon" /> Startups
+          </Link>
+        </li>
 
         <li className="inactive-item">
           <FaBackward className="icon" /> Inactive Button
@@ -83,7 +86,7 @@ const Sidebar = () => {
 
       {/* Display the Search popup if opened */}
       {isSearchOpen && (
-        <Search setSearchOpen={() => setIsSearchOpen(false)} />
+        <Search setSearchOpen={setIsSearchOpen} />
       )}
     </div>
   );

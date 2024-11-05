@@ -1,4 +1,5 @@
 /* src/components/DeveloperConferences.css */
+
 .developer-conferences-container {
   background-color: #1e1e1e;
   padding: 20px;
@@ -6,8 +7,8 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  width: 35%; /* Same width as ProductHuntTop5 */
-  height: 400px; /* Adjust this to match the height of ProductHuntTop5 */
+  width: 35%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -24,16 +25,16 @@
 .developer-conferences-list {
   list-style: none;
   padding: 0;
-  overflow-y: auto; /* Ensure long content scrolls */
+  overflow-y: auto;
 }
 
 .developer-conference-item {
   font-size: 15px;
   margin: 10px 0;
   padding: 10px 0;
-  border-bottom: 1px solid #444; /* Line to separate items */
+  border-bottom: 1px solid #444;
 }
 
 .developer-conference-item span {
-  color: #aaa; /* Lighter color for date and location */
+  color: #aaa;
 }

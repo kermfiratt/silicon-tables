@@ -7,8 +7,8 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  width: 35%; /* Make the block half-width */
-  height: 400px; /* Adjust height to match DeveloperConferences */
+  width: 35%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -22,11 +22,11 @@
   padding: 10px;
   background-color: #333;
   border-radius: 8px;
-  margin-right: 20px;
+  margin-bottom: 15px;
 }
 
 .product-hunt-left span {
-  font-size: 24px;
+  font-size: 20px;
   color: #ff7b79;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .product-hunt-header {
-  font-size: 24px;
+  font-size: 22px;
   margin-bottom: 15px;
   text-align: center;
   border-bottom: 1px solid #333;
@@ -45,7 +45,8 @@
 .product-hunt-list {
   list-style: none;
   padding: 0;
-  overflow-y: auto; /* Ensure long content scrolls */
+  overflow-y: auto;
+  max-height: 280px; /* Adjust to fit within the container */
 }
 
 .product-hunt-item {
@@ -54,11 +55,11 @@
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #333;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .product-hunt-item:last-child {
-  border-bottom: none; /* Remove border from the last item */
+  border-bottom: none;
 }
 
 .product-rank {
@@ -71,6 +72,6 @@
 }
 
 .product-votes {
-  color: #ff7b79;
+  color: #4caf50; /* Green color for positive gain */
   font-weight: bold;
 }

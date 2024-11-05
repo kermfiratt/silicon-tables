@@ -15,7 +15,9 @@ html, body {
   color: #fff;
   position: relative;
   margin-right: 300px; /* Sağdaki watchlist için boşluk bıraktık */
+  z-index: 1;
 }
+
 
 
 .top-bar {
@@ -75,7 +77,7 @@ html, body {
 }
 
 .recent-vc-funds {
-  flex: 1;
+  
   background-color: #1e1e1e;
   padding: 15px;
   border-radius: 8px;
@@ -111,14 +113,7 @@ html, body {
   width: 100%;
 }
 
-.ticker-wrapper {
-  margin-top: 20px;
-  position: sticky;
-  bottom: 0;
-  background-color: #1e1e1e;
-  padding: 10px 0;
-  z-index: 1000;
-}
+
 
 .news-area {
   display: flex;

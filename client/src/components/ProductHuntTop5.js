@@ -1,16 +1,17 @@
+// src/components/ProductHuntTop5.js
 import React from 'react';
 import './ProductHuntTop5.css';
 
 const ProductHuntTop5 = () => {
-  // Placeholder data for the top 5 products of the day
-  const products = [
-    { id: 1, name: 'AI based phone', votes_count: 120 },
-    { id: 2, name: 'Revolutionary design', votes_count: 98 },
-    { id: 3, name: 'Innovative AI', votes_count: 134 },
-    { id: 4, name: 'Next-gen writng', votes_count: 90 },
-    { id: 5, name: 'Best-in-class robot', votes_count: 110 },
-    { id: 6, name: 'Robotic Fabrics', votes_count: 160 },
-    { id: 7, name: 'Full Self Drive', votes_count: 172 },
+  // Placeholder data for the top gaining startups of the day
+  const startups = [
+    { id: 1, name: 'GreenTech Solutions', gain_percentage: 12.5 },
+    { id: 2, name: 'BioFuture', gain_percentage: 10.2 },
+    { id: 3, name: 'Quantum AI', gain_percentage: 9.8 },
+    { id: 4, name: 'NeuralNet Labs', gain_percentage: 8.9 },
+    { id: 5, name: 'Eco Innovations', gain_percentage: 8.3 },
+    { id: 6, name: 'UrbanSolar', gain_percentage: 7.7 },
+    { id: 7, name: 'AgroNova', gain_percentage: 7.3 },
   ];
 
   // Get the current date formatted (e.g., 22 October 2024)
@@ -26,13 +27,13 @@ const ProductHuntTop5 = () => {
         <span>{currentDate}</span>
       </div>
       <div className="product-hunt-right">
-        <h2 className="product-hunt-header">Top 5 Products of the Day</h2>
+        <h2 className="product-hunt-header">Top Gaining Startups of the Day</h2>
         <ul className="product-hunt-list">
-          {products.map((product, index) => (
-            <li key={product.id} className="product-hunt-item">
+          {startups.map((startup, index) => (
+            <li key={startup.id} className="product-hunt-item">
               <span className="product-rank">{index + 1}.</span>
-              <span className="product-name">{product.name}</span>
-              <span className="product-votes">{product.votes_count} votes</span>
+              <span className="product-name">{startup.name}</span>
+              <span className="product-votes">+{startup.gain_percentage}%</span>
             </li>
           ))}
         </ul>
