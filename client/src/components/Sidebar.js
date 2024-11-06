@@ -1,6 +1,7 @@
+// src/components/Sidebar.js
 import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaRocket } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaChartLine } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
@@ -11,7 +12,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve the latest visited company from localStorage
     const lastVisitedCompany = localStorage.getItem('latestCompany');
     if (lastVisitedCompany) {
       setLatestCompany(lastVisitedCompany);
@@ -22,7 +22,7 @@ const Sidebar = () => {
     if (latestCompany) {
       navigate(`/company/${latestCompany}`);
     } else {
-      navigate(`/company/Apple`); // Default to Apple if no company has been visited yet
+      navigate(`/company/Apple`);
     }
   };
 
@@ -43,7 +43,6 @@ const Sidebar = () => {
           </Link>
         </li>
         
-        {/* Search button */}
         <li>
           <div 
             className="sidebar-item search-button" 
@@ -53,7 +52,6 @@ const Sidebar = () => {
           </div>
         </li>
         
-        {/* Company Info button */}
         <li>
           <div className="sidebar-item" onClick={handleCompanyInfoClick}>
             <FaBuilding className="icon" /> Company Info
@@ -72,10 +70,10 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        {/* New Startups button */}
+        {/* Yeni Option Tracker butonu */}
         <li>
-          <Link to="/startups" className="sidebar-item">
-            <FaRocket className="icon" /> Startups
+          <Link to="/option-tracker" className="sidebar-item">
+            <FaChartLine className="icon" /> Option Tracker
           </Link>
         </li>
 
@@ -84,7 +82,6 @@ const Sidebar = () => {
         </li>
       </ul>
 
-      {/* Display the Search popup if opened */}
       {isSearchOpen && (
         <Search setSearchOpen={setIsSearchOpen} />
       )}

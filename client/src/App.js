@@ -7,7 +7,7 @@ import CompanyDetails from './components/CompanyDetails';
 import Sidebar from './components/Sidebar';
 import Funds from './components/Funds';
 import VC from './components/VC';
-import Startups from './components/Startups'; // Import the Startups component
+import OptionTracker from './components/OptionTracker'; // Yeni Option Tracker
 import './App.css';
 
 function App() {
@@ -20,17 +20,17 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <Sidebar toggleSearch={toggleSearch} /> {/* Pass the toggle function to Sidebar */}
+        <Sidebar toggleSearch={toggleSearch} />
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/company/:symbol" element={<CompanyDetails />} />
             <Route path="/funds" element={<Funds />} />
             <Route path="/vcs" element={<VC />} />
-            <Route path="/startups" element={<Startups />} /> {/* New Startups route */}
+            <Route path="/option-tracker" element={<OptionTracker />} /> {/* Option Tracker rotası */}
           </Routes>
         </div>
-        {isSearchOpen && <Search setSearchOpen={setIsSearchOpen} />} {/* Conditionally render Search */}
+        {isSearchOpen && <Search setSearchOpen={setIsSearchOpen} />}
       </div>
     </Router>
   );
