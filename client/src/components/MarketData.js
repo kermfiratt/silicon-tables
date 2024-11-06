@@ -5,7 +5,7 @@ import './MarketData.css'; // Make sure to create a corresponding CSS file for s
 const MarketData = () => {
   const [marketData, setMarketData] = useState({
     nasdaq: { price: 14500, change: 1.23 }, // Placeholder data for NASDAQ
-    sp500: { price: 4400, change: -0.56 },  // Placeholder data for S&P 500
+    sp500: { price: 4400, change: 0.56 },  // Placeholder data for S&P 500
     dowjones: { price: 34500, change: 0.89 },  // Placeholder data for Dow Jones
     euroDollar: { rate: 1.18, change: 0.02 },  // Placeholder data for Euro/Dollar
     brent: { price: 75.43, change: 1.67 },    // Placeholder data for Brent Petroleum

@@ -1,25 +1,51 @@
 /* src/components/MarketData.css */
 .market-data {
-    font-family: Arial, sans-serif;
-    color: #fff;
-    margin-top: 30px; /* Adjust margin to suit your layout */
-  }
-  
-  .ticker-change {
-    margin-left: 8px;
-    font-weight: bold;
-  }
-  
-  .ticker-change.positive {
-    color: #4caf50; /* Green for positive change */
-  }
-  
-  .ticker-change.negative {
-    color: #f44336; /* Red for negative change */
-  }
-  
-  .strong {
-    font-size: 1.2rem;
-    color: #fff;
-  }
-  
+  font-family: Arial, sans-serif;
+  color: #fff;
+  margin-top: 30px; /* Adjust margin to suit your layout */
+  display: flex;
+  justify-content: space-around;
+  background-color: #1f1f1f;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.market-data-item {
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #333;
+  color: #fff;
+}
+
+.market-data-item .label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.market-data-item .value {
+  display: block;
+  font-size: 1.2rem; /* Consistent font size for values */
+  font-weight: bold;
+}
+
+.ticker-change {
+  margin-left: 8px;
+  font-weight: bold;
+  font-size: 1rem; /* Ensures consistent size for change percentage */
+}
+
+.ticker-change.positive {
+  color: #4caf50; /* Green for positive change */
+}
+
+.ticker-change.negative {
+  color: #f44336; /* Red for negative change */
+}
+
+.strong {
+  font-size: 1.2rem;
+  font-weight: bold; /* Ensures bold style */
+  color: #fff;
+}

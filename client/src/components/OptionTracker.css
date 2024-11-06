@@ -1,71 +1,86 @@
-/* src/components/OptionTracker.css */
 .option-tracker-container {
-    padding: 20px;
-    background-color: #1e1e1e;
-    color: white;
-    border-radius: 8px;
-    margin: 20px;
-    margin-left: 100px; /* Sağdaki Sidebar için boşluk bıraktık */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .option-tracker-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .option-input-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-  
-  .option-input-form input, .option-input-form button {
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-  }
-  
-  .option-input-form input {
-    background-color: #333;
-    color: white;
-    width: 180px;
-  }
-  
-  .option-input-form button {
-    background-color: #4caf50;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .option-input-form button:hover {
-    background-color: #45a049;
-  }
-  
-  .option-tracker-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .option-tracker-table th, .option-tracker-table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #444;
-  }
-  
-  .option-tracker-table th {
-    background-color: #2a2a2a;
-    color: #ccc;
-  }
-  
-  .option-tracker-table td {
-    color: #ddd;
-  }
-  
-  .option-tracker-table td:last-child {
-    font-weight: bold;
-  }
-  
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 8px;
+  margin: 20px;
+  margin-left: 90px; /* Adjust for sidebar width */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.option-tracker-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.option-input-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.input-table {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-spacing: 0 10px;
+}
+
+.input-table td {
+  padding: 8px;
+}
+
+.input-table label {
+  color: #ccc;
+  font-weight: bold;
+}
+
+.option-input-form input {
+  padding: 8px;
+  width: 100%;
+  max-width: 200px;
+  background-color: #333;
+  border: none;
+  border-radius: 4px;
+  color: white;
+}
+
+.option-input-form button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.option-input-form button:hover {
+  background-color: #45a049;
+}
+
+.option-tracker-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.option-tracker-table th, .option-tracker-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+
+.option-tracker-table th {
+  background-color: #2a2a2a;
+  color: #ccc;
+}
+
+.option-tracker-table td {
+  color: #ddd;
+}
+
+.option-tracker-table td:last-child {
+  font-weight: bold;
+}
