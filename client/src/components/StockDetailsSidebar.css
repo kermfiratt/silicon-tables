@@ -38,3 +38,10 @@
 .stock-details-sidebar ul li:hover {
   background-color: #333;
 }
+
+
+.stock-details-sidebar ul li.active {
+  background-color: #4a90e2; /* Active background color */
+  color: white; /* Active text color */
+  font-weight: bold;
+}

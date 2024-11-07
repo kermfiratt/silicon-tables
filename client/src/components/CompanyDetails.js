@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import StockDetailsSidebar from './StockDetailsSidebar'; // İkinci sidebar bileşeni
 import Ownership from './SidebarDetails/Ownership'; // Ownership bileşeni
+import FundOwnership from './SidebarDetails/FundOwnership'; // FundOwnership bileşeni
 import './CompanyDetalis.css';
 
 const CompanyDetails = () => {
@@ -15,6 +16,7 @@ const CompanyDetails = () => {
   const [error, setError] = useState(null);
   const [isStockView, setIsStockView] = useState(false);
   const [isOwnershipView, setIsOwnershipView] = useState(false);
+  const [isFundOwnershipView, setIsFundOwnershipView] = useState(false); // New state for Fund Ownership view
 
   const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -53,6 +55,7 @@ const CompanyDetails = () => {
   const toggleView = (view) => {
     setIsStockView(view === 'stock');
     setIsOwnershipView(view === 'ownership');
+    setIsFundOwnershipView(view === 'fundOwnership');
   };
 
   if (loading) {
@@ -67,17 +70,19 @@ const CompanyDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={`company-details-container ${isStockView || isOwnershipView ? 'sidebar-visible' : ''}`}>
+    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView ? 'sidebar-visible' : ''}`}>
       <div className="company-details">
         <h2>{companyData.name || "Company Name"}</h2>
 
         {isOwnershipView ? (
           <Ownership symbol={symbol} setView={toggleView} />
+        ) : isFundOwnershipView ? (
+          <FundOwnership symbol={symbol} setView={toggleView} />
         ) : (
           <>
             <div className="switch-container">
               <span
-                className={!isStockView && !isOwnershipView ? "switch-option active" : "switch-option"}
+                className={!isStockView && !isOwnershipView && !isFundOwnershipView ? "switch-option active" : "switch-option"}
                 onClick={() => toggleView('general')}
               >
                 General
@@ -209,8 +214,13 @@ const CompanyDetails = () => {
         )}
       </div>
 
-      {(isStockView || isOwnershipView) && (
-        <StockDetailsSidebar symbol={symbol} setOwnershipView={() => toggleView('ownership')} activeSection={isOwnershipView ? 'ownership' : ''} />
+      {(isStockView || isOwnershipView || isFundOwnershipView) && (
+        <StockDetailsSidebar
+          symbol={symbol}
+          setOwnershipView={() => toggleView('ownership')}
+          setFundOwnershipView={() => toggleView('fundOwnership')}
+          activeSection={isOwnershipView ? 'ownership' : isFundOwnershipView ? 'fundOwnership' : ''}
+        />
       )}
     </div>
   );
