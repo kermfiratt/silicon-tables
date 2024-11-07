@@ -51,13 +51,9 @@ const CompanyDetails = () => {
     fetchCompanyData();
   }, [symbol, API_KEY]);
 
-  const toggleView = () => {
-    setIsStockView((prev) => !prev);
-    setIsOwnershipView(false); // Reset ownership view when toggling
-  };
-
-  const showOwnershipView = () => {
-    setIsOwnershipView(true);
+  const toggleView = (view) => {
+    setIsStockView(view === 'stock');
+    setIsOwnershipView(view === 'ownership');
   };
 
   if (loading) {
@@ -77,13 +73,13 @@ const CompanyDetails = () => {
         <h2>{companyData.name || "Company Name"}</h2>
 
         {isOwnershipView ? (
-          <Ownership symbol={symbol} />
+          <Ownership symbol={symbol} setView={toggleView} />
         ) : (
           <>
             {/* Toggle switch for General and Stock view */}
             <div className="switch-container">
-              <span className={!isStockView ? "switch-option active" : "switch-option"} onClick={() => { toggleView(); setIsOwnershipView(false); }}>General</span>
-              <span className={isStockView ? "switch-option active" : "switch-option"} onClick={() => toggleView(true)}>Stock</span>
+              <span className={!isStockView ? "switch-option active" : "switch-option"} onClick={() => toggleView('general')}>General</span>
+              <span className={isStockView ? "switch-option active" : "switch-option"} onClick={() => toggleView('stock')}>Stock</span>
             </div>
 
             <div className="grid-container">
@@ -206,8 +202,7 @@ const CompanyDetails = () => {
       </div>
 
       {/* StockDetailsSidebar component only displays in Stock view */}
-      {isStockView && <StockDetailsSidebar symbol={symbol} setOwnershipView={showOwnershipView} />}
-      
+      {isStockView && <StockDetailsSidebar symbol={symbol} setOwnershipView={() => toggleView('ownership')} />}
     </div>
   );
 };

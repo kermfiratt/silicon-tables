@@ -26,7 +26,7 @@ const Ownership = ({ symbol, setView }) => {
 
   return (
     <div className="ownership-container">
-      {/* Switch butonları */}
+      {/* General ve Stock butonları */}
       <div className="ownership-switch-container">
         <span className="switch-option" onClick={() => setView("general")}>General</span>
         <span className="switch-option" onClick={() => setView("stock")}>Stock</span>
