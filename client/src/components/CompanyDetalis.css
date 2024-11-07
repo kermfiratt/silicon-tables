@@ -7,8 +7,8 @@
   margin-left: 80px; /* Ana menü genişliği */
 }
 
-.company-details-container.stock-view .company-details {
-  margin-left: 240px; /* İkinci yan menü genişliği kadar sağdan boşluk */
+.company-details-container.sidebar-visible .company-details {
+  margin-left: 240px; /* İkinci yan menü genişliğini azaltın */
 }
 
 .company-details {
@@ -73,6 +73,12 @@
 .switch-option.active {
   background-color: #4a90e2;
   color: #ffffff;
+}
+
+/* Ownership and stock active styling */
+.stock-details-sidebar ul li.active {
+  background-color: #4a90e2;
+  color: #fff;
 }
 
 /* Grid layout for blocks */

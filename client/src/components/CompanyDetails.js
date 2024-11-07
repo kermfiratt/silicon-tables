@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import StockDetailsSidebar from './StockDetailsSidebar'; // Second sidebar component
-import Ownership from './SidebarDetails/Ownership'; // Ownership component
+import StockDetailsSidebar from './StockDetailsSidebar'; // İkinci sidebar bileşeni
+import Ownership from './SidebarDetails/Ownership'; // Ownership bileşeni
 import './CompanyDetalis.css';
 
 const CompanyDetails = () => {
@@ -11,14 +11,13 @@ const CompanyDetails = () => {
   const [companyData, setCompanyData] = useState({});
   const [news, setNews] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isStockView, setIsStockView] = useState(false); // Stock view toggle
-  const [isOwnershipView, setIsOwnershipView] = useState(false); // Ownership view toggle
+  const [isStockView, setIsStockView] = useState(false);
+  const [isOwnershipView, setIsOwnershipView] = useState(false);
 
   const API_KEY = process.env.REACT_APP_API_KEY;
 
-  // Save the latest company symbol in localStorage for later use
   useEffect(() => {
     if (symbol) {
       localStorage.setItem('latestCompany', symbol);
@@ -68,7 +67,7 @@ const CompanyDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={`company-details-container ${isStockView ? 'stock-view' : ''}`}>
+    <div className={`company-details-container ${isStockView || isOwnershipView ? 'sidebar-visible' : ''}`}>
       <div className="company-details">
         <h2>{companyData.name || "Company Name"}</h2>
 
@@ -76,10 +75,19 @@ const CompanyDetails = () => {
           <Ownership symbol={symbol} setView={toggleView} />
         ) : (
           <>
-            {/* Toggle switch for General and Stock view */}
             <div className="switch-container">
-              <span className={!isStockView ? "switch-option active" : "switch-option"} onClick={() => toggleView('general')}>General</span>
-              <span className={isStockView ? "switch-option active" : "switch-option"} onClick={() => toggleView('stock')}>Stock</span>
+              <span
+                className={!isStockView && !isOwnershipView ? "switch-option active" : "switch-option"}
+                onClick={() => toggleView('general')}
+              >
+                General
+              </span>
+              <span
+                className={isStockView ? "switch-option active" : "switch-option"}
+                onClick={() => toggleView('stock')}
+              >
+                Stock
+              </span>
             </div>
 
             <div className="grid-container">
@@ -201,8 +209,9 @@ const CompanyDetails = () => {
         )}
       </div>
 
-      {/* StockDetailsSidebar component only displays in Stock view */}
-      {isStockView && <StockDetailsSidebar symbol={symbol} setOwnershipView={() => toggleView('ownership')} />}
+      {(isStockView || isOwnershipView) && (
+        <StockDetailsSidebar symbol={symbol} setOwnershipView={() => toggleView('ownership')} activeSection={isOwnershipView ? 'ownership' : ''} />
+      )}
     </div>
   );
 };
