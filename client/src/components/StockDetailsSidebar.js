@@ -2,10 +2,20 @@
 import React from 'react';
 import './StockDetailsSidebar.css';
 
-const StockDetailsSidebar = ({ symbol, setOwnershipView, setFundOwnershipView, setFinancialsView, setRevenueBreakdownView, setPriceMetricsView, activeSection }) => {
+const StockDetailsSidebar = ({
+  symbol,
+  setOwnershipView,
+  setFundOwnershipView,
+  setFinancialsView,
+  setRevenueBreakdownView,
+  setPriceMetricsView,
+  setHistoricalMarketCapView,
+  setPeersView,
+  activeSection
+}) => {
   return (
     <div className="stock-details-sidebar">
-      <h2>Şirket İsmi</h2>
+      <h2>{symbol || "Şirket İsmi"}</h2>
       <ul>
         <li
           onClick={setOwnershipView}
@@ -38,11 +48,13 @@ const StockDetailsSidebar = ({ symbol, setOwnershipView, setFundOwnershipView, s
           Price Metrics
         </li>
         <li
+          onClick={setHistoricalMarketCapView}
           className={activeSection === 'historicalMarketCap' ? 'active' : ''}
         >
           Historical Market Cap
         </li>
         <li
+          onClick={setPeersView}
           className={activeSection === 'peers' ? 'active' : ''}
         >
           Peers

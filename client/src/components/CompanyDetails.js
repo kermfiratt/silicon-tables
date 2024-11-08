@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import StockDetailsSidebar from './StockDetailsSidebar'; // İkinci sidebar bileşeni
-import Ownership from './SidebarDetails/Ownership'; // Ownership bileşeni
-import FundOwnership from './SidebarDetails/FundOwnership'; // FundOwnership bileşeni
-import Financials from './SidebarDetails/Financials'; // Financials bileşeni
-import RevenueBreakdown from './SidebarDetails/RevenueBreakdown'; // RevenueBreakdown bileşeni
-import PriceMetrics from './SidebarDetails/PriceMetrics'; // PriceMetrics bileşeni
+import StockDetailsSidebar from './StockDetailsSidebar'; // Second sidebar component
+import Ownership from './SidebarDetails/Ownership'; // Ownership component
+import FundOwnership from './SidebarDetails/FundOwnership'; // FundOwnership component
+import Financials from './SidebarDetails/Financials'; // Financials component
+import RevenueBreakdown from './SidebarDetails/RevenueBreakdown'; // RevenueBreakdown component
+import PriceMetrics from './SidebarDetails/PriceMetrics'; // PriceMetrics component
+import HistoricalMarketCap from './SidebarDetails/HistoricalMarketCap'; // HistoricalMarketCap component
+import Peers from './SidebarDetails/Peers'; // Peers component
 import './CompanyDetalis.css';
 
 const CompanyDetails = () => {
@@ -23,6 +25,8 @@ const CompanyDetails = () => {
   const [isFinancialsView, setIsFinancialsView] = useState(false);
   const [isRevenueBreakdownView, setIsRevenueBreakdownView] = useState(false);
   const [isPriceMetricsView, setIsPriceMetricsView] = useState(false);
+  const [isHistoricalMarketCapView, setIsHistoricalMarketCapView] = useState(false);
+  const [isPeersView, setIsPeersView] = useState(false); // New state for Peers view
 
   const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -65,6 +69,8 @@ const CompanyDetails = () => {
     setIsFinancialsView(view === 'financials');
     setIsRevenueBreakdownView(view === 'revenueBreakdown');
     setIsPriceMetricsView(view === 'priceMetrics');
+    setIsHistoricalMarketCapView(view === 'historicalMarketCap');
+    setIsPeersView(view === 'peers');
   };
 
   if (loading) {
@@ -79,7 +85,7 @@ const CompanyDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView ? 'sidebar-visible' : ''}`}>
+    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView ? 'sidebar-visible' : ''}`}>
       <div className="company-details">
         <h2>{companyData.name || "Company Name"}</h2>
 
@@ -93,11 +99,15 @@ const CompanyDetails = () => {
           <RevenueBreakdown symbol={symbol} setView={toggleView} />
         ) : isPriceMetricsView ? (
           <PriceMetrics symbol={symbol} setView={toggleView} />
+        ) : isHistoricalMarketCapView ? (
+          <HistoricalMarketCap symbol={symbol} setView={toggleView} />
+        ) : isPeersView ? (
+          <Peers symbol={symbol} setView={toggleView} />
         ) : (
           <>
             <div className="switch-container">
               <span
-                className={!isStockView && !isOwnershipView && !isFundOwnershipView && !isFinancialsView && !isRevenueBreakdownView && !isPriceMetricsView ? "switch-option active" : "switch-option"}
+                className={!isStockView && !isOwnershipView && !isFundOwnershipView && !isFinancialsView && !isRevenueBreakdownView && !isPriceMetricsView && !isHistoricalMarketCapView && !isPeersView ? "switch-option active" : "switch-option"}
                 onClick={() => toggleView('general')}
               >
                 General
@@ -229,7 +239,7 @@ const CompanyDetails = () => {
         )}
       </div>
 
-      {(isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView) && (
+      {(isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView) && (
         <StockDetailsSidebar
           symbol={symbol}
           setOwnershipView={() => toggleView('ownership')}
@@ -237,12 +247,16 @@ const CompanyDetails = () => {
           setFinancialsView={() => toggleView('financials')}
           setRevenueBreakdownView={() => toggleView('revenueBreakdown')}
           setPriceMetricsView={() => toggleView('priceMetrics')}
+          setHistoricalMarketCapView={() => toggleView('historicalMarketCap')}
+          setPeersView={() => toggleView('peers')}
           activeSection={
             isOwnershipView ? 'ownership' :
             isFundOwnershipView ? 'fundOwnership' :
             isFinancialsView ? 'financials' :
             isRevenueBreakdownView ? 'revenueBreakdown' :
-            isPriceMetricsView ? 'priceMetrics' : ''
+            isPriceMetricsView ? 'priceMetrics' :
+            isHistoricalMarketCapView ? 'historicalMarketCap' :
+            isPeersView ? 'peers' : ''
           }
         />
       )}

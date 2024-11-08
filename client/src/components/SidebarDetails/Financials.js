@@ -1,9 +1,9 @@
 // src/components/SidebarDetails/Financials.js
 import React, { useEffect, useRef } from 'react';
-import { Chart, BarElement, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js';
+import { Chart, BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js';
 import './Financials.css';
 
-Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip);
 
 const Financials = ({ symbol, setView }) => {
   const chartRef = useRef(null);
@@ -12,13 +12,13 @@ const Financials = ({ symbol, setView }) => {
   useEffect(() => {
     const renderChart = () => {
       if (chartRef.current) {
-        chartRef.current.destroy(); // Destroy the previous chart instance
+        chartRef.current.destroy();
       }
 
       chartRef.current = new Chart(canvasRef.current, {
         type: 'bar',
         data: {
-          labels: ['2023/Q1', '2023/Q2', '2023/Q3', '2023/Q4'], // Example labels
+          labels: ['2023/Q1', '2023/Q2', '2023/Q3', '2023/Q4'],
           datasets: [
             {
               label: 'Quarterly Sales',
@@ -61,7 +61,6 @@ const Financials = ({ symbol, setView }) => {
 
     renderChart();
 
-    // Clean up the chart on component unmount
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
@@ -70,14 +69,15 @@ const Financials = ({ symbol, setView }) => {
   }, [symbol]);
 
   return (
-    <div className="financials-container">
-      <div className="financials-switch-container">
-        <span className="switch-option" onClick={() => setView('general')}>General</span>
-        <span className="switch-option" onClick={() => setView('stock')}>Stock</span>
+    <div className="financials-block">
+
+<div className="switch-container">
+        <button onClick={() => setView('general')} className="switch-option">General</button>
+        <button onClick={() => setView('stock')} className="switch-option">Stock</button>
       </div>
-      
       <h3>Financial Data</h3>
       <canvas ref={canvasRef}></canvas>
+      
     </div>
   );
 };

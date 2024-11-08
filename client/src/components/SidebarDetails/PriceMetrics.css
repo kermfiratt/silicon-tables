@@ -6,7 +6,7 @@
     color: white;
     border-radius: 8px;
     margin-top: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   }
   
   .price-metrics-container h3 {

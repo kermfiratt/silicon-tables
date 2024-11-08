@@ -1,5 +1,5 @@
-/* src/components/SidebarDetails/Financials.css */
-.financials-block {
+/* src/components/SidebarDetails/HistoricalMarketCap.css */
+.historical-market-cap-block {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
@@ -7,7 +7,7 @@
   margin-bottom: 20px;
 }
 
-.financials-block h3 {
+.historical-market-cap-block h3 {
   font-size: 24px;
   color: #ff7b79;
   margin-bottom: 15px;
@@ -32,11 +32,5 @@
 
 .switch-option:hover {
   background-color: #555;
-  color: white;
-}
-
-
-.switch-option.active {
-  background-color: #4a90e2;
   color: white;
 }
