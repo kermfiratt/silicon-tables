@@ -5,6 +5,9 @@ import axios from 'axios';
 import StockDetailsSidebar from './StockDetailsSidebar'; // İkinci sidebar bileşeni
 import Ownership from './SidebarDetails/Ownership'; // Ownership bileşeni
 import FundOwnership from './SidebarDetails/FundOwnership'; // FundOwnership bileşeni
+import Financials from './SidebarDetails/Financials'; // Financials bileşeni
+import RevenueBreakdown from './SidebarDetails/RevenueBreakdown'; // RevenueBreakdown bileşeni
+import PriceMetrics from './SidebarDetails/PriceMetrics'; // PriceMetrics bileşeni
 import './CompanyDetalis.css';
 
 const CompanyDetails = () => {
@@ -16,7 +19,10 @@ const CompanyDetails = () => {
   const [error, setError] = useState(null);
   const [isStockView, setIsStockView] = useState(false);
   const [isOwnershipView, setIsOwnershipView] = useState(false);
-  const [isFundOwnershipView, setIsFundOwnershipView] = useState(false); // New state for Fund Ownership view
+  const [isFundOwnershipView, setIsFundOwnershipView] = useState(false);
+  const [isFinancialsView, setIsFinancialsView] = useState(false);
+  const [isRevenueBreakdownView, setIsRevenueBreakdownView] = useState(false);
+  const [isPriceMetricsView, setIsPriceMetricsView] = useState(false);
 
   const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -56,6 +62,9 @@ const CompanyDetails = () => {
     setIsStockView(view === 'stock');
     setIsOwnershipView(view === 'ownership');
     setIsFundOwnershipView(view === 'fundOwnership');
+    setIsFinancialsView(view === 'financials');
+    setIsRevenueBreakdownView(view === 'revenueBreakdown');
+    setIsPriceMetricsView(view === 'priceMetrics');
   };
 
   if (loading) {
@@ -70,7 +79,7 @@ const CompanyDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView ? 'sidebar-visible' : ''}`}>
+    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView ? 'sidebar-visible' : ''}`}>
       <div className="company-details">
         <h2>{companyData.name || "Company Name"}</h2>
 
@@ -78,11 +87,17 @@ const CompanyDetails = () => {
           <Ownership symbol={symbol} setView={toggleView} />
         ) : isFundOwnershipView ? (
           <FundOwnership symbol={symbol} setView={toggleView} />
+        ) : isFinancialsView ? (
+          <Financials symbol={symbol} setView={toggleView} />
+        ) : isRevenueBreakdownView ? (
+          <RevenueBreakdown symbol={symbol} setView={toggleView} />
+        ) : isPriceMetricsView ? (
+          <PriceMetrics symbol={symbol} setView={toggleView} />
         ) : (
           <>
             <div className="switch-container">
               <span
-                className={!isStockView && !isOwnershipView && !isFundOwnershipView ? "switch-option active" : "switch-option"}
+                className={!isStockView && !isOwnershipView && !isFundOwnershipView && !isFinancialsView && !isRevenueBreakdownView && !isPriceMetricsView ? "switch-option active" : "switch-option"}
                 onClick={() => toggleView('general')}
               >
                 General
@@ -214,12 +229,21 @@ const CompanyDetails = () => {
         )}
       </div>
 
-      {(isStockView || isOwnershipView || isFundOwnershipView) && (
+      {(isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView) && (
         <StockDetailsSidebar
           symbol={symbol}
           setOwnershipView={() => toggleView('ownership')}
           setFundOwnershipView={() => toggleView('fundOwnership')}
-          activeSection={isOwnershipView ? 'ownership' : isFundOwnershipView ? 'fundOwnership' : ''}
+          setFinancialsView={() => toggleView('financials')}
+          setRevenueBreakdownView={() => toggleView('revenueBreakdown')}
+          setPriceMetricsView={() => toggleView('priceMetrics')}
+          activeSection={
+            isOwnershipView ? 'ownership' :
+            isFundOwnershipView ? 'fundOwnership' :
+            isFinancialsView ? 'financials' :
+            isRevenueBreakdownView ? 'revenueBreakdown' :
+            isPriceMetricsView ? 'priceMetrics' : ''
+          }
         />
       )}
     </div>

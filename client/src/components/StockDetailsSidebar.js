@@ -2,7 +2,7 @@
 import React from 'react';
 import './StockDetailsSidebar.css';
 
-const StockDetailsSidebar = ({ symbol, setOwnershipView, setFundOwnershipView, activeSection }) => {
+const StockDetailsSidebar = ({ symbol, setOwnershipView, setFundOwnershipView, setFinancialsView, setRevenueBreakdownView, setPriceMetricsView, activeSection }) => {
   return (
     <div className="stock-details-sidebar">
       <h2>Şirket İsmi</h2>
@@ -19,11 +19,34 @@ const StockDetailsSidebar = ({ symbol, setOwnershipView, setFundOwnershipView, a
         >
           Fund Ownership
         </li>
-        <li>Financials</li>
-        <li>Revenue Breakdown</li>
-        <li>Price Metrics</li>
-        <li>Historical Market Cap</li>
-        <li>Peers</li>
+        <li
+          onClick={setFinancialsView}
+          className={activeSection === 'financials' ? 'active' : ''}
+        >
+          Financials
+        </li>
+        <li
+          onClick={setRevenueBreakdownView}
+          className={activeSection === 'revenueBreakdown' ? 'active' : ''}
+        >
+          Revenue Breakdown
+        </li>
+        <li
+          onClick={setPriceMetricsView}
+          className={activeSection === 'priceMetrics' ? 'active' : ''}
+        >
+          Price Metrics
+        </li>
+        <li
+          className={activeSection === 'historicalMarketCap' ? 'active' : ''}
+        >
+          Historical Market Cap
+        </li>
+        <li
+          className={activeSection === 'peers' ? 'active' : ''}
+        >
+          Peers
+        </li>
       </ul>
     </div>
   );
