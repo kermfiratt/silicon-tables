@@ -1,23 +1,22 @@
 /* src/components/Watchlist.css */
-
 .watchlist-container {
   width: 250px;
   background-color: #1f1f1f;
   color: #fff;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Blok efekt için gölge */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
   position: fixed;
-  top: 20px; /* Üstten biraz boşluk */
-  bottom: 20px; /* Alttan biraz boşluk */
-  right: 20px; /* Sayfanın sağ tarafında kalmasını sağlar */
-  overflow-y: auto; /* İçerik sığmazsa kaydırma sağlar */
+  top: 20px;
+  bottom: 20px;
+  right: 20px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 40px); /* Üst ve alt boşlukla birlikte tam ekran boyu */
-  z-index: 1; /* Lower than search popup */
-  
+  max-height: calc(100vh - 40px);
+  z-index: 0; /* Arka planda kalması için 0 yapıldı */
 }
+
 
 
 

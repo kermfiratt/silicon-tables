@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* Ensure it is very high to overlay all other content */
+  z-index: 99999; /* En üstte olması için artırıldı */
 }
 
 .search-popup-content {
