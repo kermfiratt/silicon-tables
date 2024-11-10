@@ -8,6 +8,7 @@ import Sidebar from './components/Sidebar';
 import Funds from './components/Funds';
 import VC from './components/VC';
 import OptionTracker from './components/OptionTracker'; // Yeni Option Tracker
+import Portfolio from './components/Portfolio'; // Yeni Portfolio bileşeni
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/funds" element={<Funds />} />
             <Route path="/vcs" element={<VC />} />
             <Route path="/option-tracker" element={<OptionTracker />} /> {/* Option Tracker rotası */}
+            <Route path="/portfolio" element={<Portfolio />} /> {/* Portfolio rotası */}
           </Routes>
         </div>
         {isSearchOpen && <Search setSearchOpen={setIsSearchOpen} />}

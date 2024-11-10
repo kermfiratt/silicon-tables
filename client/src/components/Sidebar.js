@@ -1,7 +1,7 @@
 // src/components/Sidebar.js
 import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaChartLine } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaChartLine, FaWallet } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
@@ -70,10 +70,16 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        {/* Yeni Option Tracker butonu */}
         <li>
           <Link to="/option-tracker" className="sidebar-item">
             <FaChartLine className="icon" /> Option Tracker
+          </Link>
+        </li>
+
+        {/* Yeni Portföy butonu */}
+        <li>
+          <Link to="/portfolio" className="sidebar-item">
+            <FaWallet className="icon" /> Portfolio
           </Link>
         </li>
 
