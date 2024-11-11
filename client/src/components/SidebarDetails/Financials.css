@@ -40,3 +40,19 @@
   background-color: #4a90e2;
   color: white;
 }
+
+/* src/components/SidebarDetails/Financials.css */
+
+.financials-container {
+  padding: 20px;
+  background-color: #1f1f1f;
+  color: #fff;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.chart-container {
+  margin-top: 20px;
+}
+

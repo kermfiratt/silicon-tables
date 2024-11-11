@@ -1,83 +1,123 @@
 // src/components/SidebarDetails/Financials.js
-import React, { useEffect, useRef } from 'react';
-import { Chart, BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js';
-import './Financials.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip);
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Financials = ({ symbol, setView }) => {
-  const chartRef = useRef(null);
-  const canvasRef = useRef(null);
+const Financials = ({ symbol }) => {
+  const [financialData, setFinancialData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [companyName, setCompanyName] = useState('');
+
+  // Hardcoded CIKs for common companies
+  const companyCIKs = {
+    AAPL: '0000320193',
+    MSFT: '0000789019',
+    // Add other companies as needed
+  };
+
+  const fetchCIK = (symbol) => {
+    return companyCIKs[symbol.toUpperCase()] || null;
+  };
 
   useEffect(() => {
-    const renderChart = () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
-      }
+    const fetchFinancialData = async () => {
+      try {
+        const cik = fetchCIK(symbol);
+        if (!cik) {
+          console.error('CIK not found for symbol:', symbol);
+          setLoading(false);
+          return;
+        }
 
-      chartRef.current = new Chart(canvasRef.current, {
-        type: 'bar',
-        data: {
-          labels: ['2023/Q1', '2023/Q2', '2023/Q3', '2023/Q4'],
-          datasets: [
-            {
-              label: 'Quarterly Sales',
-              data: [500, 400, 300, 600], // Placeholder data
-              backgroundColor: '#4a90e2',
-            },
-            {
-              label: 'Quarterly EBITDA',
-              data: [200, 150, 250, 100], // Placeholder data
-              backgroundColor: '#7cb342',
-            },
-            {
-              label: 'Quarterly Net Income',
-              data: [300, 100, -100, -200], // Placeholder data
-              backgroundColor: ['#4a90e2', '#4a90e2', '#f44336', '#f44336'],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              type: 'category',
-              title: {
-                display: true,
-                text: 'Quarters',
-              },
-            },
-            y: {
-              type: 'linear',
-              title: {
-                display: true,
-                text: 'Amount (mn)',
-              },
-            },
-          },
-        },
-      });
-    };
+        const response = await axios.get(`http://localhost:7600/api/financials/${cik}`);
 
-    renderChart();
+        const data = response.data;
 
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
+        // Parse financial data for key metrics
+        const revenue = data.facts['us-gaap']['Revenues']?.units['USD'] || [];
+        const grossProfit = data.facts['us-gaap']['GrossProfit']?.units['USD'] || [];
+        const netIncome = data.facts['us-gaap']['NetIncomeLoss']?.units['USD'] || [];
+        const assets = data.facts['us-gaap']['Assets']?.units['USD'] || [];
+
+        // Sort the data by date in descending order and take only the latest 4 quarters
+        const quarters = revenue
+          .sort((a, b) => new Date(b.end) - new Date(a.end))
+          .slice(0, 4)
+          .map(item => ({
+            date: item.end,
+            revenue: item.val,
+            grossProfit: grossProfit.find(gp => gp.end === item.end)?.val || 0,
+            netIncome: netIncome.find(ni => ni.end === item.end)?.val || 0,
+            assets: assets.find(a => a.end === item.end)?.val || 0,
+          }));
+
+        setFinancialData(quarters);
+        setCompanyName(data.entityName || symbol); // Set company name if available
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching financial data:', error);
+        setLoading(false);
       }
     };
+
+    fetchFinancialData();
   }, [symbol]);
 
-  return (
-    <div className="financials-block">
+  const chartData = financialData.length
+    ? {
+        labels: financialData.map(item => new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })),
+        datasets: [
+          {
+            label: 'Revenue',
+            data: financialData.map(item => item.revenue),
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          },
+          {
+            label: 'Gross Profit',
+            data: financialData.map(item => item.grossProfit),
+            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+          },
+          {
+            label: 'Net Income',
+            data: financialData.map(item => item.netIncome),
+            backgroundColor: 'rgba(255, 159, 64, 0.6)',
+          },
+          {
+            label: 'Assets',
+            data: financialData.map(item => item.assets),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+        ],
+      }
+    : {};
 
-<div className="switch-container">
-        <button onClick={() => setView('general')} className="switch-option">General</button>
-        <button onClick={() => setView('stock')} className="switch-option">Stock</button>
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: `${companyName} Quarterly Financial Data` },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Value in USD' },
+      },
+    },
+  };
+
+  if (loading) return <p>Loading financial data...</p>;
+
+  if (!financialData.length) return <p>No financial data available for this company.</p>;
+
+  return (
+    <div className="financials-container">
+      <h3>Quarterly Financial Overview for {companyName}</h3>
+      <div className="chart-container">
+        <Bar data={chartData} options={options} />
       </div>
-      <h3>Financial Data</h3>
-      <canvas ref={canvasRef}></canvas>
-      
     </div>
   );
 };
