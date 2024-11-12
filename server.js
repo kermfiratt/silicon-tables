@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -11,38 +12,27 @@ app.get('/', (req, res) => {
     res.send('Silicon Numbers API running');
 });
 
-// New endpoint to retrieve CIK based on symbol
+// New endpoint to retrieve the CIK based on the symbol
 app.get('/api/get-cik/:symbol', async (req, res) => {
     const { symbol } = req.params;
     try {
-        const response = await axios.get(`https://data.sec.gov/submissions/CIK${symbol}.json`, {
+        // Replace this with the actual endpoint for retrieving the CIK
+        const response = await axios.get(`https://api.example.com/get-cik?symbol=${symbol}`, {
             headers: {
-                'User-Agent': 'Your App Name (your-email@example.com)',
-                'Accept-Encoding': 'gzip, deflate, br',
-            },
+                'User-Agent': 'YourAppName (your-email@example.com)',
+                'Accept-Encoding': 'gzip, deflate, br'
+            }
         });
-        const cik = response.data.cik;
-        res.json({ cik });
-    } catch (error) {
-        console.error('Error fetching CIK:', error);
-        res.status(500).json({ error: 'Failed to fetch CIK' });
-    }
-});
 
-// Endpoint to fetch financial data based on CIK
-app.get('/api/financials/:cik', async (req, res) => {
-    const { cik } = req.params;
-    try {
-        const response = await axios.get(`https://data.sec.gov/api/xbrl/companyfacts/CIK${cik}.json`, {
-            headers: {
-                'User-Agent': 'Your App Name (your-email@example.com)',
-                'Accept-Encoding': 'gzip, deflate, br',
-            },
-        });
-        res.json(response.data);
+        if (response.data && response.data.cik) {
+            res.json({ cik: response.data.cik });
+        } else {
+            console.error(`CIK not found in API response for symbol: ${symbol}`);
+            res.status(404).json({ error: 'CIK not found' });
+        }
     } catch (error) {
-        console.error('Error fetching financial data:', error);
-        res.status(500).json({ error: 'Failed to fetch financial data' });
+        console.error('Error fetching CIK:', error.message);
+        res.status(500).json({ error: 'Failed to retrieve CIK' });
     }
 });
 
