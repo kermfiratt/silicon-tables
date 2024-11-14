@@ -12,20 +12,21 @@ const Financials = ({ symbol }) => {
   const [loading, setLoading] = useState(true);
   const [companyName, setCompanyName] = useState('');
 
-  // Hardcoded CIKs for testing
-  const companyCIKs = {
-    AAPL: '0000320193', // Apple CIK
-    MSFT: '0000789019', // Microsoft CIK
-  };
-
-  const fetchCIK = (symbol) => {
-    return companyCIKs[symbol.toUpperCase()] || null;
+  // Fetch CIK dynamically based on symbol
+  const fetchCIK = async (symbol) => {
+    try {
+      const response = await axios.get(`http://localhost:7600/api/get-cik/${symbol}`);
+      return response.data.cik;
+    } catch (error) {
+      console.error('Error fetching CIK:', error.message);
+      return null;
+    }
   };
 
   useEffect(() => {
     const fetchFinancialData = async () => {
       try {
-        const cik = fetchCIK(symbol);
+        const cik = await fetchCIK(symbol);
         if (!cik) {
           console.error('CIK not found for symbol:', symbol);
           setLoading(false);
@@ -45,14 +46,13 @@ const Financials = ({ symbol }) => {
               value: item.val,
             }));
 
-        const revenue = getLastFourQuarters(data.facts['us-gaap']['Revenues']?.units['USD'] || []);
-        const grossProfit = getLastFourQuarters(data.facts['us-gaap']['GrossProfit']?.units['USD'] || []);
-        const netIncome = getLastFourQuarters(data.facts['us-gaap']['NetIncomeLoss']?.units['USD'] || []);
-        const assets = getLastFourQuarters(data.facts['us-gaap']['Assets']?.units['USD'] || []);
-        const liabilities = getLastFourQuarters(data.facts['us-gaap']['Liabilities']?.units['USD'] || []);
-        const equity = getLastFourQuarters(data.facts['us-gaap']['StockholdersEquity']?.units['USD'] || []);
+        const revenue = getLastFourQuarters(data.revenue);
+        const grossProfit = getLastFourQuarters(data.grossProfit);
+        const netIncome = getLastFourQuarters(data.netIncome);
+        const assets = getLastFourQuarters(data.assets);
+        const liabilities = getLastFourQuarters(data.liabilities);
+        const equity = getLastFourQuarters(data.equity);
 
-        // Combine data into an array of objects for each quarter
         const quarters = revenue.map((rev, index) => ({
           date: rev.date,
           revenue: rev.value,
@@ -69,7 +69,7 @@ const Financials = ({ symbol }) => {
         setCompanyName(data.entityName || symbol);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching financial data:', error);
+        console.error('Error fetching financial data:', error.message);
         setLoading(false);
       }
     };
@@ -78,14 +78,11 @@ const Financials = ({ symbol }) => {
   }, [symbol]);
 
   if (loading) return <p>Loading financial data...</p>;
-
   if (!financialData.length) return <p>No financial data available for this company.</p>;
 
   return (
     <div className="financials-container">
       <h3>Quarterly Financial Overview for {companyName}</h3>
-
-      {/* Summary Income Statement */}
       <div className="financials-block">
         <h4>Summary Income Statement</h4>
         <table className="financials-table">
@@ -131,7 +128,6 @@ const Financials = ({ symbol }) => {
         </table>
       </div>
 
-      {/* Summary Balance Sheet */}
       <div className="financials-block">
         <h4>Summary Balance Sheet</h4>
         <table className="financials-table">
@@ -166,27 +162,14 @@ const Financials = ({ symbol }) => {
         </table>
       </div>
 
-      {/* Charts */}
       <div className="chart-container">
         <Bar
           data={{
             labels: financialData.map((item) => new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })),
             datasets: [
-              {
-                label: 'Sales',
-                data: financialData.map((item) => item.revenue),
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              },
-              {
-                label: 'Gross Profit',
-                data: financialData.map((item) => item.grossProfit),
-                backgroundColor: 'rgba(153, 102, 255, 0.6)',
-              },
-              {
-                label: 'Net Income',
-                data: financialData.map((item) => item.netIncome),
-                backgroundColor: 'rgba(255, 159, 64, 0.6)',
-              },
+              { label: 'Sales', data: financialData.map((item) => item.revenue), backgroundColor: 'rgba(75, 192, 192, 0.6)' },
+              { label: 'Gross Profit', data: financialData.map((item) => item.grossProfit), backgroundColor: 'rgba(153, 102, 255, 0.6)' },
+              { label: 'Net Income', data: financialData.map((item) => item.netIncome), backgroundColor: 'rgba(255, 159, 64, 0.6)' },
             ],
           }}
           options={{
