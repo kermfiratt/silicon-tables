@@ -1,0 +1,39 @@
+.stock-card {
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  padding: 15px;
+  position: relative;
+  width: 200px;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.stock-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.delete-button {
+  background-color: transparent;
+  color: #ff4d4d;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.stock-card:hover .delete-button {
+  visibility: visible;
+}
+
+.card-body {
+  margin-top: 10px;
+  font-size: 14px;
+}

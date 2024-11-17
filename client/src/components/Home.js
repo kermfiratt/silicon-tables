@@ -1,5 +1,4 @@
-// src/components/Home.js
-import React from 'react';
+import React, { useState } from 'react';
 import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
 import ProductHuntTop5 from './ProductHuntTop5';
@@ -10,6 +9,7 @@ import RecentVCFunds from './RecentVCFunds';
 import HitStartupOfTheWeek from './HitStartupOfTheWeek';
 import Ticker from './Ticker';
 import Watchlist from './Watchlist';
+import StockCardContainer from './StockCardContainer';
 import './Home.css';
 
 const Home = () => {
@@ -20,6 +20,8 @@ const Home = () => {
         <MarketData />
       </div>
       
+      <StockCardContainer /> {/* Added Stock Card feature */}
+
       <div className="content-area">
         <ProductHuntTop5 />
         
@@ -40,7 +42,7 @@ const Home = () => {
         <Ticker />
       </div>
 
-      <Watchlist /> {/* Sağ tarafa Watchlist ekledik */}
+      <Watchlist />
     </div>
   );
 };

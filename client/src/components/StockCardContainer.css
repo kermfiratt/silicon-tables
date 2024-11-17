@@ -1,0 +1,60 @@
+.stock-card-container {
+  padding: 20px;
+  background-color: #1f1f1f;
+  border: 2px dashed #333;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.add-stock-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.add-stock-button {
+  background-color: #0047ab;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.stock-search {
+  display: flex;
+  gap: 10px;
+}
+
+.stock-search input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+.stock-search button {
+  background-color: #0047ab;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.stock-card-description {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin: 20px 0;
+}
+
+.stock-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
