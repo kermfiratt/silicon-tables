@@ -3,7 +3,7 @@
   background-color: #1f1f1f;
   border: 2px dashed #333;
   border-radius: 10px;
-  margin: 20px 0;
+  margin: 30px 0px -10px 0px;
 }
 
 .add-stock-section {
@@ -43,20 +43,6 @@
   width: 200px;
 }
 
-.stock-search button {
-  background-color: #0047ab;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.stock-search button:hover {
-  background-color: #003580;
-}
-
 .no-stocks {
   text-align: center;
   color: #888;
@@ -78,12 +64,12 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
   position: relative;
-  border: 2px dashed #555; /* Default dashed border */
+  border: 2px dashed #555;
 }
 
 .stock-card:hover {
   transform: translateY(-5px);
-  border-color: green; /* Change border color to green on hover */
+  border-color: green;
 }
 
 .stock-card .remove-button {
@@ -95,14 +81,14 @@
   color: white;
   font-size: 16px;
   cursor: pointer;
-  visibility: hidden; /* Hidden by default */
+  visibility: hidden;
 }
 
 .stock-card:hover .remove-button {
-  visibility: visible; /* Show remove button on hover */
+  visibility: visible;
 }
 
-.stock-card .remove-button:hover {
+.stock-card:hover .remove-button:hover {
   color: red;
 }
 
@@ -113,29 +99,84 @@
   margin-bottom: 10px;
 }
 
-.stock-card .stock-details {
-  margin-bottom: 20px;
-  font-size: 14px;
+.stock-card .stock-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
-.stock-card .stock-details p {
-  margin: 5px 0;
-}
-
-.stock-card .stock-chart {
-  margin-top: 10px;
-}
-
-.stock-card .stock-change {
+.stock-card .current-price {
+  font-size: 24px;
   font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 5px;
 }
 
-.stock-card .stock-change.up {
+.stock-card .price-change {
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.price-change.up {
   color: green;
 }
 
-.stock-card .stock-change.down {
+.price-change.down {
   color: red;
+}
+
+.stock-card .stock-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.stock-summary .summary-item {
+  text-align: center;
+  font-size: 12px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #1f1f1f;
+}
+
+.stock-summary .summary-item span {
+  display: block;
+  font-size: 10px;
+}
+
+.stock-card .stock-chart {
+  margin-top: 20px;
+}
+
+.time-percentages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.time-percentage-block {
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  text-align: center;
+  font-size: 12px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.time-percentage-block.positive {
+  border: 1px solid green;
+  color: green;
+}
+
+.time-percentage-block.negative {
+  border: 1px solid red;
+  color: red;
+}
+
+.time-percentage-block:hover {
+  transform: scale(1.05);
 }

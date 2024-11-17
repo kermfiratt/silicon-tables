@@ -4,94 +4,137 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
   position: relative;
-  border: 2px dashed #555; /* Default dashed border */
-}
-
-.stock-card.green-border {
-  border-color: green; /* Green border for positive stocks */
-}
-
-.stock-card.red-border {
-  border-color: red; /* Red border for negative stocks */
+  border: 2px dashed #555;
 }
 
 .stock-card:hover {
   transform: translateY(-5px);
+  border-color: green;
+}
+
+.stock-card .remove-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.stock-card:hover .remove-button {
+  visibility: visible;
 }
 
 .stock-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
-.stock-header .remove-button {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  visibility: hidden; /* Hidden by default */
+.stock-header .stock-name {
+  background-color: #1e1e1e;
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 20px; /* Larger size for emphasis */
 }
 
-.stock-card:hover .remove-button {
-  visibility: visible; /* Show remove button on hover */
+.price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 20px;
 }
 
-.stock-header .remove-button:hover {
-  color: red;
-}
-
-.stock-details {
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.stock-details p {
-  margin: 5px 0;
-}
-
-.stock-chart {
-  margin-top: 10px;
+.current-price {
+  font-size: 20px; /* Slightly smaller than before */
+  font-weight: bold;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100px; /* Consistent width */
   text-align: center;
 }
 
-.stock-chart canvas {
-  background: #1f1f1f;
-  border-radius: 8px;
-  padding: 5px;
-}
-
-.stock-change {
+.price-change {
+  font-size: 20px;
   font-weight: bold;
-  padding: 5px 10px;
+  margin-top: 5px;
+  background-color: #1e1e1e;
+  padding: 10px;
   border-radius: 5px;
+  width: 100px; /* Same width as current-price */
+  text-align: center;
 }
 
-.stock-change.up {
+.price-change.positive {
   color: green;
 }
 
-.stock-change.down {
+.price-change.negative {
   color: red;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .stock-card {
-    padding: 15px;
-  }
+.stock-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+  text-align: center;
+}
 
-  .stock-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.summary-item {
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-  .stock-chart canvas {
-    max-width: 100%;
-    height: auto;
-  }
+.summary-item span {
+  display: block;
+}
+
+.chart-container {
+  margin-top: 15px;
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.time-percentages {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.time-percentage-block {
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  font-size: 12px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.time-percentage-block.positive {
+  border: 1px solid green;
+  color: green;
+}
+
+.time-percentage-block.negative {
+  border: 1px solid red;
+  color: red;
+}
+
+.time-percentage-block:hover {
+  transform: scale(1.05);
 }

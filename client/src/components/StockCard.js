@@ -3,20 +3,26 @@ import { Line } from 'react-chartjs-2';
 import './StockCard.css';
 
 const StockCard = ({ stock, onRemove }) => {
-  const { symbol, currentPrice, previousClose, high, low, marketCap, chartData, priceChange } = stock;
+  const {
+    symbol,
+    currentPrice,
+    previousClose,
+    high,
+    low,
+    marketCap,
+    chartData,
+    priceChange,
+    timeChanges,
+  } = stock;
 
-  // Grafik ayarları
+  // Chart options
   const chartOptions = {
     responsive: true,
-    plugins: {
-      legend: { display: false },
-    },
-    scales: {
-      x: { display: false },
-      y: { display: false },
-    },
+    plugins: { legend: { display: false } },
+    scales: { x: { display: false }, y: { display: false } },
   };
 
+  // Chart dataset
   const chartDataset = {
     labels: chartData.map((_, index) => index),
     datasets: [
@@ -32,19 +38,64 @@ const StockCard = ({ stock, onRemove }) => {
 
   return (
     <div className="stock-card">
+      {/* Stock Header */}
       <div className="stock-header">
-        <h3>{symbol}</h3>
-        <button className="remove-button" onClick={() => onRemove(symbol)}>✖</button>
+        <div className="stock-name">{symbol}</div>
+        <div className="price-section">
+          <div className="current-price">{currentPrice.toFixed(2)}</div>
+          <div
+            className={`price-change ${
+              priceChange === 'up' ? 'positive' : 'negative'
+            }`}
+          >
+            {priceChange === 'up' ? '+' : ''}
+            {(currentPrice - previousClose).toFixed(2)} (
+            {((currentPrice - previousClose) / previousClose * 100).toFixed(2)}%)
+          </div>
+        </div>
+        <button className="remove-button" onClick={() => onRemove(symbol)}>
+          ✖
+        </button>
       </div>
-      <div className="stock-details">
-        <p>Mevcut Fiyat: {currentPrice}</p>
-        <p>Önceki Kapanış: {previousClose}</p>
-        <p>Günlük Yüksek: {high}</p>
-        <p>Günlük Düşük: {low}</p>
-        <p>Piyasa Değeri: {marketCap}</p>
+
+      {/* Stock Summary */}
+      <div className="stock-summary">
+        <div className="summary-item">
+          <span>Taban</span>
+          <span>{low.toFixed(2)}</span>
+        </div>
+        <div className="summary-item">
+          <span>Tavan</span>
+          <span>{high.toFixed(2)}</span>
+        </div>
+        <div className="summary-item">
+          <span>Ö.K.</span>
+          <span>{previousClose.toFixed(2)}</span>
+        </div>
+        <div className="summary-item">
+          <span>P.D.</span>
+          <span>{marketCap}</span>
+        </div>
       </div>
-      <div className="stock-chart">
+
+      {/* Chart Section */}
+      <div className="chart-container">
         <Line data={chartDataset} options={chartOptions} />
+      </div>
+
+      {/* Time Percentages */}
+      <div className="time-percentages">
+        {timeChanges.map((change, index) => (
+          <div
+            key={index}
+            className={`time-percentage-block ${
+              change.value >= 0 ? 'positive' : 'negative'
+            }`}
+          >
+            {change.period}: {change.value >= 0 ? '+' : ''}
+            {change.value.toFixed(2)}%
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -7,8 +7,10 @@ const StockCardContainer = () => {
   const [searchInput, setSearchInput] = useState('');
   const [showSearch, setShowSearch] = useState(false);
 
-  const addStock = async () => {
+  const addStock = async (event) => {
+    if (event.key !== 'Enter') return;
     if (!searchInput) return;
+
     try {
       const response = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${searchInput.toUpperCase()}&token=${process.env.REACT_APP_API_KEY}`
@@ -20,14 +22,15 @@ const StockCardContainer = () => {
         return;
       }
 
-      // Grafik verileri için API çağrısı
-      const historicalResponse = await fetch(
-        `https://finnhub.io/api/v1/stock/candle?symbol=${searchInput.toUpperCase()}&resolution=D&from=1609459200&to=1700000000&token=${process.env.REACT_APP_API_KEY}`
-      );
-      const historicalData = await historicalResponse.json();
-
-      const chartData =
-        historicalData && historicalData.c ? historicalData.c : [100, 102, 105, 103, 110]; // Placeholder grafik verisi
+      // Mock data for time-based changes
+      const timeChanges = [
+        { period: '1H', value: -0.3 },
+        { period: '1A', value: 10.12 },
+        { period: '3A', value: -2.77 },
+        { period: '6A', value: -18.81 },
+        { period: 'YTD', value: 32.0 },
+        { period: '1Y', value: 28.17 },
+      ];
 
       const newStock = {
         symbol: searchInput.toUpperCase(),
@@ -35,9 +38,10 @@ const StockCardContainer = () => {
         previousClose: data.pc,
         high: data.h,
         low: data.l,
-        marketCap: '5.848.000.000', // Placeholder veri
-        chartData,
+        marketCap: '5.848.000.000', // Mock value
+        chartData: [100, 102, 105, 103, 110], // Placeholder data for the chart
         priceChange: data.c > data.pc ? 'up' : 'down',
+        timeChanges,
       };
 
       setStocks([...stocks, newStock]);
@@ -55,7 +59,11 @@ const StockCardContainer = () => {
   return (
     <div className="stock-card-container">
       <div className="add-stock-section">
-        <button onClick={() => setShowSearch(!showSearch)} className="add-stock-button">Ekle</button>
+        {!showSearch && (
+          <button onClick={() => setShowSearch(true)} className="add-stock-button">
+            Ekle
+          </button>
+        )}
         {showSearch && (
           <div className="stock-search">
             <input
@@ -63,8 +71,8 @@ const StockCardContainer = () => {
               placeholder="Hisse kodu girin (ör. AAPL)"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={addStock} // Add stock on Enter key press
             />
-            <button onClick={addStock}>Ekle</button>
           </div>
         )}
       </div>
