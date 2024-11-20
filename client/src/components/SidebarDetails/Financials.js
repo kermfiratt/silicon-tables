@@ -168,7 +168,7 @@ const Financials = ({ symbol }) => {
             labels: financialData.map((item) => new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })),
             datasets: [
               { label: 'Sales', data: financialData.map((item) => item.revenue), backgroundColor: 'rgba(75, 192, 192, 0.6)' },
-              { label: 'Gross Profit', data: financialData.map((item) => item.grossProfit), backgroundColor: 'rgba(153, 102, 255, 0.6)' },
+              { label: 'Gross Profits', data: financialData.map((item) => item.grossProfit), backgroundColor: 'rgba(153, 102, 255, 0.6)' },
               { label: 'Net Income', data: financialData.map((item) => item.netIncome), backgroundColor: 'rgba(255, 159, 64, 0.6)' },
             ],
           }}
