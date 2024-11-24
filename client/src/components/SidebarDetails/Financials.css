@@ -13,7 +13,8 @@
 
 /* Title Styling */
 .financials-container h2,
-.financials-block h3 {
+.financials-container h3,
+.financials-block h4 {
   font-size: 24px;
   color: #ff7b79;
   margin-bottom: 15px;
@@ -74,34 +75,44 @@
   color: #f44336; /* Negative growth */
 }
 
-/* Switch Button Styling */
-.switch-container {
+/* Balance Sheet Graphs */
+.balance-sheet-graphs {
   display: flex;
-  justify-content: center;
-  margin-top: 15px;
+  justify-content: space-around;
+  gap: 20px;
+  margin-top: 20px;
 }
 
-.switch-option {
-  margin: 0 10px;
-  padding: 8px 16px;
-  background-color: #333;
-  color: #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+.balance-sheet-graph {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
-.switch-option:hover {
-  background-color: #555;
-  color: white;
+.balance-sheet-graph h4 {
+  font-size: 18px;
+  color: #ff7b79;
+  margin-bottom: 15px; /* Add space between title and graph */
 }
 
-.switch-option.active {
-  background-color: #4a90e2;
-  color: white;
+.graph-dates {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 10px; /* Smaller font size for dates */
+  color: #999;
+  text-align: center;
 }
 
-/* Chart Container */
+.graph-dates span {
+  flex: 1; /* Evenly distribute space for dates */
+  text-align: center; /* Center-align each date */
+}
+
+/* Graph Styling */
 .chart-container {
   margin-top: 30px;
   background-color: #1e1e1e;
@@ -110,29 +121,63 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Table Header Styling */
-.financials-table thead tr {
-  background-color: #2a2a2a;
-}
-
-.financials-table th {
-  color: #ffffff;
-  font-size: 16px;
-  padding: 10px;
-}
-
-/* Chart Canvas Styling */
 .chart-container canvas {
   background-color: #1e1e1e;
   border-radius: 8px;
 }
 
-/* Section Header for Summary Tables */
-.financials-block h4 {
-  font-size: 20px;
-  color: #ff7b79;
-  margin-bottom: 10px;
+/* Metrics Comparison Blocks */
+.metrics-comparison {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.metric-block {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
+}
+
+.metric-block h4 {
+  font-size: 18px;
+  color: #ff7b79;
+  margin-bottom: 40px; /* Add space between title and graph */
+}
+
+.metric-data {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 10px;
+  height: 180px; /* Increased height for longer blocks */
+}
+
+.metric-bar {
+  width: 25%; /* Slightly longer width for blocks */
+  background-color: #4a90e2;
+  text-align: center;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  color: white;
+  font-size: 12px;
+  padding: 5px 0;
+}
+
+.metric-bar span {
+  margin-bottom: 5px;
+  font-size: 10px;
+}
+
+.metric-bar span.b-abbr {
+  margin-left: 4px; /* Space before the "B" abbreviation */
 }
 
 /* Positive and Negative Change Styling */
@@ -144,3 +189,9 @@
   color: #f44336; /* Red for negative values */
 }
 
+/* Graph Dates Styling */
+.graph-dates span {
+  margin: 0 5px;
+  color: #999;
+  font-size: 10px; /* Smaller font for graph dates */
+}

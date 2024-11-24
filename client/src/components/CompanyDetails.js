@@ -29,6 +29,7 @@ const CompanyDetails = () => {
   const [isPeersView, setIsPeersView] = useState(false); // New state for Peers view
 
   const API_KEY = process.env.REACT_APP_API_KEY;
+  const ALPHA_API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   useEffect(() => {
     if (symbol) {

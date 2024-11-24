@@ -1,72 +1,59 @@
 // src/components/SidebarDetails/Financials.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import './Financials.css';
-
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Financials = ({ symbol }) => {
   const [financialData, setFinancialData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [companyName, setCompanyName] = useState('');
+  const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
-  // Fetch CIK dynamically based on symbol
-  const fetchCIK = async (symbol) => {
-    try {
-      const response = await axios.get(`http://localhost:7600/api/get-cik/${symbol}`);
-      return response.data.cik;
-    } catch (error) {
-      console.error('Error fetching CIK:', error.message);
-      return null;
+  const formatValue = (value) => {
+    if (value >= 1e9) {
+      return `${(value / 1e9).toFixed(2)}B`; // Convert to billions
     }
+    return value.toLocaleString();
   };
 
   useEffect(() => {
     const fetchFinancialData = async () => {
       try {
-        const cik = await fetchCIK(symbol);
-        if (!cik) {
-          console.error('CIK not found for symbol:', symbol);
-          setLoading(false);
-          return;
-        }
+        // Fetch income statement
+        const incomeResponse = await axios.get(
+          `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${symbol}&apikey=${API_KEY}`
+        );
 
-        const response = await axios.get(`http://localhost:7600/api/financials/${cik}`);
-        const data = response.data;
+        // Fetch balance sheet
+        const balanceResponse = await axios.get(
+          `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+        );
 
-        // Parse financial data for key metrics
-        const getLastFourQuarters = (metricData) =>
-          metricData
-            .sort((a, b) => new Date(b.end) - new Date(a.end))
-            .slice(0, 4)
-            .map((item) => ({
-              date: item.end,
-              value: item.val,
-            }));
+        const incomeData = incomeResponse.data.quarterlyReports;
+        const balanceData = balanceResponse.data.quarterlyReports;
 
-        const revenue = getLastFourQuarters(data.revenue);
-        const grossProfit = getLastFourQuarters(data.grossProfit);
-        const netIncome = getLastFourQuarters(data.netIncome);
-        const assets = getLastFourQuarters(data.assets);
-        const liabilities = getLastFourQuarters(data.liabilities);
-        const equity = getLastFourQuarters(data.equity);
+        // Filter and sort data to include only the last 5 quarters
+        const filteredIncomeData = incomeData
+          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding)) // Sort by latest first
+          .slice(0, 5); // Take the last 5 quarters
 
-        const quarters = revenue.map((rev, index) => ({
-          date: rev.date,
-          revenue: rev.value,
-          grossProfit: grossProfit[index]?.value || 0,
-          netIncome: netIncome[index]?.value || 0,
-          assets: assets[index]?.value || 0,
-          liabilities: liabilities[index]?.value || 0,
-          equity: equity[index]?.value || 0,
-          revenueChange:
-            index > 0 ? (((rev.value - revenue[index - 1].value) / revenue[index - 1].value) * 100).toFixed(2) : null,
+        const filteredBalanceData = balanceData
+          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding)) // Sort by latest first
+          .slice(0, 5); // Take the last 5 quarters
+
+        // Parse financial data
+        const quarters = filteredIncomeData.map((report, index) => ({
+          date: report.fiscalDateEnding,
+          revenue: parseFloat(report.totalRevenue) || 0,
+          grossProfit: parseFloat(report.grossProfit) || 0,
+          netIncome: parseFloat(report.netIncome) || 0,
+          assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
+          liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
+          equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
         }));
 
         setFinancialData(quarters);
-        setCompanyName(data.entityName || symbol);
+        setCompanyName(symbol);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching financial data:', error.message);
@@ -75,7 +62,7 @@ const Financials = ({ symbol }) => {
     };
 
     fetchFinancialData();
-  }, [symbol]);
+  }, [symbol, API_KEY]);
 
   if (loading) return <p>Loading financial data...</p>;
   if (!financialData.length) return <p>No financial data available for this company.</p>;
@@ -83,6 +70,8 @@ const Financials = ({ symbol }) => {
   return (
     <div className="financials-container">
       <h3>Quarterly Financial Overview for {companyName}</h3>
+
+      {/* Summary Income Statement */}
       <div className="financials-block">
         <h4>Summary Income Statement</h4>
         <table className="financials-table">
@@ -90,7 +79,9 @@ const Financials = ({ symbol }) => {
             <tr>
               <th>Metric</th>
               {financialData.map((item) => (
-                <th key={item.date}>{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</th>
+                <th key={item.date}>
+                  {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+                </th>
               ))}
             </tr>
           </thead>
@@ -98,94 +89,133 @@ const Financials = ({ symbol }) => {
             <tr>
               <td>Sales</td>
               {financialData.map((item) => (
-                <td key={item.date}>{item.revenue.toLocaleString()}</td>
+                <td key={item.date}>{formatValue(item.revenue)}</td>
               ))}
             </tr>
             <tr>
               <td>Gross Profit</td>
               {financialData.map((item) => (
-                <td key={item.date}>{item.grossProfit.toLocaleString()}</td>
+                <td key={item.date}>{formatValue(item.grossProfit)}</td>
               ))}
             </tr>
             <tr>
               <td>Net Income</td>
               {financialData.map((item) => (
-                <td key={item.date}>{item.netIncome.toLocaleString()}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Revenue Change (%)</td>
-              {financialData.map((item) => (
-                <td
-                  key={item.date}
-                  className={item.revenueChange >= 0 ? 'positive-change' : 'negative-change'}
-                >
-                  {item.revenueChange ? `${item.revenueChange}%` : '-'}
-                </td>
+                <td key={item.date}>{formatValue(item.netIncome)}</td>
               ))}
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div className="financials-block">
-        <h4>Summary Balance Sheet</h4>
-        <table className="financials-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              {financialData.map((item) => (
-                <th key={item.date}>{new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Assets</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{item.assets.toLocaleString()}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Liabilities</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{item.liabilities.toLocaleString()}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Equity</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{item.equity.toLocaleString()}</td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+      {/* Balance Sheet Metrics */}
+      <div className="metrics-comparison">
+        <div className="metric-block">
+          <h4>Assets (B)</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
+                <span>{formatValue(item.assets)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="metric-block">
+          <h4>Liabilities (B)</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.liabilities / Math.max(...financialData.map((d) => d.liabilities))) * 100}%` }}>
+                <span>{formatValue(item.liabilities)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="metric-block">
+          <h4>Equity (B)</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.equity / Math.max(...financialData.map((d) => d.equity))) * 100}%` }}>
+                <span>{formatValue(item.equity)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="chart-container">
-        <Bar
-          data={{
-            labels: financialData.map((item) => new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })),
-            datasets: [
-              { label: 'Sales', data: financialData.map((item) => item.revenue), backgroundColor: 'rgba(75, 192, 192, 0.6)' },
-              { label: 'Gross Profits', data: financialData.map((item) => item.grossProfit), backgroundColor: 'rgba(153, 102, 255, 0.6)' },
-              { label: 'Net Income', data: financialData.map((item) => item.netIncome), backgroundColor: 'rgba(255, 159, 64, 0.6)' },
-            ],
-          }}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: { position: 'top' },
-              title: { display: true, text: `${companyName} Quarterly Metrics` },
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: { display: true, text: 'Value in USD' },
-              },
-            },
-          }}
-        />
+      {/* Financial Metrics Comparison */}
+      <div className="metrics-comparison">
+        <div className="metric-block">
+          <h4>Quarterly Sales</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.revenue / Math.max(...financialData.map((d) => d.revenue))) * 100}%` }}>
+                <span>{formatValue(item.revenue)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="metric-block">
+          <h4>Quarterly Gross Profit</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.grossProfit / Math.max(...financialData.map((d) => d.grossProfit))) * 100}%` }}>
+                <span>{formatValue(item.grossProfit)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="metric-block">
+          <h4>Quarterly Net Income</h4>
+          <div className="metric-data">
+            {financialData.map((item) => (
+              <div key={item.date} className="metric-bar" style={{ height: `${(item.netIncome / Math.max(...financialData.map((d) => d.netIncome))) * 100}%` }}>
+                <span>{formatValue(item.netIncome)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="graph-dates">
+            {financialData.map((item) => (
+              <span key={item.date}>
+                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
