@@ -13,11 +13,12 @@ const StockCardContainer = () => {
 
     try {
       const response = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=${searchInput.toUpperCase()}&token=${process.env.REACT_APP_API_KEY}`
+        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${searchInput.toUpperCase()}&apikey=${process.env.REACT_APP_ALPHA_VANTAGE_KEY}`
       );
       const data = await response.json();
+      const quote = data['Global Quote'];
 
-      if (!data || !data.c) {
+      if (!quote || !quote['05. price']) {
         alert('Hisse bulunamadı veya geçersiz sembol');
         return;
       }
@@ -33,14 +34,14 @@ const StockCardContainer = () => {
       ];
 
       const newStock = {
-        symbol: searchInput.toUpperCase(),
-        currentPrice: data.c,
-        previousClose: data.pc,
-        high: data.h,
-        low: data.l,
-        marketCap: '5.848.000.000', // Mock value
+        symbol: quote['01. symbol'],
+        currentPrice: parseFloat(quote['05. price']),
+        previousClose: parseFloat(quote['08. previous close']),
+        high: parseFloat(quote['03. high']),
+        low: parseFloat(quote['04. low']),
+        marketCap: '5.848.000.000', // Placeholder value for Market Cap
         chartData: [100, 102, 105, 103, 110], // Placeholder data for the chart
-        priceChange: data.c > data.pc ? 'up' : 'down',
+        priceChange: parseFloat(quote['09. change']) > 0 ? 'up' : 'down',
         timeChanges,
       };
 

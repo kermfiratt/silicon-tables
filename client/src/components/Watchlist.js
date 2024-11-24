@@ -1,15 +1,15 @@
-// src/components/Watchlist.js
 import React, { useState, useEffect } from 'react';
 import { FaEllipsisV, FaTimes, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import './Watchlist.css';
 
 const Watchlist = () => {
-  const API_KEY = process.env.REACT_APP_API_KEY;
+  const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY;
+  const ALPHA_VANTAGE_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
   const [watchlist, setWatchlist] = useState([
     { symbol: 'AAPL' },
     { symbol: 'MSFT' },
-    { symbol: 'TSLA' }
+    { symbol: 'TSLA' },
   ]);
   const [stockData, setStockData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
@@ -20,8 +20,16 @@ const Watchlist = () => {
       const newStockData = {};
       for (let item of watchlist) {
         try {
-          const response = await axios.get(`https://finnhub.io/api/v1/quote?symbol=${item.symbol}&token=${API_KEY}`);
-          newStockData[item.symbol] = response.data;
+          const response = await axios.get(
+            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.symbol}&apikey=${ALPHA_VANTAGE_KEY}`
+          );
+          const quote = response.data['Global Quote'];
+          if (quote) {
+            newStockData[item.symbol] = {
+              c: parseFloat(quote['05. price']), // Current Price
+              d: parseFloat(quote['10. change percent']), // Change %
+            };
+          }
         } catch (error) {
           console.error(`Error fetching data for ${item.symbol}:`, error);
         }
@@ -33,10 +41,10 @@ const Watchlist = () => {
     const interval = setInterval(fetchStockData, 60000); // Refresh every 60 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [watchlist, API_KEY]);
+  }, [watchlist, ALPHA_VANTAGE_KEY]);
 
   const handleRemove = (symbol) => {
-    setWatchlist(watchlist.filter(item => item.symbol !== symbol));
+    setWatchlist(watchlist.filter((item) => item.symbol !== symbol));
   };
 
   const handleAdd = () => {
@@ -71,11 +79,19 @@ const Watchlist = () => {
           <div key={index} className="watchlist-item">
             <div className="symbol">{item.symbol}</div>
             <div className="price">
-              {stockData[item.symbol]?.c !== undefined ? `$${stockData[item.symbol].c.toFixed(2)}` : ''}
+              {stockData[item.symbol]?.c !== undefined
+                ? `$${stockData[item.symbol].c.toFixed(2)}`
+                : ''}
             </div>
-            <div className={`change ${stockData[item.symbol]?.d >= 0 ? 'positive' : 'negative'}`}>
+            <div
+              className={`change ${
+                stockData[item.symbol]?.d >= 0 ? 'positive' : 'negative'
+              }`}
+            >
               {stockData[item.symbol]?.d !== undefined
-                ? `${stockData[item.symbol].d >= 0 ? '+' : ''}${stockData[item.symbol].d.toFixed(2)}%`
+                ? `${stockData[item.symbol].d >= 0 ? '+' : ''}${stockData[
+                    item.symbol
+                  ].d.toFixed(2)}%`
                 : ''}
             </div>
             {showOptions && (
