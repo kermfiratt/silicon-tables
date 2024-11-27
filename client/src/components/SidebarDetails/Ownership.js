@@ -1,72 +1,84 @@
-// src/components/SidebarDetails/Ownership.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Ownership.css';
 
 const Ownership = ({ symbol, setView }) => {
-  const [ownershipData, setOwnershipData] = useState(null);
-  const API_KEY = process.env.REACT_APP_API_KEY;
+    const [ownershipData, setOwnershipData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchOwnershipData = async () => {
-      try {
-        const response = await axios.get(`https://finnhub.io/api/v1/stock/ownership?symbol=${symbol}&token=${API_KEY}`);
-        setOwnershipData(response.data);
-      } catch (error) {
-        console.error("Error fetching ownership data:", error);
-        setOwnershipData([
-          { name: "Placeholder Corp", capitalShare: "10,000", capitalPercentage: "20%", votingPercentage: "15%" },
-          { name: "Sample Inc.", capitalShare: "5,000", capitalPercentage: "10%", votingPercentage: "5%" }
-        ]);
-      }
-    };
+    useEffect(() => {
+        const fetchOwnershipData = async () => {
+            try {
+                console.log(`Fetching CIK for symbol: ${symbol}`);
+                const cikResponse = await axios.get(`http://localhost:7600/api/get-cik/${symbol}`);
+                const { cik } = cikResponse.data;
 
-    fetchOwnershipData();
-  }, [symbol, API_KEY]);
+                console.log(`Fetched CIK: ${cik}`);
+                const ownershipResponse = await axios.get(`http://localhost:7600/api/ownership/${cik}`);
+                setOwnershipData(ownershipResponse.data);
+            } catch (err) {
+                console.error('Error fetching ownership data:', err);
+                setError(
+                    err.response?.status === 404
+                        ? 'Ownership data not available for this company.'
+                        : 'Failed to fetch ownership data.'
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  return (
-    <div className="ownership-container">
-      {/* General ve Stock butonları */}
-      <div className="ownership-switch-container">
-        <span className="switch-option" onClick={() => setView("general")}>General</span>
-        <span className="switch-option" onClick={() => setView("stock")}>Stock</span>
-      </div>
+        fetchOwnershipData();
+    }, [symbol]);
 
-      <h3>Sermaye Sahipliği</h3>
-      <div className="ownership-charts">
-        <div className="chart">
-          <h4>Sermaye Payları</h4>
+    if (loading) return <p>Loading ownership data...</p>;
+    if (error) return <p>{error}</p>;
+
+    return (
+        <div className="ownership-container">
+            <div className="ownership-switch-container">
+                <span className="switch-option" onClick={() => setView('general')}>General</span>
+                <span className="switch-option" onClick={() => setView('stock')}>Stock</span>
+            </div>
+
+            <h3>Ownership Information</h3>
+            <div className="ownership-charts">
+                <div className="chart">
+                    <h4>Capital Shares</h4>
+                </div>
+                <div className="chart">
+                    <h4>Voting Rights</h4>
+                </div>
+            </div>
+            <table className="ownership-table">
+                <thead>
+                    <tr>
+                        <th>Owner Name</th>
+                        <th>Shares Outstanding</th>
+                        <th>Capital Percentage</th>
+                        <th>Voting Rights (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ownershipData && ownershipData.length > 0 ? (
+                        ownershipData.map((owner, index) => (
+                            <tr key={index}>
+                                <td>{owner.name || 'Unknown'}</td>
+                                <td>{owner.shares || 'N/A'}</td>
+                                <td>{owner.percentage || 'N/A'}</td>
+                                <td>{owner.votingRights || 'N/A'}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No ownership data available.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
-        <div className="chart">
-          <h4>Oy Hakkı Oranları</h4>
-        </div>
-      </div>
-      <table className="ownership-table">
-        <thead>
-          <tr>
-            <th>Ortağın Adı-Soyadı/Ticaret Unvanı</th>
-            <th>Sermayedeki Payı (TL)</th>
-            <th>Sermayedeki Pay (%)</th>
-            <th>Oy Hakkı Oranı (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ownershipData ? ownershipData.map((owner, index) => (
-            <tr key={index}>
-              <td>{owner.name}</td>
-              <td>{owner.capitalShare}</td>
-              <td>{owner.capitalPercentage}</td>
-              <td>{owner.votingPercentage}</td>
-            </tr>
-          )) : (
-            <tr>
-              <td colSpan="4">Veri yükleniyor...</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+    );
 };
 
 export default Ownership;

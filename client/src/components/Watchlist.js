@@ -4,7 +4,6 @@ import axios from 'axios';
 import './Watchlist.css';
 
 const Watchlist = () => {
-  const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY;
   const ALPHA_VANTAGE_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
   const [watchlist, setWatchlist] = useState([
     { symbol: 'AAPL' },
@@ -18,27 +17,40 @@ const Watchlist = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       const newStockData = {};
+
       for (let item of watchlist) {
         try {
           const response = await axios.get(
-            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.symbol}&apikey=${ALPHA_VANTAGE_KEY}`
+            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.symbol}&entitlement=delayed&apikey=${ALPHA_VANTAGE_KEY}`
           );
-          const quote = response.data['Global Quote'];
-          if (quote) {
+
+          const globalQuote =
+            response.data['Global Quote'] || // Standard response structure
+            response.data['Global Quote - DATA DELAYED BY 15 MINUTES']; // Handle delayed key
+
+          console.log(`Raw API response for ${item.symbol}:`, response.data); // Debugging
+
+          if (globalQuote) {
             newStockData[item.symbol] = {
-              c: parseFloat(quote['05. price']), // Current Price
-              d: parseFloat(quote['10. change percent']), // Change %
+              c: parseFloat(globalQuote['05. price'] || 0), // Current Price
+              d: parseFloat(globalQuote['10. change percent'] || 0), // Change %
             };
+          } else {
+            console.error(`Invalid data for ${item.symbol}:`, response.data);
+            newStockData[item.symbol] = { c: null, d: null };
           }
         } catch (error) {
           console.error(`Error fetching data for ${item.symbol}:`, error);
+          newStockData[item.symbol] = { c: null, d: null };
         }
       }
+
+      console.log('Final Stock Data:', newStockData);
       setStockData(newStockData);
     };
 
     if (watchlist.length > 0) fetchStockData();
-    const interval = setInterval(fetchStockData, 60000); // Refresh every 60 seconds
+    const interval = setInterval(fetchStockData, 5000); // Refresh every 20 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [watchlist, ALPHA_VANTAGE_KEY]);
@@ -80,8 +92,10 @@ const Watchlist = () => {
             <div className="symbol">{item.symbol}</div>
             <div className="price">
               {stockData[item.symbol]?.c !== undefined
-                ? `$${stockData[item.symbol].c.toFixed(2)}`
-                : ''}
+                ? stockData[item.symbol]?.c !== null
+                  ? `$${stockData[item.symbol].c.toFixed(2)}`
+                  : 'N/A'
+                : 'Fetching...'}
             </div>
             <div
               className={`change ${
@@ -89,10 +103,12 @@ const Watchlist = () => {
               }`}
             >
               {stockData[item.symbol]?.d !== undefined
-                ? `${stockData[item.symbol].d >= 0 ? '+' : ''}${stockData[
-                    item.symbol
-                  ].d.toFixed(2)}%`
-                : ''}
+                ? stockData[item.symbol]?.d !== null
+                  ? `${stockData[item.symbol].d >= 0 ? '+' : ''}${stockData[
+                      item.symbol
+                    ].d.toFixed(2)}%`
+                  : 'N/A'
+                : 'Fetching...'}
             </div>
             {showOptions && (
               <FaTimes onClick={() => handleRemove(item.symbol)} className="remove-icon" />

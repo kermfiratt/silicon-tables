@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -35,11 +34,12 @@ app.get('/api/get-cik/:symbol', (req, res) => {
     }
 });
 
-// Endpoint to fetch recent 10-K and 10-Q filings by CIK
-app.get('/api/financials/:cik', async (req, res) => {
+// Endpoint to fetch ownership data from SEC EDGAR
+app.get('/api/ownership/:cik', async (req, res) => {
     const { cik } = req.params;
+
     try {
-        console.log(`Fetching financial data for CIK: ${cik}`);
+        console.log(`Fetching ownership data for CIK: ${cik}`);
         const response = await axios.get(`https://data.sec.gov/api/xbrl/companyfacts/CIK${cik}.json`, {
             headers: {
                 'User-Agent': 'YourAppName (your-email@example.com)',
@@ -47,20 +47,16 @@ app.get('/api/financials/:cik', async (req, res) => {
             },
         });
 
-        const data = response.data.facts['us-gaap'];
-        const financials = {
-            revenue: data['Revenues']?.units['USD'] || [],
-            grossProfit: data['GrossProfit']?.units['USD'] || [],
-            netIncome: data['NetIncomeLoss']?.units['USD'] || [],
-            assets: data['Assets']?.units['USD'] || [],
-            liabilities: data['Liabilities']?.units['USD'] || [],
-            equity: data['StockholdersEquity']?.units['USD'] || [],
-        };
+        const ownershipData = response.data?.facts?.['dei']?.['EntityCommonStockSharesOutstanding']?.units?.['shares'];
 
-        res.json(financials);
+        if (!ownershipData) {
+            res.status(404).json({ error: 'Ownership data not found' });
+        } else {
+            res.json(ownershipData);
+        }
     } catch (error) {
-        console.error('Error fetching financial data:', error.toString());
-        res.status(500).json({ error: 'Failed to fetch financial data' });
+        console.error('Error fetching ownership data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch ownership data' });
     }
 });
 

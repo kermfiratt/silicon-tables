@@ -111,7 +111,7 @@ const Financials = ({ symbol }) => {
       {/* Balance Sheet Metrics */}
       <div className="metrics-comparison">
         <div className="metric-block">
-          <h4>Assets (B)</h4>
+          <h4 className='graph-title'>Assets (B)</h4>
           <div className="metric-data">
             {financialData.map((item) => (
               <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
