@@ -1,40 +1,82 @@
-/* src/components/LiveDateTime.css */
 .live-datetime {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    margin-left: 20px; /* Adjust for padding */
-    margin-bottom: 30px; /* Add space below the live time */
-  }
-  
-  .date {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .time {
-    display: flex;
-    align-items: center;
-  }
-  
-  .live-indicator {
-    width: 8px;
-    height: 8px;
-    background-color: #4caf50; /* Green color for the live dot */
-    border-radius: 50%;
-    margin-right: 8px;
-  }
-  
-  .time-text {
-    font-size: 16px; /* Smaller font for the time */
-    color: #fff;
-  }
-  
-  /* Add margins for the block below live time */
-  .market-data {
-    margin-top: 30px; /* Ensure there's spacing between live time and market data block */
-  }
-  
+  display: flex;
+  justify-content: space-between; /* Space between date/time and market blocks */
+  align-items: flex-start;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  margin-left: 20px;
+  margin-bottom: 30px;
+}
+
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.date {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+}
+
+.live-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #4caf50; /* Green for live */
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.time-text {
+  font-size: 16px; /* Smaller font for the time */
+  color: #fff;
+}
+
+.market-statuses {
+  display: flex;
+  gap: 20px; /* Space between each market block */
+}
+
+.market-status {
+  background-color: #2e2e2e;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 300px; /* Constrain the block size */
+}
+
+.market-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.market-details {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.market-status-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.market-open {
+  color: #4caf50; /* Green for open */
+}
+
+.market-closed {
+  color: #f44336; /* Red for closed */
+}
+
+.market-hours {
+  color: #bbb;
+}
