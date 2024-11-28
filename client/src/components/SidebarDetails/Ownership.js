@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Ownership.css';
 
 const Ownership = ({ symbol, setView }) => {
-    const [ownershipData, setOwnershipData] = useState(null);
+    const [ownershipData, setOwnershipData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -17,6 +17,7 @@ const Ownership = ({ symbol, setView }) => {
                 console.log(`Fetched CIK: ${cik}`);
                 const ownershipResponse = await axios.get(`http://localhost:7600/api/ownership/${cik}`);
                 setOwnershipData(ownershipResponse.data);
+                setError('');
             } catch (err) {
                 console.error('Error fetching ownership data:', err);
                 setError(
@@ -24,6 +25,7 @@ const Ownership = ({ symbol, setView }) => {
                         ? 'Ownership data not available for this company.'
                         : 'Failed to fetch ownership data.'
                 );
+                setOwnershipData([]);
             } finally {
                 setLoading(false);
             }
@@ -61,7 +63,7 @@ const Ownership = ({ symbol, setView }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {ownershipData && ownershipData.length > 0 ? (
+                    {ownershipData.length > 0 ? (
                         ownershipData.map((owner, index) => (
                             <tr key={index}>
                                 <td>{owner.name || 'Unknown'}</td>

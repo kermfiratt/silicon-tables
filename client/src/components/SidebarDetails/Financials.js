@@ -111,7 +111,7 @@ const Financials = ({ symbol }) => {
       {/* Balance Sheet Metrics */}
       <div className="metrics-comparison">
         <div className="metric-block">
-          <h4 className='graph-title'>Assets (B)</h4>
+          <h4>Assets</h4>
           <div className="metric-data">
             {financialData.map((item) => (
               <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
@@ -128,7 +128,7 @@ const Financials = ({ symbol }) => {
           </div>
         </div>
         <div className="metric-block">
-          <h4>Liabilities (B)</h4>
+          <h4>Liabilities</h4>
           <div className="metric-data">
             {financialData.map((item) => (
               <div key={item.date} className="metric-bar" style={{ height: `${(item.liabilities / Math.max(...financialData.map((d) => d.liabilities))) * 100}%` }}>
@@ -145,7 +145,7 @@ const Financials = ({ symbol }) => {
           </div>
         </div>
         <div className="metric-block">
-          <h4>Equity (B)</h4>
+          <h4>Equity</h4>
           <div className="metric-data">
             {financialData.map((item) => (
               <div key={item.date} className="metric-bar" style={{ height: `${(item.equity / Math.max(...financialData.map((d) => d.equity))) * 100}%` }}>
@@ -199,6 +199,7 @@ const Financials = ({ symbol }) => {
             ))}
           </div>
         </div>
+
         <div className="metric-block">
           <h4>Quarterly Net Income</h4>
           <div className="metric-data">
@@ -208,6 +209,7 @@ const Financials = ({ symbol }) => {
               </div>
             ))}
           </div>
+
           <div className="graph-dates">
             {financialData.map((item) => (
               <span key={item.date}>

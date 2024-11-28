@@ -47,12 +47,27 @@ app.get('/api/ownership/:cik', async (req, res) => {
             },
         });
 
-        const ownershipData = response.data?.facts?.['dei']?.['EntityCommonStockSharesOutstanding']?.units?.['shares'];
+        const outstandingShares =
+            response.data?.facts?.['dei']?.['EntityCommonStockSharesOutstanding']?.units?.['shares'] || [];
 
-        if (!ownershipData) {
+        // Placeholder for ownership names; these should be fetched from another source
+        const ownershipNames = ['Owner 1', 'Owner 2', 'Owner 3'];
+
+        const totalShares = outstandingShares.reduce((sum, entry) => sum + entry.val, 0);
+
+        const formattedOwnershipData = outstandingShares.map((entry, index) => ({
+            name: ownershipNames[index] || 'Unknown', // Assign names if available
+            shares: entry.val.toLocaleString(),
+            percentage: totalShares
+                ? ((entry.val / totalShares) * 100).toFixed(2) + '%'
+                : 'N/A',
+            votingRights: 'N/A', // Replace with actual data if available
+        }));
+
+        if (!formattedOwnershipData.length) {
             res.status(404).json({ error: 'Ownership data not found' });
         } else {
-            res.json(ownershipData);
+            res.json(formattedOwnershipData);
         }
     } catch (error) {
         console.error('Error fetching ownership data:', error.message);

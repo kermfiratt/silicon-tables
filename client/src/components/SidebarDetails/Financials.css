@@ -151,6 +151,7 @@
 
 .metric-data {
   display: flex;
+  margin-top: 40px;
   justify-content: space-around;
   align-items: flex-end;
   gap: 10px;
@@ -198,5 +199,10 @@
 
 
 .graph-title {
-  margin-bottom: 40px;
+  margin-top: 40px; /* Ensure proper spacing between title and graph */
+  color: #ff7b79;
+  font-size: 18px;
+  text-align: center;
 }
+
+

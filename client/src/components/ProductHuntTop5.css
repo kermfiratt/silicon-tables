@@ -1,37 +1,54 @@
-/* src/components/ProductHuntTop5.css */
 .product-hunt-container {
   display: flex;
+  flex-direction: column;
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  width: 35%;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  margin: 20px auto;
+  width: 40%;
+  max-width: 600px;
 }
 
 .product-hunt-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-color: #333;
-  border-radius: 8px;
+  text-align: center;
   margin-bottom: 15px;
 }
 
 .product-hunt-left span {
   font-size: 20px;
-  color: #ff7b79;
+  color: white;
 }
 
 .product-hunt-right {
   width: 100%;
+}
+
+.toggle-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.toggle-switch button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-switch button.active {
+  background-color: #0047ab;
+  color: white;
+}
+
+.toggle-switch button:hover {
+  background-color: #555;
 }
 
 .product-hunt-header {
@@ -45,8 +62,14 @@
 .product-hunt-list {
   list-style: none;
   padding: 0;
-  overflow-y: auto;
-  max-height: 280px; /* Adjust to fit within the container */
+  overflow-y: auto; /* Make the list scrollable */
+  max-height: 280px; /* Limit the height of the block */
+  margin: 0;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.product-hunt-list::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
 }
 
 .product-hunt-item {
@@ -65,13 +88,19 @@
 .product-rank {
   font-weight: bold;
   margin-right: 10px;
+  color: #ffa500;
 }
 
 .product-name {
   flex-grow: 1;
+  color: #ffffff;
 }
 
 .product-votes {
-  color: #4caf50; /* Green color for positive gain */
   font-weight: bold;
+}
+
+.error {
+  color: red;
+  text-align: center;
 }

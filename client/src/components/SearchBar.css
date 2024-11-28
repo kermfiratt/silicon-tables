@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 99999; /* En üstte olması için artırıldı */
+  z-index: 99999; /* Ensures it is on top */
 }
 
 .search-popup-content {
@@ -89,8 +89,80 @@
 }
 
 .company-logo {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-  border-radius: 5px;
+  width: 50px; /* Updated to medium size */
+  height: 50px;
+  border-radius: 8px; /* Slightly rounded square */
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  margin-right: 10px; /* Space between logo and text */
+}
+
+.placeholder-logo {
+  width: 50px; /* Same size as logo */
+  height: 50px;
+  border-radius: 8px; /* Slightly rounded square */
+  background-color: #ccc; /* Gray placeholder */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.suggestions-dropdown {
+  background-color: #2e2e2e; /* Matches popup content background */
+  border-radius: 8px;
+  margin-top: 10px; /* Adds spacing below the search bar */
+  padding: 10px 0; /* Padding around the suggestions */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle shadow for dropdown */
+  max-height: 200px; /* Limits the height for long lists */
+  overflow-y: auto; /* Enables scrolling for long lists */
+  width: 100%; /* Matches the width of the input field */
+  z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/* Hides the scrollbar while keeping the dropdown scrollable */
+.suggestions-dropdown::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Edge */
+}
+
+.suggestions-dropdown {
+  scrollbar-width: none; /* Firefox */
+}
+
+.suggestions-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions-dropdown li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex; /* For alignment between ticker and name */
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #ccc; /* Subtle text color */
+}
+
+.suggestions-dropdown li:hover {
+  background-color: #444; /* Slightly darker background on hover */
+  color: #fff; /* Brighter text on hover */
+}
+
+.suggestions-dropdown strong {
+  color: #fff; /* Highlight ticker symbol */
+  font-weight: bold;
+}
+
+.suggestions-dropdown li img {
+  width: 50px; /* Medium size */
+  height: 50px;
+  border-radius: 8px; /* Slightly rounded square */
+  object-fit: cover;
+  margin-right: 10px; /* Space between image and text */
 }
