@@ -22,6 +22,7 @@ function App() {
     <Router>
       <div className="app-container">
         <Sidebar toggleSearch={toggleSearch} />
+
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -30,8 +31,10 @@ function App() {
             <Route path="/vcs" element={<VC />} />
             <Route path="/option-tracker" element={<OptionTracker />} /> {/* Option Tracker rotası */}
             <Route path="/portfolio" element={<Portfolio />} /> {/* Portfolio rotası */}
+            
           </Routes>
         </div>
+
         {isSearchOpen && <Search setSearchOpen={setIsSearchOpen} />}
       </div>
     </Router>

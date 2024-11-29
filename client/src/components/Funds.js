@@ -4,7 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import './Funds.css';
 
-// Register required Chart.js components
+// Chart.js components registration
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Fund = () => {
@@ -43,35 +43,83 @@ const Fund = () => {
     fetchETFData();
   };
 
-  const { net_assets, net_expense_ratio, portfolio_turnover, dividend_yield, asset_allocation, holdings } = etfData || {};
+  const { holdings } = etfData || {};
 
-  // Pie chart data for asset allocation
-  const pieData = {
-    labels: asset_allocation ? Object.keys(asset_allocation) : [],
-    datasets: [
-      {
-        data: asset_allocation
-          ? Object.values(asset_allocation).map((value) => parseFloat(value) * 100)
-          : [],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-      },
-    ],
+  // Pie chart data processing
+  const processHoldingsData = (holdings) => {
+    if (!holdings) return { labels: [], datasets: [] };
+
+    const threshold = 5; // 5% threshold
+    let othersWeight = 0;
+    const filteredHoldings = holdings
+      .map((holding) => ({
+        label: holding.description,
+        value: parseFloat(holding.weight) * 100,
+      }))
+      .filter((holding) => {
+        if (holding.value < threshold) {
+          othersWeight += holding.value;
+          return false; // Exclude small holdings
+        }
+        return true; // Include others
+      });
+
+    // Add "Others" category
+    if (othersWeight > 0) {
+      filteredHoldings.push({ label: 'Others', value: othersWeight });
+    }
+
+    return {
+      labels: filteredHoldings.map((h) => h.label),
+      datasets: [
+        {
+          data: filteredHoldings.map((h) => h.value),
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+            '#FF9F40',
+            '#4D5360',
+            '#AC64AD',
+            '#7494EA',
+            '#F89C74',
+          ],
+          hoverBackgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+            '#FF9F40',
+            '#4D5360',
+            '#AC64AD',
+            '#7494EA',
+            '#F89C74',
+          ],
+        },
+      ],
+    };
   };
+
+  const pieDataHoldings = processHoldingsData(holdings);
 
   return (
     <div className="fund-container">
       <h2>ETF Profile & Holdings</h2>
 
-      {/* Search Function */}
-      <div className="search-bar">
+      {/* Search Bar */}
+      <div className="search-bar-etf">
         <input
           type="text"
           placeholder="Enter ETF Symbol (e.g., QQQ)"
           value={etfSymbol}
           onChange={(e) => setEtfSymbol(e.target.value.toUpperCase())}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') handleSearch();
+          }}
         />
-        <button onClick={handleSearch}>Search</button>
       </div>
 
       {loading && <p className="loading">Loading...</p>}
@@ -80,16 +128,8 @@ const Fund = () => {
         <div>
           {/* Pie Chart */}
           <div className="chart-container">
-            <h3>Asset Allocation</h3>
-            <Pie data={pieData} />
-          </div>
-
-          {/* ETF Metrics */}
-          <div className="etf-metrics">
-            <p><strong>Net Assets:</strong> ${parseFloat(net_assets).toLocaleString()}</p>
-            <p><strong>Expense Ratio:</strong> {(parseFloat(net_expense_ratio) * 100).toFixed(2)}%</p>
-            <p><strong>Portfolio Turnover:</strong> {(parseFloat(portfolio_turnover) * 100).toFixed(2)}%</p>
-            <p><strong>Dividend Yield:</strong> {(parseFloat(dividend_yield) * 100).toFixed(2)}%</p>
+            <h3>Top Holdings Distribution</h3>
+            <Pie data={pieDataHoldings} />
           </div>
 
           {/* ETF Holdings Table */}

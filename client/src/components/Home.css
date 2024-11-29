@@ -4,6 +4,7 @@ html, body {
   padding: 0;
   height: 100%;
   background-color: #1b1b1b;
+  
 }
 
 .home-container {
@@ -16,6 +17,7 @@ html, body {
   color: #fff;
   position: relative;
   margin-right: 300px;
+  z-index: 1;
   /* z-index kaldırıldı veya 0 yapıldı */
 }
 
