@@ -16,7 +16,7 @@
 .financials-container h3,
 .financials-block h4 {
   font-size: 24px;
-  color: #ff7b79;
+  color: white;
   margin-bottom: 15px;
   text-align: center;
 }
@@ -75,6 +75,12 @@
   color: #f44336; /* Negative growth */
 }
 
+.financials-table td span {
+  margin-left: 5px;
+  font-size: 0.9em;
+}
+
+
 /* Balance Sheet Graphs */
 .balance-sheet-graphs {
   display: flex;
@@ -94,7 +100,7 @@
 
 .balance-sheet-graph h4 {
   font-size: 18px;
-  color: #ff7b79;
+  color: white;
   margin-bottom: 15px; /* Add space between title and graph */
 }
 
@@ -145,7 +151,7 @@
 
 .metric-block h4 {
   font-size: 18px;
-  color: #ff7b79;
+  color: white;
   margin-bottom: 40px; /* Add space between title and graph */
 }
 
@@ -200,9 +206,17 @@
 
 .graph-title {
   margin-top: 40px; /* Ensure proper spacing between title and graph */
-  color: #ff7b79;
+  color: white;
   font-size: 18px;
   text-align: center;
 }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 graphs in a row */
+  gap: 20px; /* Spacing between graphs */
+  margin-top: 30px;
+}
+
 
 

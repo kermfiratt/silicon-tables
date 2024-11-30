@@ -3,10 +3,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Financials.css';
 
-const Financials = ({ symbol }) => {
+const Financials = ({ symbol, setView }) => {
   const [financialData, setFinancialData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [priceMetrics, setPriceMetrics] = useState([]);
+  const [loadingFinancials, setLoadingFinancials] = useState(true);
+  const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(true);
   const [companyName, setCompanyName] = useState('');
+  const [errorFinancials, setErrorFinancials] = useState(null);
+  const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   const formatValue = (value) => {
@@ -14,6 +18,13 @@ const Financials = ({ symbol }) => {
       return `${(value / 1e9).toFixed(2)}B`; // Convert to billions
     }
     return value.toLocaleString();
+  };
+
+
+  const calculatePercentageChange = (latest, previous) => {
+    if (previous === 0) return 'N/A'; // Avoid division by zero
+    const change = ((latest - previous) / previous) * 100;
+    return `${change.toFixed(2)}%`;
   };
 
   useEffect(() => {
@@ -34,12 +45,12 @@ const Financials = ({ symbol }) => {
 
         // Filter and sort data to include only the last 5 quarters
         const filteredIncomeData = incomeData
-          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding)) // Sort by latest first
-          .slice(0, 5); // Take the last 5 quarters
+          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
+          .slice(0, 5);
 
         const filteredBalanceData = balanceData
-          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding)) // Sort by latest first
-          .slice(0, 5); // Take the last 5 quarters
+          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
+          .slice(0, 5);
 
         // Parse financial data
         const quarters = filteredIncomeData.map((report, index) => ({
@@ -54,25 +65,61 @@ const Financials = ({ symbol }) => {
 
         setFinancialData(quarters);
         setCompanyName(symbol);
-        setLoading(false);
+        setLoadingFinancials(false);
       } catch (error) {
         console.error('Error fetching financial data:', error.message);
-        setLoading(false);
+        setErrorFinancials('Failed to load financial data.');
+        setLoadingFinancials(false);
+      }
+    };
+
+    const fetchPriceMetrics = async () => {
+      try {
+        const response = await fetch(
+          `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
+        );
+        const data = await response.json();
+
+        if (data && data.Symbol) {
+          setPriceMetrics([
+            { label: 'PE Ratio', value: parseFloat(data.PERatio).toFixed(2) || 'N/A', color: '#4caf50' },
+            { label: 'EPS', value: parseFloat(data.EPS).toFixed(2) || 'N/A', color: '#ff9800' },
+            { label: 'Price to Book', value: parseFloat(data.PriceToBookRatio).toFixed(2) || 'N/A', color: '#03a9f4' },
+            { label: 'Price to Sales', value: parseFloat(data.PriceToSalesRatioTTM).toFixed(2) || 'N/A', color: '#9c27b0' },
+            { label: 'Dividend Yield', value: `${(parseFloat(data.DividendYield) * 100).toFixed(2)}%` || 'N/A', color: '#f44336' },
+            { label: 'Beta', value: parseFloat(data.Beta).toFixed(2) || 'N/A', color: '#ffeb3b' },
+            { label: 'Operating Margin', value: `${(parseFloat(data.OperatingMarginTTM) * 100).toFixed(2)}%` || 'N/A', color: '#8bc34a' },
+            { label: 'Return on Equity (ROE)', value: `${(parseFloat(data.ReturnOnEquityTTM) * 100).toFixed(2)}%` || 'N/A', color: '#e91e63' },
+            { label: 'Dividend Payout Ratio (DPR)', value: `${(parseFloat(data.DividendPayoutRatioTTM) * 100).toFixed(2)}%` || 'N/A', color: '#9e9e9e' },
+            { label: 'EV/EBITDA', value: parseFloat(data.EVToEBITDA).toFixed(2) || 'N/A', color: '#673ab7' },
+          ]);
+        } else {
+          throw new Error('No data available');
+        }
+        setLoadingPriceMetrics(false);
+      } catch (error) {
+        console.error('Error fetching price metrics:', error);
+        setErrorPriceMetrics('Failed to load price metrics.');
+        setLoadingPriceMetrics(false);
       }
     };
 
     fetchFinancialData();
+    fetchPriceMetrics();
   }, [symbol, API_KEY]);
 
-  if (loading) return <p>Loading financial data...</p>;
-  if (!financialData.length) return <p>No financial data available for this company.</p>;
+  if (loadingFinancials || loadingPriceMetrics) return <p>Loading data...</p>;
+  if (errorFinancials || errorPriceMetrics) return <p>{errorFinancials || errorPriceMetrics}</p>;
+  if (!financialData.length && !priceMetrics.length) return <p>No data available for this company.</p>;
 
   return (
     <div className="financials-container">
       <h3>Quarterly Financial Overview for {companyName}</h3>
 
-      {/* Summary Income Statement */}
-      <div className="financials-block">
+
+
+    {/* Summary Income Statement */}
+    <div className="financials-block">
         <h4>Summary Income Statement</h4>
         <table className="financials-table">
           <thead>
@@ -86,31 +133,93 @@ const Financials = ({ symbol }) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
+          <tr>
               <td>Sales</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{formatValue(item.revenue)}</td>
-              ))}
+              {financialData.map((item, index) => {
+                const previousYearIndex = index + 4;
+                const percentageChange =
+                  previousYearIndex < financialData.length
+                    ? calculatePercentageChange(item.revenue, financialData[previousYearIndex]?.revenue)
+                    : null;
+                return (
+                  <td key={item.date}>
+                    {formatValue(item.revenue)}{' '}
+                    {percentageChange && (
+                      <span
+                        style={{
+                          color: percentageChange.includes('-') ? 'red' : 'green',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        ({percentageChange})
+                      </span>
+                    )}
+                  </td>
+                );
+              })}
             </tr>
             <tr>
               <td>Gross Profit</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{formatValue(item.grossProfit)}</td>
-              ))}
+              {financialData.map((item, index) => {
+                const previousYearIndex = index + 4;
+                const percentageChange =
+                  previousYearIndex < financialData.length
+                    ? calculatePercentageChange(item.grossProfit, financialData[previousYearIndex]?.grossProfit)
+                    : null;
+                return (
+                  <td key={item.date}>
+                    {formatValue(item.grossProfit)}{' '}
+                    {percentageChange && (
+                      <span
+                        style={{
+                          color: percentageChange.includes('-') ? 'red' : 'green',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        ({percentageChange})
+                      </span>
+                    )}
+                  </td>
+                );
+              })}
             </tr>
             <tr>
               <td>Net Income</td>
-              {financialData.map((item) => (
-                <td key={item.date}>{formatValue(item.netIncome)}</td>
-              ))}
+              {financialData.map((item, index) => {
+                const previousYearIndex = index + 4;
+                const percentageChange =
+                  previousYearIndex < financialData.length
+                    ? calculatePercentageChange(item.netIncome, financialData[previousYearIndex]?.netIncome)
+                    : null;
+                return (
+                  <td key={item.date}>
+                    {formatValue(item.netIncome)}{' '}
+                    {percentageChange && (
+                      <span
+                        style={{
+                          color: percentageChange.includes('-') ? 'red' : 'green',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        ({percentageChange})
+                      </span>
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Balance Sheet Metrics */}
-      <div className="metrics-comparison">
-        <div className="metric-block">
+
+
+
+      {/* Financial Metrics */}
+      
+      <div className="metrics-grid">
+
+      <div className="metric-block">
           <h4>Assets</h4>
           <div className="metric-data">
             {financialData.map((item) => (
@@ -127,6 +236,7 @@ const Financials = ({ symbol }) => {
             ))}
           </div>
         </div>
+
         <div className="metric-block">
           <h4>Liabilities</h4>
           <div className="metric-data">
@@ -144,6 +254,7 @@ const Financials = ({ symbol }) => {
             ))}
           </div>
         </div>
+
         <div className="metric-block">
           <h4>Equity</h4>
           <div className="metric-data">
@@ -161,10 +272,7 @@ const Financials = ({ symbol }) => {
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Financial Metrics Comparison */}
-      <div className="metrics-comparison">
         <div className="metric-block">
           <h4>Quarterly Sales</h4>
           <div className="metric-data">
@@ -182,6 +290,7 @@ const Financials = ({ symbol }) => {
             ))}
           </div>
         </div>
+
         <div className="metric-block">
           <h4>Quarterly Gross Profit</h4>
           <div className="metric-data">
@@ -217,6 +326,24 @@ const Financials = ({ symbol }) => {
               </span>
             ))}
           </div>
+        </div>
+
+      </div>
+
+      {/* Price Metrics */}
+      <div className="price-metrics-container">
+        <h3>Price Metrics</h3>
+        <div className="metrics-blocks">
+          {priceMetrics.map((metric, index) => (
+            <div
+              key={index}
+              className="metric-block"
+              style={{ borderLeft: `5px solid ${metric.color}` }}
+            >
+              <h4 style={{ color: metric.color }}>{metric.label}</h4>
+              <p>{metric.value}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
