@@ -10,7 +10,6 @@ const Financials = ({ symbol, setView }) => {
   const [loadingFinancials, setLoadingFinancials] = useState(true);
   const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(true);
   const [loadingOverview, setLoadingOverview] = useState(true);
-  const [companyName, setCompanyName] = useState('');
   const [errorFinancials, setErrorFinancials] = useState(null);
   const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const [errorOverview, setErrorOverview] = useState(null);
@@ -67,7 +66,6 @@ const Financials = ({ symbol, setView }) => {
         }));
 
         setFinancialData(quarters);
-        setCompanyName(symbol);
         setLoadingFinancials(false);
       } catch (error) {
         console.error('Error fetching financial data:', error.message);
@@ -135,10 +133,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
 
 
   return (
-    <div className="financials-container">
-      <h3>Quarterly Financial Overview for {companyName}</h3>
-
-
+   <div>
 
     {/* Summary Income Statement */}
     <div className="financials-block">
@@ -232,128 +227,138 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
             </tr>
           </tbody>
         </table>
-      </div>
-
-
-
-
-      {/* Financial Metrics */}
       
-      <div className="metrics-grid">
 
-      <div className="metric-block">
-          <h4>Assets</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
-                <span>{formatValue(item.assets)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+
+
+
+      
+
+      
+
+      
+    
+    </div>
+
+
+    {/* Financial Metrics */}
+      
+    <div className="metrics-grid">
+
+<div className="metric-block">
+    <h4>Assets</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
+          <span>{formatValue(item.assets)}</span>
         </div>
+      ))}
+    </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-        <div className="metric-block">
-          <h4>Liabilities</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.liabilities / Math.max(...financialData.map((d) => d.liabilities))) * 100}%` }}>
-                <span>{formatValue(item.liabilities)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+  <div className="metric-block">
+    <h4>Liabilities</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.liabilities / Math.max(...financialData.map((d) => d.liabilities))) * 100}%` }}>
+          <span>{formatValue(item.liabilities)}</span>
         </div>
+      ))}
+    </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-        <div className="metric-block">
-          <h4>Equity</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.equity / Math.max(...financialData.map((d) => d.equity))) * 100}%` }}>
-                <span>{formatValue(item.equity)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+  <div className="metric-block">
+    <h4>Equity</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.equity / Math.max(...financialData.map((d) => d.equity))) * 100}%` }}>
+          <span>{formatValue(item.equity)}</span>
         </div>
+      ))}
+    </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-        <div className="metric-block">
-          <h4>Quarterly Sales</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.revenue / Math.max(...financialData.map((d) => d.revenue))) * 100}%` }}>
-                <span>{formatValue(item.revenue)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+  <div className="metric-block">
+    <h4>Quarterly Sales</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.revenue / Math.max(...financialData.map((d) => d.revenue))) * 100}%` }}>
+          <span>{formatValue(item.revenue)}</span>
         </div>
+      ))}
+    </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-        <div className="metric-block">
-          <h4>Quarterly Gross Profit</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.grossProfit / Math.max(...financialData.map((d) => d.grossProfit))) * 100}%` }}>
-                <span>{formatValue(item.grossProfit)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+  <div className="metric-block">
+    <h4>Quarterly Gross Profit</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.grossProfit / Math.max(...financialData.map((d) => d.grossProfit))) * 100}%` }}>
+          <span>{formatValue(item.grossProfit)}</span>
         </div>
+      ))}
+    </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-        <div className="metric-block">
-          <h4>Quarterly Net Income</h4>
-          <div className="metric-data">
-            {financialData.map((item) => (
-              <div key={item.date} className="metric-bar" style={{ height: `${(item.netIncome / Math.max(...financialData.map((d) => d.netIncome))) * 100}%` }}>
-                <span>{formatValue(item.netIncome)}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="graph-dates">
-            {financialData.map((item) => (
-              <span key={item.date}>
-                {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-              </span>
-            ))}
-          </div>
+  <div className="metric-block">
+    <h4>Quarterly Net Income</h4>
+    <div className="metric-data">
+      {financialData.map((item) => (
+        <div key={item.date} className="metric-bar" style={{ height: `${(item.netIncome / Math.max(...financialData.map((d) => d.netIncome))) * 100}%` }}>
+          <span>{formatValue(item.netIncome)}</span>
         </div>
+      ))}
+    </div>
 
-      </div>
+    <div className="graph-dates">
+      {financialData.map((item) => (
+        <span key={item.date}>
+          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+        </span>
+      ))}
+    </div>
+  </div>
 
-      {/* Price Metrics */}
-      <div className="price-metrics-container">
+</div>
+
+
+    {/* Price Metrics */}
+    <div className="price-metrics-container">
         <h3>Price Metrics</h3>
         <div className="metrics-blocks">
           {priceMetrics.map((metric, index) => (
@@ -369,8 +374,9 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
         </div>
       </div>
 
-      {/* Special Blocks Section */}
-      <div className="special-blocks-container">
+
+    {/* Special Blocks Section */}
+    <div className="special-blocks-container">
         <div className="special-block">
           <h4>Dividend Details</h4>
           <div className="block-content-stock">
@@ -399,7 +405,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
           </div>
         </div>
       </div>
-    
+
     </div>
   );
 };
