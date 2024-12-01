@@ -217,6 +217,71 @@
   gap: 20px; /* Spacing between graphs */
   margin-top: 30px;
 }
+.special-blocks-container {
+  display: flex;
+  gap: 20px; /* Space between blocks */
+  justify-content: space-between; /* Align blocks evenly */
+  margin-top: 20px;
+}
 
+.special-block {
+  flex: 1 1 calc(33.33% - 20px); /* Three blocks per row with equal spacing */
+  background-color: #1e1e1e; /* Dark background */
+  border-radius: 8px; /* Rounded corners */
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Evenly spaced content */
+  height: 250px; /* Fixed height for consistency */
+}
 
+.special-block h4 {
+  font-size: 14px; /* Slightly smaller for compact design */
+  margin-bottom: 10px;
+  font-weight: 500; /* Medium weight for titles */
+  color: #ddd; /* Muted white */
+  text-transform: uppercase; /* Uniform titles */
+  border-bottom: 1px solid #444; /* Underline for separation */
+  padding-bottom: 8px; /* Space below the title */
+}
 
+.block-content-stock {
+  flex-grow: 1; /* Allows content to expand evenly */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Proper spacing for content */
+}
+
+.block-content-stock p {
+  font-size: 14px; /* Clean and readable font */
+  margin: 0;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between; /* Align label and value */
+  background-color: #2a2a2a; /* Slight contrast for each line */
+  border-radius: 6px;
+}
+
+.block-content-stock p span {
+  color: white;
+  font-weight: 500; /* Uniform weight for content */
+}
+
+.block-content-stock p span.positive {
+  color: #4caf50; /* Green for positive values */
+}
+
+.block-content-stock p span.negative {
+  color: #f44336; /* Red for negative values */
+}
+
+@media (max-width: 768px) {
+  .special-blocks-container {
+    flex-wrap: wrap; /* Allow blocks to wrap on smaller screens */
+  }
+  .special-block {
+    flex: 1 1 calc(100% - 20px); /* Stack blocks vertically */
+  }
+}

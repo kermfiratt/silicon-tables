@@ -140,7 +140,7 @@ const StockCard = ({ stock, onRemove }) => {
       </div>
 
       {/* Intraday Chart */}
-      <div className="chart-container">
+      <div className="chart-container-style">
         {loading ? (
           <p>Loading intraday data...</p>
         ) : intradayData.length > 0 ? (
