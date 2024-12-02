@@ -406,6 +406,12 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
         </div>
       </div>
 
+      <div className="about-company-block">
+  <h4> About The Company </h4>
+  <div> {companyOverview.Description} </div>
+</div>
+
+
     </div>
   );
 };

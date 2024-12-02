@@ -285,3 +285,30 @@
     flex: 1 1 calc(100% - 20px); /* Stack blocks vertically */
   }
 }
+
+
+
+.about-company-block {
+  background-color: #1e1e1e; /* Dark background to match theme */
+  color: #fff; /* White text for contrast */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Padding inside the block */
+  margin: 20px 0; /* Space around the block */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.about-company-block h4 {
+  text-align: center; /* Center the heading */
+  font-size: 20px; /* Larger font size for heading */
+  font-weight: bold; /* Bold text for heading */
+  color: #ff7b79; /* Highlight color for heading */
+  margin-bottom: 15px; /* Space below the heading */
+}
+
+.about-company-block div {
+  font-size: 16px; /* Normal text size for description */
+  line-height: 1.6; /* Better readability with increased line height */
+  text-align: justify; /* Justify the description text */
+  color: #ccc; /* Slightly muted white for description text */
+}
+

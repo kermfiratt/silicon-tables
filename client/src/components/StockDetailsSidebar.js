@@ -1,5 +1,5 @@
 // src/components/StockDetailsSidebar.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './StockDetailsSidebar.css';
 
 const StockDetailsSidebar = ({
@@ -11,11 +11,47 @@ const StockDetailsSidebar = ({
   setPriceMetricsView,
   setHistoricalMarketCapView,
   setPeersView,
-  activeSection
+  activeSection,
 }) => {
+  const [companyLogo, setCompanyLogo] = useState(null);
+  const [currentPrice, setCurrentPrice] = useState(null);
+  const [priceChangePercent, setPriceChangePercent] = useState(null);
+
+  const API_KEY = process.env.REACT_APP_API_KEY;
+
+  useEffect(() => {
+    // Fetch company logo and price
+    const fetchCompanyDetails = async () => {
+      if (symbol) {
+        try {
+          const logoResponse = await fetch(
+            `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${API_KEY}`
+          );
+          const logoData = await logoResponse.json();
+          setCompanyLogo(logoData.logo);
+
+          const priceResponse = await fetch(
+            ``
+          );
+          const priceData = await priceResponse.json();
+          setCurrentPrice(priceData.c?.toFixed(2));
+          setPriceChangePercent(priceData.dp?.toFixed(2));
+        } catch (error) {
+          console.error('Error fetching company details:', error);
+        }
+      }
+    };
+
+    fetchCompanyDetails();
+  }, [symbol, API_KEY]);
+
   return (
     <div className="stock-details-sidebar">
-      <h2>{symbol || "Şirket İsmi"}</h2>
+      <div className="header-container">
+        {companyLogo && <img src={companyLogo} alt={`${symbol} logo`} className="company-logo" />}
+        <h2 className="company-name">{symbol || 'Şirket İsmi'}</h2>
+        
+      </div>
       <ul>
         <li
           onClick={setOwnershipView}

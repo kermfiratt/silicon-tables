@@ -6,16 +6,56 @@
   width: 200px;
   color: #fff;
   position: fixed;
-  left: 80px; /* Ana menü genişliği kadar sola kaydırıldı */
+  left: 80px;
   top: 0;
   height: 100vh;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
-.stock-details-sidebar h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.company-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  margin-right: 10px;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.company-name {
+  font-size: 20px;
+  font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
+  color: #fff;
+  margin-right: 40px;
+}
+
+
+
+.price-value {
+  font-size: 16px; /* Main price font size */
+  font-weight: bold;
+}
+
+.price-change {
+  font-size: 14px; /* Font size for percentage change */
+  margin-top: 4px; /* Slight spacing below the price */
+}
+
+.price-change.positive {
+  color: #4caf50; /* Green for positive change */
+}
+
+.price-change.negative {
+  color: #f44336; /* Red for negative change */
 }
 
 .stock-details-sidebar ul {
@@ -38,11 +78,4 @@
 
 .stock-details-sidebar ul li:hover {
   background-color: #333;
-}
-
-
-.stock-details-sidebar ul li.active {
-  background-color: #4a90e2; /* Active background color */
-  color: white; /* Active text color */
-  font-weight: bold;
 }
