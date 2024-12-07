@@ -79,3 +79,7 @@
 .stock-details-sidebar ul li:hover {
   background-color: #333;
 }
+
+html {
+  scroll-behavior: smooth;
+}

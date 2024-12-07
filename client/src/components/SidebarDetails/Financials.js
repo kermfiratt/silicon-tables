@@ -244,6 +244,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
     {/* Financial Metrics */}
       
     <div className="metrics-grid">
+      
 
 <div className="metric-block">
     <h4>Assets</h4>
@@ -359,6 +360,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
 
     {/* Price Metrics */}
     <div className="price-metrics-container">
+      <section id='price-metrics-section'>
         <h3>Price Metrics</h3>
         <div className="metrics-blocks">
           {priceMetrics.map((metric, index) => (
@@ -372,7 +374,10 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
             </div>
           ))}
         </div>
+        </section>
       </div>
+
+      
 
 
     {/* Special Blocks Section */}
@@ -406,7 +411,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
         </div>
       </div>
 
-      <div className="about-company-block">
+      <div id='about-section' className="about-company-block">
   <h4> About The Company </h4>
   <div> {companyOverview.Description} </div>
 </div>
