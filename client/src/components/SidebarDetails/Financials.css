@@ -247,6 +247,12 @@
   padding-bottom: 8px; /* Space below the title */
 }
 
+.special-block:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Slightly more shadow on hover */
+  transform: translateY(-2px); /* Lift the block on hover for interactivity */
+  transition: all 0.3s ease; /* Smooth hover transition */
+}
+
 .block-content-stock {
   flex-grow: 1; /* Allows content to expand evenly */
   display: flex;

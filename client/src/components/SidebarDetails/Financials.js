@@ -380,36 +380,49 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
       
 
 
-    {/* Special Blocks Section */}
-    <div className="special-blocks-container">
-        <div className="special-block">
-          <h4>Dividend Details</h4>
-          <div className="block-content-stock">
-            <p><strong>Dividend Date:</strong> {companyOverview.DividendDate || 'N/A'}</p>
-            <p><strong>Ex-Dividend Date:</strong> {companyOverview.ExDividendDate || 'N/A'}</p>
-          </div>
-        </div>
-        <div className="special-block">
-          <h4>52 Week & Moving Averages</h4>
-          <div className="block-content-stock">
-            <p><strong>52 Week High:</strong> {companyOverview['52WeekHigh'] || 'N/A'}</p>
-            <p><strong>52 Week Low:</strong> {companyOverview['52WeekLow'] || 'N/A'}</p>
-            <p><strong>50 Day Moving Avg:</strong> {companyOverview['50DayMovingAverage'] || 'N/A'}</p>
-            <p><strong>200 Day Moving Avg:</strong> {companyOverview['200DayMovingAverage'] || 'N/A'}</p>
-          </div>
-        </div>
-        <div className="special-block">
-          <h4>Analyst Ratings</h4>
-          <div className="block-content-stock">
-            <p><strong>Target Price:</strong> {companyOverview.AnalystTargetPrice || 'N/A'}</p>
-            <p><strong>Strong Buy:</strong> {companyOverview.AnalystRatingStrongBuy || 'N/A'}</p>
-            <p><strong>Buy:</strong> {companyOverview.AnalystRatingBuy || 'N/A'}</p>
-            <p><strong>Hold:</strong> {companyOverview.AnalystRatingHold || 'N/A'}</p>
-            <p><strong>Sell:</strong> {companyOverview.AnalystRatingSell || 'N/A'}</p>
-            <p><strong>Strong Sell:</strong> {companyOverview.AnalystRatingStrongSell || 'N/A'}</p>
-          </div>
-        </div>
-      </div>
+      <div className="special-blocks-container">
+  {/* Dividend Details Block */}
+  <div className="special-block">
+    <h4>Dividend Details</h4>
+    <div className="block-content-stock">
+      <p><strong>Dividend Date:</strong> {companyOverview.DividendDate || 'N/A'}</p>
+      <p><strong>Ex-Dividend Date:</strong> {companyOverview.ExDividendDate || 'N/A'}</p>
+      <p><strong>Dividend Per Share:</strong> {companyOverview.DividendPerShare || 'N/A'}</p>
+      <p>
+        <strong>Dividend Yield:</strong>{' '}
+        {companyOverview.DividendYield
+          ? `${(parseFloat(companyOverview.DividendYield) * 100).toFixed(2)}%`
+          : 'N/A'}
+      </p>
+    </div>
+  </div>
+
+  {/* 52 Week & Moving Averages Block */}
+  <div className="special-block">
+    <h4>52 Week & Moving Averages</h4>
+    <div className="block-content-stock">
+      <p><strong>Market Cap:</strong> {formatValue(companyOverview.MarketCapitalization) || 'N/A'}</p>
+      <p><strong>52 Week High:</strong> {companyOverview['52WeekHigh'] || 'N/A'}</p>
+      <p><strong>52 Week Low:</strong> {companyOverview['52WeekLow'] || 'N/A'}</p>
+      <p><strong>50 Day Moving Avg:</strong> {companyOverview['50DayMovingAverage'] || 'N/A'}</p>
+      <p><strong>200 Day Moving Avg:</strong> {companyOverview['200DayMovingAverage'] || 'N/A'}</p>
+    </div>
+  </div>
+
+  {/* Analyst Ratings Block */}
+  <div className="special-block">
+    <h4>Analyst Ratings</h4>
+    <div className="block-content-stock">
+      <p><strong>Target Price:</strong> {companyOverview.AnalystTargetPrice || 'N/A'}</p>
+      <p><strong>Strong Buy:</strong> {companyOverview.AnalystRatingStrongBuy || 'N/A'}</p>
+      <p><strong>Buy:</strong> {companyOverview.AnalystRatingBuy || 'N/A'}</p>
+      <p><strong>Hold:</strong> {companyOverview.AnalystRatingHold || 'N/A'}</p>
+      <p><strong>Sell:</strong> {companyOverview.AnalystRatingSell || 'N/A'}</p>
+      <p><strong>Strong Sell:</strong> {companyOverview.AnalystRatingStrongSell || 'N/A'}</p>
+    </div>
+  </div>
+</div>
+
 
       <div id='about-section' className="about-company-block">
   <h4> About The Company </h4>
