@@ -5,6 +5,7 @@ import './StockDetailsSidebar.css';
 const StockDetailsSidebar = ({
   symbol,
   setFinancialsView,
+  setNewsView, // Added for News View
 }) => {
   const [activeSectionState, setActiveSectionState] = useState('financials'); // Default to 'financials'
   const [companyLogo, setCompanyLogo] = useState(null);
@@ -64,13 +65,16 @@ const StockDetailsSidebar = ({
           aboutSection.scrollIntoView({ behavior: 'smooth' });
         }
         break;
+      case 'news':
+        setNewsView(); // Activate News View
+        break;
       default:
         // Default to financials scrolling behavior
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setFinancialsView();
         break;
     }
-  }, [activeSectionState, setFinancialsView]);
+  }, [activeSectionState, setFinancialsView, setNewsView]);
 
   return (
     <div className="stock-details-sidebar">
@@ -109,6 +113,12 @@ const StockDetailsSidebar = ({
           className={activeSectionState === 'about' ? 'active' : ''}
         >
           About
+        </li>
+        <li
+          onClick={() => setActiveSectionState('news')}
+          className={activeSectionState === 'news' ? 'active' : ''}
+        >
+          News
         </li>
         {/* Commented out for now */}
         {/* 

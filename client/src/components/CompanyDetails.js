@@ -19,17 +19,17 @@ const CompanyDetails = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isStockView, setIsStockView] = useState(false);
+  const [isStockView, setIsStockView] = useState(true); // Default to stock
   const [isOwnershipView, setIsOwnershipView] = useState(false);
   const [isFundOwnershipView, setIsFundOwnershipView] = useState(false);
   const [isFinancialsView, setIsFinancialsView] = useState(false);
   const [isRevenueBreakdownView, setIsRevenueBreakdownView] = useState(false);
   const [isPriceMetricsView, setIsPriceMetricsView] = useState(false);
   const [isHistoricalMarketCapView, setIsHistoricalMarketCapView] = useState(false);
-  const [isPeersView, setIsPeersView] = useState(false); // New state for Peers view
+  const [isPeersView, setIsPeersView] = useState(false);
+  const [isNewsView, setIsNewsView] = useState(false); // New state for News view
 
   const API_KEY = process.env.REACT_APP_API_KEY;
-  const ALPHA_API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   useEffect(() => {
     if (symbol) {
@@ -72,6 +72,7 @@ const CompanyDetails = () => {
     setIsPriceMetricsView(view === 'priceMetrics');
     setIsHistoricalMarketCapView(view === 'historicalMarketCap');
     setIsPeersView(view === 'peers');
+    setIsNewsView(view === 'news');
   };
 
   if (loading) {
@@ -86,7 +87,7 @@ const CompanyDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView ? 'sidebar-visible' : ''}`}>
+    <div className={`company-details-container ${isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView || isNewsView ? 'sidebar-visible' : ''}`}>
       <div className="company-details">
         <h2>{companyData.name || "Company Name"}</h2>
 
@@ -104,14 +105,33 @@ const CompanyDetails = () => {
           <HistoricalMarketCap symbol={symbol} setView={toggleView} />
         ) : isPeersView ? (
           <Peers symbol={symbol} setView={toggleView} />
+        ) : isNewsView ? (
+          <div className="news-page">
+            <h3 className="news-header">Recent News</h3>
+            <div className="news-list">
+              {news.length > 0 ? (
+                news.map((article, index) => (
+                  <div key={index} className="news-item">
+                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
+                      {article.headline}
+                    </a>
+                    <p className="news-date">{new Date(article.datetime * 1000).toLocaleDateString()}</p>
+                    <p className="news-summary">{article.summary}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No recent news available.</p>
+              )}
+            </div>
+          </div>
         ) : (
           <>
             <div className="switch-container">
               <span
-                className={!isStockView && !isOwnershipView && !isFundOwnershipView && !isFinancialsView && !isRevenueBreakdownView && !isPriceMetricsView && !isHistoricalMarketCapView && !isPeersView ? "switch-option active" : "switch-option"}
-                onClick={() => toggleView('general')}
+                className={isNewsView ? "switch-option active" : "switch-option"}
+                onClick={() => toggleView('news')}
               >
-                General
+                News
               </span>
               <span
                 className={isStockView ? "switch-option active" : "switch-option"}
@@ -120,127 +140,11 @@ const CompanyDetails = () => {
                 Stock
               </span>
             </div>
-
-            <div className="grid-container">
-              {isStockView ? (
-                <>
-                  <div className="block">
-                    <div className="block-header">Stock Profile</div>
-                    <div className="block-content">
-                      <p><strong>Current Price:</strong> {companyData.c ? `$${companyData.c}` : 'N/A'}</p>
-                      <p><strong>High Price:</strong> {companyData.h ? `$${companyData.h}` : 'N/A'}</p>
-                      <p><strong>Low Price:</strong> {companyData.l ? `$${companyData.l}` : 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Analyst Recommendations</div>
-                    <div className="block-content">
-                      {recommendations.length > 0 ? (
-                        <p><strong>Buy:</strong> {recommendations[0].buy || 'N/A'} | 
-                          <strong> Hold:</strong> {recommendations[0].hold || 'N/A'} | 
-                          <strong> Sell:</strong> {recommendations[0].sell || 'N/A'}</p>
-                      ) : <p>No recommendations available.</p>}
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Market Performance</div>
-                    <div className="block-content">
-                      <p><strong>Market Cap:</strong> {companyData.marketCapitalization ? `$${companyData.marketCapitalization.toLocaleString()}` : 'N/A'}</p>
-                      <p><strong>IPO Date:</strong> {companyData.ipo || 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Exchange Info</div>
-                    <div className="block-content">
-                      <p><strong>Currency:</strong> {companyData.currency || 'N/A'}</p>
-                      <p><strong>Exchange:</strong> {companyData.exchange || 'N/A'}</p>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="block">
-                    <div className="block-header">Profile</div>
-                    <div className="block-content">
-                      <p><strong>Industry:</strong> {companyData.finnhubIndustry || 'N/A'}</p>
-                      <p><strong>Country:</strong> {companyData.country || 'N/A'}</p>
-                      <p><strong>Website:</strong> 
-                        <a href={companyData.weburl} target="_blank" rel="noopener noreferrer">
-                          {companyData.weburl || 'N/A'}
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Financials</div>
-                    <div className="block-content">
-                      <p><strong>Market Cap:</strong> {companyData.marketCapitalization ? `$${companyData.marketCapitalization.toLocaleString()}` : 'N/A'}</p>
-                      <p><strong>Shares Outstanding:</strong> {companyData.shareOutstanding || 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Stock Price</div>
-                    <div className="block-content">
-                      <p><strong>Current Price:</strong> {companyData.c ? `$${companyData.c}` : 'N/A'}</p>
-                      <p><strong>High Price:</strong> {companyData.h ? `$${companyData.h}` : 'N/A'}</p>
-                      <p><strong>Low Price:</strong> {companyData.l ? `$${companyData.l}` : 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Employees</div>
-                    <div className="block-content">
-                      <p>{companyData.employeeTotal || 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Location</div>
-                    <div className="block-content">
-                      <p>{companyData.country || 'N/A'}</p>
-                    </div>
-                  </div>
-
-                  <div className="block">
-                    <div className="block-header">Additional Info</div>
-                    <div className="block-content">
-                      <p><strong>Currency:</strong> {companyData.currency || 'N/A'}</p>
-                      <p><strong>Exchange:</strong> {companyData.exchange || 'N/A'}</p>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="news-block">
-              <h3 className="news-header">Recent News</h3>
-              <div className="news-list">
-                {news.length > 0 ? (
-                  news.map((article, index) => (
-                    <div key={index} className="news-item">
-                      <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
-                        {article.headline}
-                      </a>
-                      <p className="news-date">{new Date(article.datetime * 1000).toLocaleDateString()}</p>
-                      <p className="news-summary">{article.summary}</p>
-                      {index < news.length - 1 && <hr className="news-divider" />}
-                    </div>
-                  ))
-                ) : (
-                  <p>No recent news available.</p>
-                )}
-              </div>
-            </div>
           </>
         )}
       </div>
 
-      {(isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView) && (
+      {(isStockView || isOwnershipView || isFundOwnershipView || isFinancialsView || isRevenueBreakdownView || isPriceMetricsView || isHistoricalMarketCapView || isPeersView || isNewsView) && (
         <StockDetailsSidebar
           symbol={symbol}
           setOwnershipView={() => toggleView('ownership')}
@@ -250,6 +154,7 @@ const CompanyDetails = () => {
           setPriceMetricsView={() => toggleView('priceMetrics')}
           setHistoricalMarketCapView={() => toggleView('historicalMarketCap')}
           setPeersView={() => toggleView('peers')}
+          setNewsView={() => toggleView('news')} // Added News toggle
           activeSection={
             isOwnershipView ? 'ownership' :
             isFundOwnershipView ? 'fundOwnership' :
@@ -257,7 +162,8 @@ const CompanyDetails = () => {
             isRevenueBreakdownView ? 'revenueBreakdown' :
             isPriceMetricsView ? 'priceMetrics' :
             isHistoricalMarketCapView ? 'historicalMarketCap' :
-            isPeersView ? 'peers' : ''
+            isPeersView ? 'peers' :
+            isNewsView ? 'news' : ''
           }
         />
       )}

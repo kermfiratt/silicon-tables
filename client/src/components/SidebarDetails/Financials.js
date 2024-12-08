@@ -29,6 +29,8 @@ const Financials = ({ symbol, setView }) => {
     return `${change.toFixed(2)}%`;
   };
 
+  
+
   useEffect(() => {
     const fetchFinancialData = async () => {
       try {
@@ -134,6 +136,7 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
 
   return (
    <div>
+    
 
     {/* Summary Income Statement */}
     <div className="financials-block">
