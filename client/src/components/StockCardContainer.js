@@ -15,10 +15,10 @@ const StockCardContainer = () => {
     for (let stock of stocks) {
       try {
         const response = await fetch(
-          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock.symbol}&entitlement=delayed&apikey=${ALPHA_VANTAGE_KEY}`
+          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock.symbol}&apikey=${ALPHA_VANTAGE_KEY}`
         );
         const data = await response.json();
-        const quote = data['Global Quote'] || data['Global Quote - DATA DELAYED BY 15 MINUTES'];
+        const quote = data['Global Quote'];
 
         if (quote && quote['05. price']) {
           updatedStockData[stock.symbol] = {
@@ -53,10 +53,10 @@ const StockCardContainer = () => {
 
     try {
       const response = await fetch(
-        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&entitlement=delayed&apikey=${ALPHA_VANTAGE_KEY}`
+        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
       );
       const data = await response.json();
-      const quote = data['Global Quote'] || data['Global Quote - DATA DELAYED BY 15 MINUTES'];
+      const quote = data['Global Quote'];
 
       if (!quote || !quote['05. price']) {
         alert('Stock not found or invalid symbol');
@@ -93,14 +93,14 @@ const StockCardContainer = () => {
       <div className="add-stock-section">
         {!showSearch && (
           <button onClick={() => setShowSearch(true)} className="add-stock-button">
-            Ekle
+            Add
           </button>
         )}
         {showSearch && (
           <div className="stock-search">
             <input
               type="text"
-              placeholder="Hisse kodu girin (ör. AAPL)"
+              placeholder="Enter stock code (e.g., AAPL)"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={addStock}
@@ -111,8 +111,8 @@ const StockCardContainer = () => {
 
       {stocks.length === 0 && (
         <div className="no-stocks">
-          <p>Henüz hisse kartı eklemediniz.</p>
-          <p>Hisse kartı eklemek için yukarıdaki "Ekle" butonuna tıklayın.</p>
+          <p>No stock cards added yet.</p>
+          <p>Click the "Add" button above to add stock cards.</p>
         </div>
       )}
 

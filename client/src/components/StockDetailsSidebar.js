@@ -66,7 +66,12 @@ const StockDetailsSidebar = ({
         }
         break;
       case 'news':
-        setNewsView(); // Activate News View
+        const newsSection = document.getElementById('news-section');
+        if (newsSection) {
+          newsSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          setNewsView(); // Activate News View if the section is not available
+        }
         break;
       default:
         // Default to financials scrolling behavior

@@ -10,10 +10,14 @@ const Financials = ({ symbol, setView }) => {
   const [loadingFinancials, setLoadingFinancials] = useState(true);
   const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(true);
   const [loadingOverview, setLoadingOverview] = useState(true);
+  const [news, setNews] = useState([]); // Define news state
+  const [loadingNews, setLoadingNews] = useState(true); // Define loading state for news
   const [errorFinancials, setErrorFinancials] = useState(null);
   const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const [errorOverview, setErrorOverview] = useState(null);
+  const [errorNews, setErrorNews] = useState(null); // Define error state for news
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
+  const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY
 
   const formatValue = (value) => {
     if (value >= 1e9) {
@@ -28,6 +32,27 @@ const Financials = ({ symbol, setView }) => {
     const change = ((latest - previous) / previous) * 100;
     return `${change.toFixed(2)}%`;
   };
+
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const endDate = new Date().toISOString().split('T')[0];
+        const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const newsResponse = await axios.get(
+          `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${startDate}&to=${endDate}&token=${FINNHUB_API_KEY}`
+        );
+        setNews(newsResponse.data.slice(0, 20));
+        setLoadingNews(false);
+      } catch (error) {
+        console.error('Error fetching news:', error.message);
+        setErrorNews('Failed to load news.');
+        setLoadingNews(false);
+      }
+    };
+  
+    fetchNews();
+  }, [symbol, API_KEY]);
 
   
 
@@ -426,11 +451,45 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
   </div>
 </div>
 
+    {/* About Section */}
+    <div id='about-section' className="about-company-block">
+        <h4> About The Company </h4>
+        <div> {companyOverview.Description} </div>
+    </div>
 
-      <div id='about-section' className="about-company-block">
-  <h4> About The Company </h4>
-  <div> {companyOverview.Description} </div>
+
+
+
+    {/* News Section */}
+
+    <div id="news-section" className="news-block">
+  <h4>Recent News</h4>
+  {loadingNews ? (
+    <p>Loading news...</p>
+  ) : news.length > 0 ? (
+    <div className="news-list">
+      {news.map((article, index) => (
+        <div key={index} className="news-item">
+          <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
+            {article.headline}
+          </a>
+          <p className="news-date">{new Date(article.datetime * 1000).toLocaleDateString()}</p>
+          <p className="news-summary">{article.summary}</p>
+          {index < news.length - 1 && <hr className="news-divider" />}
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p>No recent news available.</p>
+  )}
 </div>
+
+
+
+
+
+
+
 
 
     </div>
