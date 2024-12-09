@@ -1,28 +1,62 @@
 // src/components/DeveloperConferences.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './DeveloperConferences.css';
 
 const DeveloperConferences = () => {
-  // Placeholder data for recently funded startups
-  const startups = [
-    { id: 1, name: 'Figma', amount: '$200M', date: 'February 2024' },
-    { id: 2, name: 'Notion', amount: '$150M', date: 'March 2024' },
-    { id: 3, name: 'Robinhood', amount: '$100M', date: 'March 2024' },
-    { id: 4, name: 'Plaid', amount: '$300M', date: 'April 2024' },
-    { id: 5, name: 'Stripe', amount: '$600M', date: 'April 2024' },
-  ];
+  const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
+  const [ipoCalendar, setIpoCalendar] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchIpoCalendar = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `https://www.alphavantage.co/query?function=IPO_CALENDAR&apikey=${API_KEY}`
+        );
+
+        const rawData = await response.text();
+        const parsedData = rawData
+          .split('\n')
+          .slice(1) // Skip the header row
+          .map((line) => {
+            const [name, date, exchange] = line.split(',');
+            return { name, date, exchange };
+          })
+          .filter((ipo) => ipo.name && ipo.date && ipo.exchange); // Filter out invalid entries
+
+        setIpoCalendar(parsedData);
+      } catch (error) {
+        console.error('Error fetching IPO calendar:', error);
+        setError('Failed to fetch IPO calendar. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIpoCalendar();
+  }, [API_KEY]);
 
   return (
     <div className="developer-conferences-container">
-      <h2 className="developer-conferences-header">Recently Funded Startups</h2>
-      <ul className="developer-conferences-list">
-        {startups.map((startup, index) => (
-          <li key={startup.id} className="developer-conference-item">
-            <strong>{index + 1}.</strong> {startup.name} <br />
-            <span>{startup.amount} - {startup.date}</span>
-          </li>
-        ))}
-      </ul>
+      <h2 className="developer-conferences-header">Upcoming IPOs</h2>
+      {loading ? (
+        <p style={{ textAlign: 'center' }}>Loading...</p>
+      ) : error ? (
+        <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>
+      ) : (
+        <ul className="developer-conferences-list">
+          {ipoCalendar.map((ipo, index) => (
+            <li key={index} className="developer-conference-item">
+              <strong>{index + 1}.</strong> {ipo.name} <br />
+              <span>
+                {ipo.date} - {ipo.exchange}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
