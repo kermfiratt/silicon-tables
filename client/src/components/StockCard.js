@@ -95,13 +95,14 @@ const StockCard = ({ stock, onRemove }) => {
         }
       });
 
-     
-
       setTimePercentageData(percentages);
     };
 
     fetchData();
   }, [symbol, API_KEY]);
+
+  // Determine chart color based on price change
+  const chartBorderColor = currentPrice < previousClose ? 'red' : 'green';
 
   // Chart options for intraday price volatility
   const chartOptions = {
@@ -142,7 +143,7 @@ const StockCard = ({ stock, onRemove }) => {
       {
         label: `${symbol} Intraday Prices`,
         data: intradayData.map((data) => data.price),
-        borderColor: 'green',
+        borderColor: chartBorderColor,
         tension: 0.3,
         pointRadius: 0,
       },

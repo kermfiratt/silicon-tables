@@ -96,5 +96,14 @@
 }
 
 
+.watchlist-item {
+  transition: background-color 0.5s ease;
+}
 
+.flash-green {
+  background-color: rgba(0, 255, 0, 0.2); /* Yeşil flash */
+}
 
+.flash-red {
+  background-color: rgba(255, 0, 0, 0.2); /* Kırmızı flash */
+}
