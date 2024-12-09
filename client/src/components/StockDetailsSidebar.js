@@ -51,6 +51,8 @@ const StockDetailsSidebar = ({
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setFinancialsView();
         break;
+
+
       case 'priceMetrics':
         const priceMetricsSection = document.getElementById('price-metrics-section');
         if (priceMetricsSection) {
@@ -59,12 +61,18 @@ const StockDetailsSidebar = ({
           window.scrollTo({ top: yPosition, behavior: 'smooth' });
         }
         break;
+
+
+        
+
+
       case 'about':
         const aboutSection = document.getElementById('about-section');
         if (aboutSection) {
           aboutSection.scrollIntoView({ behavior: 'smooth' });
         }
         break;
+        
       case 'news':
         const newsSection = document.getElementById('news-section');
         if (newsSection) {
@@ -73,6 +81,13 @@ const StockDetailsSidebar = ({
           setNewsView(); // Activate News View if the section is not available
         }
         break;
+
+
+        case 'balanceSheet':
+      window.location.href = '/balance-sheet'; // Navigate to the Balance Sheet page
+      break;
+
+
       default:
         // Default to financials scrolling behavior
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -125,6 +140,13 @@ const StockDetailsSidebar = ({
         >
           News
         </li>
+        <li
+         onClick={() => setActiveSectionState('balanceSheet')}
+        className={activeSectionState === 'balanceSheet' ? 'active' : ''}
+        >
+        Balance Sheet
+        </li>
+
         {/* Commented out for now */}
         {/* 
         <li

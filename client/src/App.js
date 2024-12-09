@@ -9,6 +9,8 @@ import Funds from './components/Funds';
 import VC from './components/VC';
 import OptionTracker from './components/OptionTracker'; // Yeni Option Tracker
 import Portfolio from './components/Portfolio'; // Yeni Portfolio bileşeni
+import BalanceSheet from './components/SidebarDetails/BalanceSheet';
+
 import './App.css';
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
             <Route path="/vcs" element={<VC />} />
             <Route path="/option-tracker" element={<OptionTracker />} /> {/* Option Tracker rotası */}
             <Route path="/portfolio" element={<Portfolio />} /> {/* Portfolio rotası */}
+            <Route path="/balance-sheet" element={<BalanceSheet />} />
             
           </Routes>
         </div>
