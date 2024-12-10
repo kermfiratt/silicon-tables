@@ -473,26 +473,29 @@ const speedometerData = [
 
 
 
-{/* Speedometers */}
+
 <div className="special-blocks-container">
-  {speedometerData.map((speedometer, index) => (
-    <div key={index} className="special-block">
-      <ReactSpeedometer
-        maxValue={50}
-        value={speedometer.value}
-        needleColor="gray"
-        segments={5}
-        startColor="red"
-        endColor="green"
-        textColor="white"
-        width={150} /* Matches the special block width */
-        height={150} /* Matches the special block height */
-        ringWidth={30} /* Thickness of the gauge ring */
-      />
-      <h4 className="speedometer-label">{speedometer.label}</h4>
+      {speedometerData.map((speedometer, index) => (
+        <div key={index} className="special-block speedometer-special-block">
+          <ReactSpeedometer
+            maxValue={50}
+            value={speedometer.value}
+            needleColor="gray"
+            segments={5}
+            startColor="red"
+            endColor="green"
+            textColor="white"
+            width={200} /* Matches special block size */
+            height={200} /* Matches special block size */
+            ringWidth={25} /* Matches the design */
+          />
+          <h4 className="speedometer-label">{speedometer.label}</h4>
+        </div>
+      ))}
     </div>
-  ))}
-</div>
+
+
+
 
 
     {/* About Section */}
