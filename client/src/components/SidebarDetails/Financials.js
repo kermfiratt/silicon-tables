@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Financials.css';
+import ReactSpeedometer from 'react-d3-speedometer';
 
 const Financials = ({ symbol, setView }) => {
   const [financialData, setFinancialData] = useState([]);
@@ -157,6 +158,25 @@ const Financials = ({ symbol, setView }) => {
   if (!financialData.length && !priceMetrics.length) return <p>No data available for this company.</p>;
   if (loadingFinancials || loadingOverview) return <p>Loading data...</p>;
 if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOverview}</p>;
+
+
+
+
+
+const speedometerData = [
+  {
+    label: 'Strong Buy',
+    value: parseInt(companyOverview.AnalystRatingStrongBuy) || 0,
+  },
+  {
+    label: 'Neutral',
+    value: parseInt(companyOverview.AnalystRatingHold) || 0,
+  },
+  {
+    label: 'Strong Sell',
+    value: parseInt(companyOverview.AnalystRatingStrongSell) || 0,
+  },
+];
 
 
   return (
@@ -450,6 +470,30 @@ if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOvervie
     </div>
   </div>
 </div>
+
+
+
+{/* Speedometers */}
+<div className="special-blocks-container">
+  {speedometerData.map((speedometer, index) => (
+    <div key={index} className="special-block">
+      <ReactSpeedometer
+        maxValue={50}
+        value={speedometer.value}
+        needleColor="gray"
+        segments={5}
+        startColor="red"
+        endColor="green"
+        textColor="white"
+        width={150} /* Matches the special block width */
+        height={150} /* Matches the special block height */
+        ringWidth={30} /* Thickness of the gauge ring */
+      />
+      <h4 className="speedometer-label">{speedometer.label}</h4>
+    </div>
+  ))}
+</div>
+
 
     {/* About Section */}
     <div id='about-section' className="about-company-block">

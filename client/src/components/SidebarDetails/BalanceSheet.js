@@ -2,12 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import './BalanceSheet.css';
 
+
 const BalanceSheet = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const symbol = 'AAPL'; // Şirket sembolü dinamik olabilir
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
+
+  
 
   useEffect(() => {
     const fetchBalanceSheet = async () => {

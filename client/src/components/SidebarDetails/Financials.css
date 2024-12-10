@@ -393,3 +393,62 @@
   border: 0;
   border-top: 1px solid #555; /* Subtle line to blend with dark theme */
 }
+
+
+.speedometers {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.speedometer-block {
+  text-align: center;
+  width: 300px;
+}
+
+.speedometer-label {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+
+/* Speedometer Styles */
+.react-d3-speedometer {
+  margin: auto; /* Center the speedometer inside the block */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-d3-speedometer .speedometer {
+  width: 100%; /* Adjust width to fit within the block */
+  height: 100%; /* Adjust height to fit within the block */
+}
+
+.react-d3-speedometer .needle {
+  fill: #ddd; /* Needle color */
+}
+
+.react-d3-speedometer .segment {
+  stroke: #444; /* Segment border color */
+  stroke-width: 1px; /* Segment border thickness */
+}
+
+.react-d3-speedometer .text {
+  fill: white; /* Text color */
+  font-size: 12px; /* Font size for labels */
+  font-family: 'Arial', sans-serif; /* Font family */
+}
+
+.react-d3-speedometer .arc {
+  fill: linear-gradient(to right, red, yellow, green); /* Gradient fill for arcs */
+}
+
+.react-d3-speedometer .value-text {
+  fill: #ffffff; /* Value text color */
+  font-size: 14px; /* Value text size */
+  font-weight: bold; /* Value text weight */
+}
+
