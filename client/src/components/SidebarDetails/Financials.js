@@ -309,7 +309,7 @@ const speedometerData = [
     { label: 'Quarterly Net Income', key: 'netIncome' },
   ].map((metric, index) => {
     const maxMetricValue = Math.max(
-      ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Handle absolute max value for scaling
+      ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
     );
 
     return (
@@ -319,12 +319,14 @@ const speedometerData = [
           {financialData.map((item) => {
             const metricValue = item[metric.key]; // Access the correct key
             const formattedValue = formatValue(metricValue);
+
             return (
               <div
                 key={item.date}
-                className="metric-bar"
+                className={`metric-bar ${metricValue < 0 ? 'negative-bar' : 'positive-bar'}`}
                 style={{
-                  height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Ensure valid height calculation
+                  height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Adjust bar height
+                  transform: metricValue < 0 ? 'translateY(100%)' : 'none', // Negative bars grow downward
                 }}
               >
                 <span>{formattedValue}</span>
@@ -343,6 +345,14 @@ const speedometerData = [
     );
   })}
 </div>
+
+
+
+
+
+
+
+
 
 
 
