@@ -1,37 +1,75 @@
 .balance-sheet-container {
-    padding: 20px;
-    background-color: #1e1e1e;
-    color: white;
-    border-radius: 8px;
-    margin: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .balance-sheet-container h2 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .balance-sheet-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .balance-sheet-table th,
-  .balance-sheet-table td {
-    padding: 12px 15px;
-    text-align: center;
-    border-bottom: 1px solid #444;
-  }
-  
-  .balance-sheet-table th {
-    background-color: #333;
-    color: #ddd;
-    font-weight: bold;
-  }
-  
-  .balance-sheet-table tr:hover {
-    background-color: #444;
-  }
-  
+  padding: 20px;
+  background-color: #2c2f33; /* Darker background for modern design */
+  color: #ffffff;
+  border-radius: 10px;
+  margin-top: 30px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+  font-family: 'Roboto', sans-serif; /* Professional font */
+}
+
+.balance-sheet-container h2 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #f3f4f6; /* Slightly lighter color for better visibility */
+  text-transform: uppercase; /* Emphasize the title */
+  letter-spacing: 1.5px; /* Spaced-out letters for sophistication */
+}
+
+.balance-sheet-table {
+  width: 100%;
+  border-collapse: separate; /* Separate borders for a sleek look */
+  border-spacing: 0 10px; /* Space between rows */
+  background-color: #2e3033; /* Table background matches container */
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.balance-sheet-table th,
+.balance-sheet-table td {
+  padding: 15px;
+  text-align: center;
+  border: none;
+  background-color: #3b3e44; /* Row background color */
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.balance-sheet-table th {
+  background-color: #4c5059; /* Distinct header row */
+  font-weight: 600;
+  text-transform: uppercase; /* Capitalized header text */
+  letter-spacing: 1px; /* Neat spacing */
+  color: #f3f4f6; /* Slightly lighter header text */
+}
+
+.balance-sheet-table tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.balance-sheet-table tr:hover {
+  transform: scale(1.02); /* Slight zoom for hover effect */
+  background-color: #565b63; /* Highlight row on hover */
+}
+
+.balance-sheet-table td {
+  background-color: #3b3e44; /* Even color for table data cells */
+  border-bottom: 1px solid #2c2f33; /* Subtle divider between rows */
+}
+
+.balance-sheet-table th:first-child,
+.balance-sheet-table td:first-child {
+  border-top-left-radius: 10px; /* Rounded corners for the first column */
+  border-bottom-left-radius: 10px;
+}
+
+.balance-sheet-table th:last-child,
+.balance-sheet-table td:last-child {
+  border-top-right-radius: 10px; /* Rounded corners for the last column */
+  border-bottom-right-radius: 10px;
+}
+
+.balance-sheet-table tr:last-child td {
+  border-bottom: none; /* Remove border for the last row */
+}

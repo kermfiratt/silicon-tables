@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Financials.css';
 import ReactSpeedometer from 'react-d3-speedometer';
+import BalanceSheet from './BalanceSheet';
 
 const Financials = ({ symbol, setView }) => {
   const [financialData, setFinancialData] = useState([]);
@@ -21,11 +22,19 @@ const Financials = ({ symbol, setView }) => {
   const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY
 
   const formatValue = (value) => {
-    if (value >= 1e9) {
-      return `${(value / 1e9).toFixed(2)}B`; // Convert to billions
-    }
-    return value.toLocaleString();
+    if (value === null || value === undefined || isNaN(value)) return 'N/A'; // Handle invalid numbers
+    const absValue = Math.abs(value); // Use absolute value for formatting
+    const sign = value < 0 ? '-' : ''; // Keep the sign if the value is negative
+  
+    if (absValue >= 1e9) return `${sign}${(absValue / 1e9).toFixed(2)}B`; // Billion
+    if (absValue >= 1e6) return `${sign}${(absValue / 1e6).toFixed(2)}M`; // Million
+    if (absValue >= 1e3) return `${sign}${(absValue / 1e3).toFixed(2)}K`; // Thousand
+    return `${sign}${absValue.toLocaleString()}`; // Smaller numbers
   };
+  
+  
+
+  
 
 
   const calculatePercentageChange = (latest, previous) => {
@@ -290,120 +299,53 @@ const speedometerData = [
 
 
     {/* Financial Metrics */}
-      
-    <div className="metrics-grid">
-      
+<div className="metrics-grid">
+  {[
+    { label: 'Assets', key: 'assets' },
+    { label: 'Liabilities', key: 'liabilities' },
+    { label: 'Equity', key: 'equity' },
+    { label: 'Quarterly Sales', key: 'revenue' },
+    { label: 'Quarterly Gross Profit', key: 'grossProfit' },
+    { label: 'Quarterly Net Income', key: 'netIncome' },
+  ].map((metric, index) => {
+    const maxMetricValue = Math.max(
+      ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Handle absolute max value for scaling
+    );
 
-<div className="metric-block">
-    <h4>Assets</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.assets / Math.max(...financialData.map((d) => d.assets))) * 100}%` }}>
-          <span>{formatValue(item.assets)}</span>
+    return (
+      <div className="metric-block" key={index}>
+        <h4>{metric.label}</h4>
+        <div className="metric-data">
+          {financialData.map((item) => {
+            const metricValue = item[metric.key]; // Access the correct key
+            const formattedValue = formatValue(metricValue);
+            return (
+              <div
+                key={item.date}
+                className="metric-bar"
+                style={{
+                  height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Ensure valid height calculation
+                }}
+              >
+                <span>{formattedValue}</span>
+              </div>
+            );
+          })}
         </div>
-      ))}
-    </div>
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
-  <div className="metric-block">
-    <h4>Liabilities</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.liabilities / Math.max(...financialData.map((d) => d.liabilities))) * 100}%` }}>
-          <span>{formatValue(item.liabilities)}</span>
+        <div className="graph-dates">
+          {financialData.map((item) => (
+            <span key={item.date}>
+              {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+            </span>
+          ))}
         </div>
-      ))}
-    </div>
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
-  <div className="metric-block">
-    <h4>Equity</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.equity / Math.max(...financialData.map((d) => d.equity))) * 100}%` }}>
-          <span>{formatValue(item.equity)}</span>
-        </div>
-      ))}
-    </div>
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
-  <div className="metric-block">
-    <h4>Quarterly Sales</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.revenue / Math.max(...financialData.map((d) => d.revenue))) * 100}%` }}>
-          <span>{formatValue(item.revenue)}</span>
-        </div>
-      ))}
-    </div>
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
-  <div className="metric-block">
-    <h4>Quarterly Gross Profit</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.grossProfit / Math.max(...financialData.map((d) => d.grossProfit))) * 100}%` }}>
-          <span>{formatValue(item.grossProfit)}</span>
-        </div>
-      ))}
-    </div>
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
-  <div className="metric-block">
-    <h4>Quarterly Net Income</h4>
-    <div className="metric-data">
-      {financialData.map((item) => (
-        <div key={item.date} className="metric-bar" style={{ height: `${(item.netIncome / Math.max(...financialData.map((d) => d.netIncome))) * 100}%` }}>
-          <span>{formatValue(item.netIncome)}</span>
-        </div>
-      ))}
-    </div>
-
-    <div className="graph-dates">
-      {financialData.map((item) => (
-        <span key={item.date}>
-          {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-        </span>
-      ))}
-    </div>
-  </div>
-
+      </div>
+    );
+  })}
 </div>
+
+
+
 
 
     {/* Price Metrics */}
@@ -534,6 +476,13 @@ const speedometerData = [
 
 
 
+
+
+    {/* Balance Sheet Section */}
+
+    <div id="balance-sheet-section" className="balance-sheet-block">
+        <BalanceSheet symbol={symbol} />
+    </div>
 
 
 

@@ -1,4 +1,3 @@
-// src/components/StockDetailsSidebar.js
 import React, { useEffect, useState } from 'react';
 import './StockDetailsSidebar.css';
 
@@ -47,52 +46,50 @@ const StockDetailsSidebar = ({
   useEffect(() => {
     switch (activeSectionState) {
       case 'financials':
-        // Scroll to the top of the page for financials
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0); // Immediate scroll to top for financials
         setFinancialsView();
         break;
-
 
       case 'priceMetrics':
         const priceMetricsSection = document.getElementById('price-metrics-section');
         if (priceMetricsSection) {
-          const offset = 100; // Adjust offset for better alignment
+          const offset = 0; // No offset
           const yPosition = priceMetricsSection.getBoundingClientRect().top + window.pageYOffset - offset;
-          window.scrollTo({ top: yPosition, behavior: 'smooth' });
+          window.scrollTo(0, yPosition); // Immediate scroll
         }
         break;
-
-
-        
-
 
       case 'about':
         const aboutSection = document.getElementById('about-section');
         if (aboutSection) {
-          aboutSection.scrollIntoView({ behavior: 'smooth' });
+          aboutSection.scrollIntoView(); // Default browser behavior (no smooth scrolling)
         }
         break;
-        
+
       case 'news':
         const newsSection = document.getElementById('news-section');
         if (newsSection) {
-          newsSection.scrollIntoView({ behavior: 'smooth' });
+          newsSection.scrollIntoView();
         } else {
-          setNewsView(); // Activate News View if the section is not available
+          setNewsView();
         }
         break;
 
-
         case 'balanceSheet':
-      window.location.href = '/balance-sheet'; // Navigate to the Balance Sheet page
-      break;
-
-
-      default:
-        // Default to financials scrolling behavior
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setFinancialsView();
-        break;
+          const balanceSheetSection = document.getElementById('balance-sheet-section'); // Locate the balance sheet section
+          if (balanceSheetSection) {
+            // Temporarily disable smooth scrolling
+            document.documentElement.style.scrollBehavior = 'auto';
+        
+            // Perform the scroll
+            const yPosition = balanceSheetSection.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo(0, yPosition);
+        
+            // Re-enable smooth scrolling
+            document.documentElement.style.scrollBehavior = '';
+          }
+          break;
+        
     }
   }, [activeSectionState, setFinancialsView, setNewsView]);
 
@@ -100,7 +97,7 @@ const StockDetailsSidebar = ({
     <div className="stock-details-sidebar">
       <div className="header-container">
         {companyLogo && <img src={companyLogo} alt={`${symbol} logo`} className="company-logo" />}
-        <h2 className="company-name">{symbol || 'Şirket İsmi'}</h2>
+        <h2 className="company-name">{symbol || 'Company Name'}</h2>
         <div>
           <span className="price-value">{currentPrice}</span>
           {priceChangePercent && (
@@ -141,45 +138,11 @@ const StockDetailsSidebar = ({
           News
         </li>
         <li
-         onClick={() => setActiveSectionState('balanceSheet')}
-        className={activeSectionState === 'balanceSheet' ? 'active' : ''}
+          onClick={() => setActiveSectionState('balanceSheet')}
+          className={activeSectionState === 'balanceSheet' ? 'active' : ''}
         >
-        Balance Sheet
+          Balance Sheet
         </li>
-
-        {/* Commented out for now */}
-        {/* 
-        <li
-          onClick={() => setActiveSectionState('ownership')}
-          className={activeSectionState === 'ownership' ? 'active' : ''}
-        >
-          Ownership
-        </li>
-        <li
-          onClick={() => setActiveSectionState('fundOwnership')}
-          className={activeSectionState === 'fundOwnership' ? 'active' : ''}
-        >
-          Fund Ownership
-        </li>
-        <li
-          onClick={() => setActiveSectionState('revenueBreakdown')}
-          className={activeSectionState === 'revenueBreakdown' ? 'active' : ''}
-        >
-          Revenue Breakdown
-        </li>
-        <li
-          onClick={() => setActiveSectionState('historicalMarketCap')}
-          className={activeSectionState === 'historicalMarketCap' ? 'active' : ''}
-        >
-          Historical Market Cap
-        </li>
-        <li
-          onClick={() => setActiveSectionState('peers')}
-          className={activeSectionState === 'peers' ? 'active' : ''}
-        >
-          Peers
-        </li>
-        */}
       </ul>
     </div>
   );
