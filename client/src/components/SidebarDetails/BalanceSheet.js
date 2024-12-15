@@ -7,11 +7,13 @@ const BalanceSheet = ({ symbol }) => {
   const [error, setError] = useState('');
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
-  // Function to format large numbers
+  // Function to format large numbers, including negative values
   const formatLargeNumber = (num) => {
-    if (num >= 1e9) return `${(num / 1e9).toFixed(1)}B`; // Billions
-    if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M`; // Millions
-    if (num >= 1e3) return `${(num / 1e3).toFixed(1)}K`; // Thousands
+    if (!num || isNaN(num)) return 'N/A';
+    const absNum = Math.abs(num); // Handle negative numbers
+    if (absNum >= 1e9) return `${(num / 1e9).toFixed(1)}B`; // Billions
+    if (absNum >= 1e6) return `${(num / 1e6).toFixed(1)}M`; // Millions
+    if (absNum >= 1e3) return `${(num / 1e3).toFixed(1)}K`; // Thousands
     return num.toLocaleString(); // Standard format
   };
 

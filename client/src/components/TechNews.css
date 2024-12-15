@@ -1,35 +1,73 @@
 /* src/components/TechNews.css */
 .tech-news-container {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-    color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    width: 50%; /* Full width like the other blocks */
-  }
-  
-  .tech-news-header {
-    font-size: 24px;
-    margin-bottom: 15px;
-    text-align: center;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-  }
-  
-  .tech-news-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .tech-news-item {
-    font-size: 18px;
-    margin: 10px 0;
-    border-bottom: 1px solid #444; /* Line to separate items */
-    padding-bottom: 10px;
-  }
-  
-  .tech-news-item strong {
-    color: #ff7b79; /* Highlight the date */
-  }
-  
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 80px;
+}
+
+.tech-news-header {
+  font-size: 24px; /* Matches the Stock News header */
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.tech-news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tech-news-item {
+  font-size: 16px; /* Matches Stock News text */
+  margin: 10px 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+  line-height: 1.5; /* Ensures consistency with spacing */
+}
+
+.tech-news-item a {
+  color: #ff7b79; /* Match the same color */
+  font-size: 18px; /* Bold title */
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.tech-news-item a:hover {
+  text-decoration: underline;
+}
+
+.tech-news-item p {
+  font-size: 14px; /* Matches the summary font size in Stock News */
+  color: #ddd;
+  margin: 5px 0 0;
+}
+
+.load-more-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.load-more-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.load-more-button:hover {
+  background-color: #357ab8;
+}

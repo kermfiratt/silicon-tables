@@ -299,6 +299,7 @@ const speedometerData = [
 
 
     {/* Financial Metrics */}
+{/* Financial Metrics */}
 <div className="metrics-grid">
   {[
     { label: 'Assets', key: 'assets' },
@@ -326,7 +327,6 @@ const speedometerData = [
                 className={`metric-bar ${metricValue < 0 ? 'negative-bar' : 'positive-bar'}`}
                 style={{
                   height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Adjust bar height
-                  transform: metricValue < 0 ? 'translateY(100%)' : 'none', // Negative bars grow downward
                 }}
               >
                 <span>{formattedValue}</span>
@@ -345,6 +345,7 @@ const speedometerData = [
     );
   })}
 </div>
+
 
 
 

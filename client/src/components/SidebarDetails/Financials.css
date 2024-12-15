@@ -184,7 +184,7 @@
 
 .metric-bar.negative-bar {
   background-color: #f44336; /* Red for negative values */
-  transform: translateY(100%); /* Shift negative bars below baseline */
+  
 }
 
 
