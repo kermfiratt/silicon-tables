@@ -6,18 +6,40 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
   margin-bottom: 80px;
+  width: calc(100% - 10px); /* Adjusted width */
+  max-width: 1200px;
 }
 
-.tech-news-header {
-  font-size: 24px; /* Matches the Stock News header */
-  margin-bottom: 15px;
-  text-align: center;
-  border-bottom: 1px solid #333;
-  padding-bottom: 10px;
+
+
+.news-header-newyork {
+  font-family: 'Chomsky', serif; /* Chomsky fontunu kullan */
+  font-size: 40px; /* Büyük başlık için boyut */
+  font-weight: normal; /* Normal font kalınlığı */ 
+  text-align: center; /* Başlığı ortala */
+  margin-bottom: 25px; /* Alt boşluk ekle */
+  text-transform: uppercase; /* Büyük harf kullanımı */
+  color: white;
+
+}
+
+
+.category-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.news-category-dropdown {
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+  outline: none;
 }
 
 .tech-news-list {
@@ -27,17 +49,18 @@
 }
 
 .tech-news-item {
-  font-size: 16px; /* Matches Stock News text */
-  margin: 10px 0;
+  font-size: 16px;
+  margin: 20px 0; /* Increased margin for more space between news */
   border-bottom: 1px solid #444;
-  padding-bottom: 10px;
-  line-height: 1.5; /* Ensures consistency with spacing */
+  padding-bottom: 15px; /* Increased padding for better separation */
+  line-height: 1.6; /* Slightly increased line spacing for readability */
 }
 
 .tech-news-item a {
-  color: #ff7b79; /* Match the same color */
-  font-size: 18px; /* Bold title */
+  color: #E6E1A5 ; /* Golden yellow for titles */
+  font-size: 18px;
   font-weight: bold;
+  font-family: 'Roboto', sans-serif; /* Modern font for links */
   text-decoration: none;
 }
 
@@ -46,7 +69,7 @@
 }
 
 .tech-news-item p {
-  font-size: 14px; /* Matches the summary font size in Stock News */
+  font-size: 14px;
   color: #ddd;
   margin: 5px 0 0;
 }
@@ -54,10 +77,12 @@
 .load-more-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-.load-more-button {
+.load-more-button,
+.load-less-button {
   padding: 10px 20px;
   font-size: 16px;
   color: white;
@@ -68,6 +93,7 @@
   transition: background-color 0.3s ease;
 }
 
-.load-more-button:hover {
+.load-more-button:hover,
+.load-less-button:hover {
   background-color: #357ab8;
 }

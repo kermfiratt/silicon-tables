@@ -1,48 +1,52 @@
 /* src/components/RecentVCFunds.css */
-
 .recent-vc-funds-container {
   background-color: #1e1e1e;
-  margin-top: 10%;
+  padding: 20px;
   border-radius: 8px;
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 24%;
-  
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: center;
 }
 
 .recent-vc-funds-header {
-  font-size: 18px;
-  text-align: center;
+  font-size: 22px;
+  margin-bottom: 15px;
   border-bottom: 1px solid #333;
   padding-bottom: 10px;
-  margin-bottom: 2%;
+}
+
+.yearly-inflation h2 {
+  font-size: 24px;
+  color: #4caf50; /* Green for yearly inflation */
+  margin-bottom: 20px;
 }
 
 .recent-vc-funds-list {
   list-style: none;
   padding: 0;
-  overflow-y: auto;
-  padding-right: 5%;
-  padding-left: 5%;
-  padding-top: 1%;
+  margin: 0;
 }
 
 .recent-vc-funds-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin: 10px 0;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
   border-bottom: 1px solid #444;
-  padding-bottom: 10px;
 }
 
-.startup-name {
+.month-name {
   font-weight: bold;
 }
 
-.fund-amount {
-  color: #00c853;
+.inflation-value {
+  color: #ffa500; /* Orange for monthly inflation values */
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
 }
