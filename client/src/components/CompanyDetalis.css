@@ -5,6 +5,9 @@
   flex-direction: row;
   min-height: 100vh;
   margin-left: 80px; /* Ana menü genişliği */
+  position: static;
+  z-index: auto;
+  
 }
 
 .company-details-container.sidebar-visible .company-details {
@@ -16,6 +19,7 @@
   padding: 20px;
   background-color: #2a2a2a;
   color: #e6e6e6;
+  
 }
 
 .company-details h2 {
@@ -94,6 +98,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  
 }
 
 .block-header {
@@ -107,6 +112,7 @@
 .block-content {
   font-size: 18px;
   color: #d4d4d4;
+  
 }
 
 .news-block {

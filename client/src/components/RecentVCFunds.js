@@ -3,60 +3,71 @@ import React, { useState, useEffect } from 'react';
 import './RecentVCFunds.css';
 
 const RecentVCFunds = () => {
-  const [earningsData, setEarningsData] = useState([]);
+  const [commoditiesData, setCommoditiesData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
-  const fetchEarningsData = async () => {
+  const fetchCommoditiesData = async () => {
+    const commodityEndpoints = [
+      { name: 'Crude Oil (WTI)', function: 'WTI', interval: 'monthly' },
+      { name: 'Crude Oil (Brent)', function: 'BRENT', interval: 'monthly' },
+      { name: 'Natural Gas', function: 'NATURAL_GAS', interval: 'monthly' },
+      { name: 'Aluminum', function: 'ALUMINUM', interval: 'monthly' },
+      { name: 'Copper', function: 'COPPER', interval: 'monthly' },
+    ];
+
     try {
-      const response = await fetch(
-        `https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=6month&apikey=${API_KEY}`
-      );
+      setIsLoading(true);
+      const promises = commodityEndpoints.map(async (commodity) => {
+        const response = await fetch(
+          `https://www.alphavantage.co/query?function=${commodity.function}&interval=${commodity.interval}&apikey=${API_KEY}`
+        );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data for ${commodity.name}`);
+        }
 
-      const data = await response.json();
+        const data = await response.json();
+        const latestDate = Object.keys(data.data || {})[0];
+        const latestPrice = data.data?.[latestDate]?.value;
 
-      if (!data.earningsCalendar) {
-        throw new Error('No earnings calendar data available.');
-      }
+        return {
+          name: commodity.name,
+          price: parseFloat(latestPrice).toFixed(2),
+        };
+      });
 
-      // Filter the data for the top 5 companies
-      const topCompanies = ['AAPL', 'NVDA', 'TSLA', 'GOOG', 'MSFT'];
-      const filteredData = data.earningsCalendar.filter((item) =>
-        topCompanies.includes(item.symbol)
-      );
-
-      setEarningsData(filteredData);
+      const results = await Promise.all(promises);
+      setCommoditiesData(results);
     } catch (err) {
-      console.error('Error fetching earnings data:', err);
-      setError('Failed to fetch earnings data. Please try again later.');
+      console.error('Error fetching commodities data:', err);
+      setError('Failed to fetch commodities data. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEarningsData();
+    fetchCommoditiesData();
   }, []);
 
   return (
     <div className="recent-vc-funds-container">
-      <h3 className="recent-vc-funds-header">Top 5 Companies - Earnings Calendar</h3>
+      <h3 className="recent-vc-funds-header">Popular Commodities Prices</h3>
       {isLoading ? (
         <p>Loading data...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
         <ul className="recent-vc-funds-list">
-          {earningsData.map((item, index) => (
+          {commoditiesData.map((commodity, index) => (
             <li key={index} className="recent-vc-funds-item">
-              <span className="company-symbol">{item.symbol}</span>
-              <span className="earnings-date">{item.reportDate}</span>
+              <span className="commodity-name">{commodity.name}</span>
+              <span className="commodity-price" style={{ color: '#4caf50' }}>
+                ${commodity.price}
+              </span>
             </li>
           ))}
         </ul>

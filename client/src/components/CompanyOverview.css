@@ -12,6 +12,9 @@
   text-align: center;
   color: white;
   margin: 0; /* Bloklar arasındaki boşluk kaldırıldı */
+  position: static;
+  z-index: 1;
+
 }
 
 .company-logo {

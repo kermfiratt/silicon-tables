@@ -15,9 +15,10 @@ html, body {
   margin-left: 80px;
   padding: 20px;
   color: #fff;
-  position: relative;
+  position: static;
   margin-right: 300px;
   z-index: 1;
+
   /* z-index kaldırıldı veya 0 yapıldı */
 }
 

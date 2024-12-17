@@ -9,6 +9,10 @@
   text-align: center;
   margin-top: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  
+  
+ 
+  
 }
 
 /* Title Styling */
@@ -19,6 +23,7 @@
   color: white;
   margin-bottom: 15px;
   text-align: center;
+
 }
 
 /* Financials Block */
@@ -28,6 +33,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   margin-bottom: 20px;
+  
+  
 }
 
 /* Table Styling */
@@ -148,6 +155,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
+  position: static;
+  z-index: auto;
 }
 
 .metric-block h4 {
@@ -163,7 +172,9 @@
   align-items: flex-end;
   gap: 10px;
   height: 180px; /* Increased height for longer blocks */
-  position: relative; /* For negative bar alignment */
+  position: static; /* For negative bar alignment */
+  z-index: auto;
+
   
 }
 
@@ -185,12 +196,14 @@
 .metric-bar.negative-bar {
   background-color: #f44336; /* Red for negative values */
   
+  
 }
 
 
 .metric-bar.positive-bar {
   background-color: #4a90e2; /* Blue for positive values */
   transform: translateY(0); /* Align positive bars with the baseline */
+  
 }
 
 
@@ -233,7 +246,10 @@
   grid-template-columns: repeat(3, 1fr); /* 3 graphs in a row */
   gap: 20px; /* Spacing between graphs */
   margin-top: 30px;
-  z-index: 1;
+  position: static;
+  z-index: auto;
+  
+  
 }
 .special-blocks-container {
   display: flex;

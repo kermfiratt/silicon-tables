@@ -1,3 +1,24 @@
+#root {
+  position: relative;
+  z-index: 0; /* Ensures all components stack below the overlay */
+}
+
+
+.search-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2147483647; /* Use the maximum safe z-index value */
+}
+
+
+
 .search-popup {
   position: fixed;
   top: 0;
@@ -8,7 +29,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 99999; /* Ensures it is on top */
+  z-index: 9999999; /* Ensures it is on top */
 }
 
 .search-popup-content {
@@ -21,6 +42,7 @@
   flex-direction: column;
   align-items: center;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+  
 }
 
 .search-form {
