@@ -1,86 +1,275 @@
+/* General Container Styling */
 .option-tracker-container {
   padding: 20px;
-  background-color: #1e1e1e;
-  color: white;
+  background-color: #202020; /* Darker background for the page */
+  color: #fff; /* Light text for contrast */
+  margin: 20px auto;
+  max-width: calc(100% - 100px); /* Adjust for sidebar width */
   border-radius: 8px;
-  margin: 20px;
-  margin-left: 90px; /* Adjust for sidebar width */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  margin-left: 90px; /* Space for the sidebar */
+  margin-right: 10px;
 }
 
-.option-tracker-container h2 {
+/* Title Styling */
+h2 {
   text-align: center;
+  color: #fff; /* White text for title */
   margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.option-input-form {
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  gap: 20px; /* Space between blocks */
+  align-items: start; /* Align blocks to the top */
+}
+
+/* Add Company Block */
+.add-company-block {
+  background: #333; /* Darker block background */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  min-height: 500px; /* Minimum height for consistency */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
-.input-table {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  border-spacing: 0 10px;
+.add-company-block h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #ccc; /* Lighter text for better contrast */
+  text-align: center;
 }
 
-.input-table td {
-  padding: 8px;
+.form-group {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-.input-table label {
+.form-group label {
+  margin-bottom: 5px;
+  font-size: 14px;
   color: #ccc;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #555;
+  color: #fff;
+}
+
+.form-group input.shares-input {
+  margin-top: 10px; /* Add space above "Enter Shares" input */
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4caf50; /* Green border on focus */
+}
+
+/* Buttons */
+.add-dates-button,
+.add-company-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50; /* Green button */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.add-dates-button:hover,
+.add-company-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Dates & Shares Display */
+.dates-and-shares-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Space between mini blocks */
+  margin-top: 15px;
+}
+
+.small-info-block {
+  background: #444; /* Darker background for sub-blocks */
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+  font-size: 12px;
+  color: #fff; /* Light text for sub-blocks */
+}
+
+.small-info-block:hover {
+  background: #555; /* Hover effect */
+}
+
+/* Autocomplete Dropdown */
+.autocomplete-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0; /* Start dropdown below input box */
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+  width: 42%;
+  margin-top: 60px;
+  color: #fff; /* Light text for dropdown */
+}
+
+.autocomplete-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.autocomplete-dropdown li:hover {
+  background-color: #444;
+}
+
+/* Company Blocks */
+.company-block {
+  background: #333; /* Darker background */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  min-height: 420px; /* Same height as Add Company Block */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative; /* For delete button positioning */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.company-block:hover {
+  background-color: #444; /* Hover effect */
+}
+
+.company-block h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #ccc; /* Lighter text */
+  text-align: center;
+}
+
+.company-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns for sub-blocks */
+  gap: 10px; /* Space between sub-blocks */
+}
+
+.info-block {
+  background: #444; /* Darker background for sub-blocks */
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.info-block:hover {
+  background: #555; /* Hover effect */
+}
+
+.info-block h4 {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.info-block p {
+  margin: 0;
+  font-size: 14px;
+  color: #fff; /* Light text */
+  text-align: center;
+}
+
+.info-block p:last-child {
+  margin-top: 5px;
   font-weight: bold;
 }
 
-.option-input-form input {
-  padding: 8px;
-  width: 100%;
-  max-width: 200px;
-  background-color: #333;
-  border: none;
-  border-radius: 4px;
-  color: white;
+.info-block p.positive {
+  color: #4caf50; /* Green for positive profit */
 }
 
-.option-input-form button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+.info-block p.negative {
+  color: #f44336; /* Red for negative profit */
+}
+
+/* Delete Button */
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff4d4d; /* Red background for delete */
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  width: 25px;
+  height: 25px;
+  font-size: 12px;
+  text-align: center;
+  display: none; /* Hidden by default */
   cursor: pointer;
 }
 
-.option-input-form button:hover {
-  background-color: #45a049;
+.company-block:hover .delete-button {
+  display: block; /* Show delete button on hover */
 }
 
-.option-tracker-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.delete-button:hover {
+  background: #ff0000; /* Darker red on hover */
 }
 
-.option-tracker-table th, .option-tracker-table td {
-  padding: 12px;
+/* Empty Block */
+.empty-block {
+  background: #555;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  border-bottom: 1px solid #444;
+  font-size: 16px;
+  color: #888;
+  min-height: 400px; /* Same height to match filled blocks */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.option-tracker-table th {
-  background-color: #2a2a2a;
-  color: #ccc;
-}
+/* Responsiveness */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* Stack blocks on smaller screens */
+  }
 
-.option-tracker-table td {
-  color: #ddd;
-} sa
-
-.option-tracker-table td:last-child {
-  font-weight: bold;
+  .add-company-block,
+  .company-block,
+  .empty-block {
+    height: auto; /* Allow flexible height on small screens */
+  }
 }

@@ -15,6 +15,7 @@ const Watchlist = () => {
   const [newSymbol, setNewSymbol] = useState('');
 
   useEffect(() => {
+
     const fetchStockData = async () => {
       const newStockData = {};
 
