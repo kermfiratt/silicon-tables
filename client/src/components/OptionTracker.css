@@ -37,7 +37,7 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 500px; /* Minimum height for consistency */
+  min-height: 550px; /* Minimum height for consistency */
   transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
@@ -155,12 +155,13 @@ h2 {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  min-height: 420px; /* Same height as Add Company Block */
+  min-height: 550px; /* Same height as Add Company Block */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative; /* For delete button positioning */
   transition: background-color 0.3s ease; /* Smooth hover effect */
+  
 }
 
 .company-block:hover {
@@ -178,6 +179,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Two columns for sub-blocks */
   gap: 10px; /* Space between sub-blocks */
+  height: 100%; /* Stretch to fit block height */
 }
 
 .info-block {
@@ -205,9 +207,10 @@ h2 {
 
 .info-block p {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px; /* Adjusted font size for more content */
   color: #fff; /* Light text */
   text-align: center;
+  word-wrap: break-word; /* Ensure text wraps properly */
 }
 
 .info-block p:last-child {
