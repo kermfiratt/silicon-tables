@@ -24,7 +24,7 @@ app.get('/api/search', async (req, res) => {
       `https://api.crunchbase.com/v4/data/entities`,
       {
         params: {
-          query: query,
+          query,
           user_key: process.env.REACT_APP_CRUNCHBASE_API_KEY, // Use your Crunchbase API Key
         },
       }

@@ -20,11 +20,13 @@ const VC = () => {
       });
 
       const results = response.data.entities.map((entity) => ({
-        name: entity.properties.name || 'N/A',
-        chairpersons: entity.properties.founders || 'N/A',
-        totalEmployees: entity.properties.num_employees_min || 'N/A',
-        funding: entity.properties.funding_stage || 'N/A',
-        location: entity.properties.headquarters_city || 'N/A',
+        name: entity.properties.name || 'Not Available',
+        chairpersons: entity.properties.founders || 'Not Available',
+        totalEmployees: entity.properties.num_employees_min
+          ? `${entity.properties.num_employees_min} - ${entity.properties.num_employees_max || 'N/A'}`
+          : 'Not Available',
+        funding: entity.properties.funding_stage || 'Not Available',
+        location: entity.properties.headquarters_city || 'Not Available',
       }));
 
       setSearchResults(results);
@@ -53,10 +55,18 @@ const VC = () => {
         {searchResults.map((result, index) => (
           <div key={index} className="result-block">
             <h3>{result.name}</h3>
-            <p><strong>Chairpersons:</strong> {result.chairpersons}</p>
-            <p><strong>Total Employees:</strong> {result.totalEmployees}</p>
-            <p><strong>Funding Stage:</strong> {result.funding}</p>
-            <p><strong>Location:</strong> {result.location}</p>
+            <p>
+              <strong>Chairpersons:</strong> {result.chairpersons}
+            </p>
+            <p>
+              <strong>Total Employees:</strong> {result.totalEmployees}
+            </p>
+            <p>
+              <strong>Funding Stage:</strong> {result.funding}
+            </p>
+            <p>
+              <strong>Location:</strong> {result.location}
+            </p>
           </div>
         ))}
       </div>
