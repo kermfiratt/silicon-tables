@@ -5,6 +5,7 @@ import './VC.css';
 const VC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedDetails, setSelectedDetails] = useState(null);
   const [error, setError] = useState(null);
 
   const handleSearch = async () => {
@@ -15,26 +16,27 @@ const VC = () => {
     }
 
     try {
-      const response = await axios.get('http://localhost:7600/api/search', {
-        params: { query: searchQuery },
+      const response = await axios.post('http://localhost:7600/api/search', {
+        query: searchQuery,
       });
 
-      const results = response.data.entities.map((entity) => ({
-        name: entity.properties.name || 'Not Available',
-        chairpersons: entity.properties.founders || 'Not Available',
-        totalEmployees: entity.properties.num_employees_min
-          ? `${entity.properties.num_employees_min} - ${entity.properties.num_employees_max || 'N/A'}`
-          : 'Not Available',
-        funding: entity.properties.funding_stage || 'Not Available',
-        location: entity.properties.headquarters_city || 'Not Available',
-      }));
-
-      setSearchResults(results);
+      setSearchResults(response.data);
+      setSelectedDetails(null);
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err.message);
       setError('Failed to fetch data. Please try again later.');
       setSearchResults([]);
+    }
+  };
+
+  const fetchDetails = async (permalink) => {
+    try {
+      const response = await axios.get(`http://localhost:7600/api/details/${permalink}`);
+      setSelectedDetails(response.data);
+    } catch (err) {
+      console.error('Error fetching details:', err.message);
+      setError('Failed to fetch details. Please try again later.');
     }
   };
 
@@ -53,23 +55,47 @@ const VC = () => {
       {error && <p className="error-message">{error}</p>}
       <div className="search-results">
         {searchResults.map((result, index) => (
-          <div key={index} className="result-block">
+          <div
+            key={index}
+            className="result-block"
+            onClick={() => fetchDetails(result.permalink)}
+          >
             <h3>{result.name}</h3>
             <p>
-              <strong>Chairpersons:</strong> {result.chairpersons}
+              <strong>Website:</strong>{' '}
+              <a href={result.website} target="_blank" rel="noopener noreferrer">
+                {result.website || 'Not Available'}
+              </a>
             </p>
             <p>
-              <strong>Total Employees:</strong> {result.totalEmployees}
+              <strong>Facebook:</strong>{' '}
+              <a href={result.facebook} target="_blank" rel="noopener noreferrer">
+                {result.facebook || 'Not Available'}
+              </a>
             </p>
             <p>
-              <strong>Funding Stage:</strong> {result.funding}
+              <strong>LinkedIn:</strong>{' '}
+              <a href={result.linkedin} target="_blank" rel="noopener noreferrer">
+                {result.linkedin || 'Not Available'}
+              </a>
             </p>
             <p>
-              <strong>Location:</strong> {result.location}
+              <strong>Twitter:</strong>{' '}
+              <a href={result.twitter} target="_blank" rel="noopener noreferrer">
+                {result.twitter || 'Not Available'}
+              </a>
             </p>
           </div>
         ))}
       </div>
+      {selectedDetails && (
+        <div className="details-block">
+          <h2>{selectedDetails.name}</h2>
+          <p>
+            <strong>Description:</strong> {selectedDetails.shortDescription || 'Not Available'}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
