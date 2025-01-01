@@ -6,80 +6,81 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 7600;
 
-// Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
 
-// Crunchbase API key and base URL
-const CRUNCHBASE_API_KEY = process.env.CRUNCHBASE_API_KEY; // Updated key to match .env file
-const CRUNCHBASE_BASE_URL = 'https://api.crunchbase.com/api/v4';
+const TRACXN_API_KEY = process.env.TRACXN_API_KEY;
+
+if (!TRACXN_API_KEY) {
+  console.error('TRACXN_API_KEY is not set. Please check your .env file.');
+  process.exit(1);
+}
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.send('Silicon Numbers API is running.');
+  res.send('Tracxn API Proxy is running.');
 });
 
-// Proxy endpoint for organization search
+// Proxy endpoint to search for companies and fetch their details
 app.post('/api/search', async (req, res) => {
-  const { query } = req.body;
+  const { name } = req.body;
 
-  if (!query) {
-    return res.status(400).json({ error: 'Query parameter is required' });
+  if (!name) {
+    return res.status(400).json({ error: 'Company name is required.' });
   }
 
+  console.log(`Searching for company: ${name}`);
+
   try {
-    const response = await axios.post(
-      `${CRUNCHBASE_BASE_URL}/searches/organizations`,
+    // Step 1: Use Companies Name Search API to get id and domain
+    const searchResponse = await axios.post(
+      'https://platform.tracxn.com/api/2.2/playground/companies/search',
       {
-        query: {
-          field: 'identifier.name',
-          operator: 'contains',
-          value: query,
-        },
-        limit: 5,
+        filter: { companyName: [name] },
       },
       {
         headers: {
-          'x-cb-user-key': CRUNCHBASE_API_KEY,
+          accessToken: TRACXN_API_KEY,
           'Content-Type': 'application/json',
         },
       }
     );
 
-    res.json(response.data.data);
-  } catch (error) {
-    console.error('Error fetching data from Crunchbase (Search):', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to fetch data from Crunchbase' });
-  }
-});
+    if (!searchResponse.data || searchResponse.data.length === 0) {
+      return res.status(404).json({ error: 'Company not found.' });
+    }
 
-// Proxy endpoint for organization details
-app.get('/api/details/:permalink', async (req, res) => {
-  const { permalink } = req.params;
+    const companyId = searchResponse.data[0].id; // Extract the id from the response
+    console.log(`Found company ID: ${companyId}`);
 
-  try {
-    const response = await axios.get(
-      `${CRUNCHBASE_BASE_URL}/entities/organizations/${permalink}`,
+    // Step 2: Use Companies API to fetch detailed company information
+    const detailsResponse = await axios.get(
+      `https://platform.tracxn.com/api/2.2/playground/companies/${companyId}`,
       {
         headers: {
-          'x-cb-user-key': CRUNCHBASE_API_KEY,
+          accessToken: TRACXN_API_KEY,
+          'Content-Type': 'application/json',
         },
       }
     );
 
-    const details = {
-      name: response.data.properties?.name || 'Not Available',
-      shortDescription: response.data.properties?.short_description || 'Not Available',
-      website: response.data.properties?.website_url || 'Not Available',
-      linkedin: response.data.properties?.linkedin || 'Not Available',
-      facebook: response.data.properties?.facebook || 'Not Available',
-      twitter: response.data.properties?.twitter || 'Not Available',
-    };
-
-    res.json(details);
+    res.json(detailsResponse.data);
   } catch (error) {
-    console.error('Error fetching details from Crunchbase (Details):', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to fetch details from Crunchbase' });
+    console.error('Error fetching data from Tracxn API:');
+    if (error.response) {
+      console.error('Response Data:', error.response.data);
+      console.error('Status Code:', error.response.status);
+      console.error('Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('No Response Received:', error.request);
+    } else {
+      console.error('Error Message:', error.message);
+    }
+
+    res.status(500).json({
+      error: 'Failed to fetch data from Tracxn API',
+      details: error.response?.data || error.message,
+    });
   }
 });
 
