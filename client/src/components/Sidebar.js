@@ -58,17 +58,6 @@ const Sidebar = () => {
           </div>
         </li>
 
-        <li>
-          <Link to="/funds" className="sidebar-item">
-            <FaDatabase className="icon" /> Funds
-          </Link>
-        </li>
-
-        <li>
-          <Link to="/vcs" className="sidebar-item">
-            <FaAngellist className="icon" /> VCs
-          </Link>
-        </li>
 
         <li>
           <Link to="/option-tracker" className="sidebar-item">
