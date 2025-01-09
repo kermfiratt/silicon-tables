@@ -4,6 +4,12 @@ import axios from 'axios';
 import './Financials.css';
 import ReactSpeedometer from 'react-d3-speedometer';
 import BalanceSheet from './BalanceSheet';
+import SecEdgarOwnership from './SecEdgarOwnership';
+
+
+
+
+
 
 const Financials = ({ symbol, setView }) => {
   const [financialData, setFinancialData] = useState([]);
@@ -20,6 +26,8 @@ const Financials = ({ symbol, setView }) => {
   const [errorNews, setErrorNews] = useState(null); // Define error state for news
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
   const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY
+
+
 
   const formatValue = (value) => {
     if (value === null || value === undefined || isNaN(value)) return 'N/A'; // Handle invalid numbers
@@ -42,6 +50,9 @@ const Financials = ({ symbol, setView }) => {
     const change = ((latest - previous) / previous) * 100;
     return `${change.toFixed(2)}%`;
   };
+
+
+  
 
 
   useEffect(() => {
@@ -497,6 +508,14 @@ const speedometerData = [
 
 
 
+
+
+
+    {/* Sec Edgar Section */}
+
+    <div>
+    <SecEdgarOwnership />
+    </div>
 
 
     </div>
