@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './SecEdgarOwnership.css';
 
 const SecEdgarOwnership = () => {
   const [ownershipData, setOwnershipData] = useState([]);
@@ -26,19 +27,21 @@ const SecEdgarOwnership = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h4>Ownership of Securities</h4>
-      <table>
+    <div className="ownership-container">
+      <h4 className="table-title">Ownership of Securities</h4>
+      <table className="ownership-table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Name and Address</th>
+            <th>Shares</th>
             <th>Percentage</th>
           </tr>
         </thead>
         <tbody>
           {ownershipData.map((owner, index) => (
             <tr key={index}>
-              <td>{owner.name}</td>
+              <td>{owner.nameAndAddress}</td>
+              <td>{owner.shares}</td>
               <td>{owner.percentage}</td>
             </tr>
           ))}
