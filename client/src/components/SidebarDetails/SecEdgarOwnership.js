@@ -40,7 +40,7 @@ const SecEdgarOwnership = () => {
         <tbody>
           {ownershipData.map((owner, index) => (
             <tr key={index}>
-              <td>{owner.nameAndAddress}</td>
+              <td>{owner.name}</td>
               <td>{owner.shares}</td>
               <td>{owner.percentage}</td>
             </tr>

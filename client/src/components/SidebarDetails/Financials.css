@@ -140,6 +140,83 @@
   border-radius: 8px;
 }
 
+
+
+/* Earnings Block */
+.earnings-block {
+  width: 96%;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #1e1e1e; /* Block background color */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.earnings-header {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #fff; /* White header for dark background */
+}
+
+.year-selector {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.year-selector label {
+  font-size: 1rem;
+  margin-right: 10px;
+  color: #ddd; /* Light gray for the label */
+}
+
+.year-dropdown {
+  padding: 8px 10px;
+  font-size: 1rem;
+  border: 1px solid #444; /* Darker border for dropdown */
+  border-radius: 4px;
+  background-color: #333; /* Dark dropdown background */
+  color: #fff; /* Light text for dropdown */
+}
+
+/* Earnings Table */
+.earnings-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  background-color: #1e1e1e; /* Table background color */
+}
+
+.earnings-table th,
+.earnings-table td {
+  border: 1px solid #444; /* Subtle dark border */
+  padding: 10px;
+  color: #ddd; /* Light gray text */
+}
+
+.earnings-table th {
+  background-color: #333; /* Slightly lighter than table background */
+  font-weight: bold;
+}
+
+.earnings-table tr:nth-child(even) {
+  background-color: #2a2a2a; /* Darker row background for even rows */
+}
+
+.earnings-table tr:nth-child(odd) {
+  background-color: #252525; /* Slightly lighter than even rows */
+}
+
+.earnings-table tr:hover {
+  background-color: #3a3a3a; /* Highlight on hover */
+}
+
+
 /* Metrics Comparison Blocks */
 .metrics-comparison {
   display: flex;

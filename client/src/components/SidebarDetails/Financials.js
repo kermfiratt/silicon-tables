@@ -24,6 +24,14 @@ const Financials = ({ symbol, setView }) => {
   const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const [errorOverview, setErrorOverview] = useState(null);
   const [errorNews, setErrorNews] = useState(null); // Define error state for news
+  const [quarterlyEarnings, setQuarterlyEarnings] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('');
+  const [filteredEarnings, setFilteredEarnings] = useState([]);
+  const [loadingEarnings, setLoadingEarnings] = useState(true);
+  const [errorEarnings, setErrorEarnings] = useState(null);
+  
+
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
   const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY
 
@@ -50,6 +58,69 @@ const Financials = ({ symbol, setView }) => {
     const change = ((latest - previous) / previous) * 100;
     return `${change.toFixed(2)}%`;
   };
+
+
+
+
+
+  useEffect(() => {
+    const fetchEarningsData = async () => {
+      try {
+        const response = await axios.get(
+          `https://www.alphavantage.co/query?function=EARNINGS&symbol=${symbol}&apikey=${API_KEY}`
+        );
+        const data = response.data;
+  
+        if (data && data.quarterlyEarnings) {
+          setQuarterlyEarnings(data.quarterlyEarnings);
+  
+          // Extract unique years from fiscalDateEnding
+          const uniqueYears = Array.from(
+            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
+          );
+          setYears(uniqueYears);
+  
+          // Set the latest year as default
+          const latestYear = uniqueYears[0];
+          setSelectedYear(latestYear);
+  
+          // Filter earnings by the latest year
+          const filtered = data.quarterlyEarnings.filter((e) =>
+            e.fiscalDateEnding.startsWith(latestYear)
+          );
+          setFilteredEarnings(filtered);
+        } else {
+          throw new Error('No quarterly earnings data available.');
+        }
+  
+        setLoadingEarnings(false);
+      } catch (err) {
+        console.error('Error fetching quarterly earnings:', err.message);
+        setErrorEarnings('Failed to load quarterly earnings data.');
+        setLoadingEarnings(false);
+      }
+    };
+  
+    fetchEarningsData();
+  }, [symbol, API_KEY]);
+
+
+
+
+
+
+  useEffect(() => {
+    if (selectedYear && quarterlyEarnings.length > 0) {
+      const filtered = quarterlyEarnings.filter((e) =>
+        e.fiscalDateEnding.startsWith(selectedYear)
+      );
+      setFilteredEarnings(filtered);
+    }
+  }, [selectedYear, quarterlyEarnings]);
+  
+  
+
+
 
 
   
@@ -309,7 +380,7 @@ const speedometerData = [
     </div>
 
 
-    {/* Financial Metrics */}
+    
 {/* Financial Metrics */}
 <div className="metrics-grid">
   {[
@@ -362,6 +433,60 @@ const speedometerData = [
 
 
 
+
+{/* Earnings Section */}
+<div className="earnings-block">
+  <h4 className="earnings-header">Quarterly Earnings</h4>
+  {loadingEarnings ? (
+    <p className="earnings-loading">Loading Quarterly Earnings...</p>
+  ) : errorEarnings ? (
+    <p className="earnings-error">{errorEarnings}</p>
+  ) : (
+    <div>
+      <div className="year-selector">
+        <label htmlFor="year-select">Select Year:</label>
+        <select
+          id="year-select"
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+          className="year-dropdown"
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      <table className="earnings-table">
+        <thead>
+          <tr>
+            <th>Fiscal Date Ending</th>
+            <th>Reported Date</th>
+            <th>Reported EPS</th>
+            <th>Estimated EPS</th>
+            <th>Surprise</th>
+            <th>Surprise %</th>
+            <th>Report Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredEarnings.map((earning, index) => (
+            <tr key={index}>
+              <td>{earning.fiscalDateEnding}</td>
+              <td>{earning.reportedDate}</td>
+              <td>{earning.reportedEPS}</td>
+              <td>{earning.estimatedEPS}</td>
+              <td>{earning.surprise}</td>
+              <td>{earning.surprisePercentage}%</td>
+              <td>{earning.reportTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
 
 
 

@@ -1,8 +1,7 @@
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 const app = express();
 const PORT = process.env.PORT || 7600;
@@ -12,62 +11,68 @@ app.use(express.json());
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.send('Apollo Free Plan API Proxy and SEC EDGAR Proxy are running.');
+  res.send('SEC EDGAR Proxy is running.');
 });
 
-// Fetch SEC EDGAR DEF 14A document and filter ownership data
+// Fetch SEC EDGAR DEF 14A data
 app.get('/api/sec/def14a', async (req, res) => {
-  const secEdgarUrl =
-    'https://www.sec.gov/Archives/edgar/data/51143/000110465924032641/tm2329614-d3_def14a.htm';
+  const companyCIK = '0000051143'; // Update with the correct CIK
+  const url = `https://data.sec.gov/submissions/CIK${companyCIK}.json`;
 
   try {
-    const response = await axios.get(secEdgarUrl, {
+    // Fetch filings data from SEC
+    const response = await axios.get(url, {
       headers: {
-        'User-Agent': 'MyAppName (your-email@example.com)', // Replace with your details
+        'User-Agent': 'YourAppName (your-email@example.com)', // Replace with your details
       },
     });
 
-    const $ = cheerio.load(response.data);
+    const filings = response.data.filings.recent;
+    const def14aIndex = filings.form.findIndex((form) => form === 'DEF 14A');
 
-    // Extract the "Ownership of Securities" table
-    const ownershipTable = $('*:contains("Ownership of Securities")')
-      .nextUntil('table')
-      .next('table');
-
-    if (!ownershipTable.length) {
-      console.error('No table found for "Ownership of Securities"');
-      throw new Error('Ownership of Securities table not found.');
+    if (def14aIndex === -1) {
+      return res.status(404).json({ error: 'No DEF 14A filing found for this company.' });
     }
 
-    const ownershipData = [];
-
-    ownershipTable.find('tr').each((rowIndex, row) => {
-      if (rowIndex === 0) return; // Skip header row
-
-      const cells = $(row).find('td');
-
-      const nameAndAddress = $(cells[1]).find('span').first().text().trim();
-      const shares = $(cells[4]).text().trim();
-      const percentage = $(cells[7]).text().trim();
-
-      if (nameAndAddress || shares || percentage) {
-        ownershipData.push({
-          nameAndAddress: nameAndAddress || 'N/A',
-          shares: shares || 'N/A',
-          percentage: percentage || 'N/A',
-        });
-      }
+    // Retrieve DEF 14A filing URL
+    const filingUrl = `https://www.sec.gov${filings.primaryDocument[def14aIndex]}`;
+    const filingResponse = await axios.get(filingUrl, {
+      headers: {
+        'User-Agent': 'YourAppName (your-email@example.com)', // Replace with your details
+      },
     });
 
-    if (ownershipData.length === 0) {
-      throw new Error('No valid ownership data found in the SEC filing.');
+    // Parse the filing HTML to extract table data
+    const filingHtml = filingResponse.data;
+    const ownershipData = [];
+    const tableRegex = /Ownership of Securities.*?<table.*?>(.*?)<\/table>/gs;
+    const match = tableRegex.exec(filingHtml);
+
+    if (match) {
+      const tableHtml = match[1];
+      const rows = tableHtml.match(/<tr.*?>(.*?)<\/tr>/gs);
+
+      if (rows && rows.length > 1) {
+        rows.slice(1).forEach((row) => {
+          const columns = row.match(/<td.*?>(.*?)<\/td>/gs);
+          if (columns && columns.length >= 3) {
+            ownershipData.push({
+              name: columns[0].replace(/<.*?>/g, '').trim(),
+              shares: columns[1].replace(/<.*?>/g, '').trim(),
+              percentage: columns[2].replace(/<.*?>/g, '').trim(),
+            });
+          }
+        });
+      }
+    } else {
+      throw new Error('Unable to locate Ownership of Securities table.');
     }
 
-    res.status(200).json(ownershipData);
+    res.json(ownershipData);
   } catch (error) {
-    console.error('Error fetching or filtering SEC EDGAR data:', error.message);
+    console.error('Error fetching SEC EDGAR data:', error.message);
     res.status(500).json({
-      error: 'Failed to fetch or filter SEC EDGAR data',
+      error: 'Failed to fetch SEC EDGAR data',
       details: error.message,
     });
   }
