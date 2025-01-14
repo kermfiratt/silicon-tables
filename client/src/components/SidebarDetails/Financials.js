@@ -30,6 +30,13 @@ const Financials = ({ symbol, setView }) => {
   const [filteredEarnings, setFilteredEarnings] = useState([]);
   const [loadingEarnings, setLoadingEarnings] = useState(true);
   const [errorEarnings, setErrorEarnings] = useState(null);
+  const [cashFlowData, setCashFlowData] = useState([]);
+  const [cashFlowYears, setCashFlowYears] = useState([]);
+  const [selectedCashFlowYear, setSelectedCashFlowYear] = useState('');
+  const [filteredCashFlow, setFilteredCashFlow] = useState([]);
+  const [loadingCashFlow, setLoadingCashFlow] = useState(true);
+  const [errorCashFlow, setErrorCashFlow] = useState(null);
+
   
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
@@ -58,6 +65,68 @@ const Financials = ({ symbol, setView }) => {
     const change = ((latest - previous) / previous) * 100;
     return `${change.toFixed(2)}%`;
   };
+
+
+
+
+
+
+  useEffect(() => {
+    const fetchCashFlowData = async () => {
+      try {
+        const response = await axios.get(
+          `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol}&apikey=${API_KEY}`
+        );
+        const data = response.data;
+  
+        if (data && data.annualReports) {
+          setCashFlowData(data.annualReports);
+  
+          // Extract unique years from fiscalDateEnding
+          const uniqueYears = Array.from(
+            new Set(data.annualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
+          );
+          setCashFlowYears(uniqueYears);
+  
+          // Set the latest year as default
+          const latestYear = uniqueYears[0];
+          setSelectedCashFlowYear(latestYear);
+  
+          // Filter cash flow data by the latest year
+          const filtered = data.annualReports.filter((report) =>
+            report.fiscalDateEnding.startsWith(latestYear)
+          );
+          setFilteredCashFlow(filtered);
+        } else {
+          throw new Error('No cash flow data available.');
+        }
+  
+        setLoadingCashFlow(false);
+      } catch (err) {
+        console.error('Error fetching cash flow data:', err.message);
+        setErrorCashFlow('Failed to load cash flow data.');
+        setLoadingCashFlow(false);
+      }
+    };
+  
+    fetchCashFlowData();
+  }, [symbol, API_KEY]);
+  
+
+
+
+
+
+
+  useEffect(() => {
+    if (selectedCashFlowYear && cashFlowData.length > 0) {
+      const filtered = cashFlowData.filter((report) =>
+        report.fiscalDateEnding.startsWith(selectedCashFlowYear)
+      );
+      setFilteredCashFlow(filtered);
+    }
+  }, [selectedCashFlowYear, cashFlowData]);
+  
 
 
 
@@ -434,66 +503,6 @@ const speedometerData = [
 
 
 
-{/* Earnings Section */}
-<div className="earnings-block">
-  <h4 className="earnings-header">Quarterly Earnings</h4>
-  {loadingEarnings ? (
-    <p className="earnings-loading">Loading Quarterly Earnings...</p>
-  ) : errorEarnings ? (
-    <p className="earnings-error">{errorEarnings}</p>
-  ) : (
-    <div>
-      <div className="year-selector">
-        <label htmlFor="year-select">Select Year:</label>
-        <select
-          id="year-select"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-          className="year-dropdown"
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-      <table className="earnings-table">
-        <thead>
-          <tr>
-            <th>Fiscal Date Ending</th>
-            <th>Reported Date</th>
-            <th>Reported EPS</th>
-            <th>Estimated EPS</th>
-            <th>Surprise</th>
-            <th>Surprise %</th>
-            <th>Report Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEarnings.map((earning, index) => (
-            <tr key={index}>
-              <td>{earning.fiscalDateEnding}</td>
-              <td>{earning.reportedDate}</td>
-              <td>{earning.reportedEPS}</td>
-              <td>{earning.estimatedEPS}</td>
-              <td>{earning.surprise}</td>
-              <td>{earning.surprisePercentage}%</td>
-              <td>{earning.reportTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
-</div>
-
-
-
-
-
-
-
 
     {/* Price Metrics */}
     <div className="price-metrics-container">
@@ -582,6 +591,165 @@ const speedometerData = [
         </div>
       ))}
     </div>
+
+
+
+
+
+
+
+
+
+{/* Earnings Section */}
+<div className="earnings-block">
+  <h4 className="earnings-header">Quarterly Earnings</h4>
+  {loadingEarnings ? (
+    <p className="earnings-loading">Loading Quarterly Earnings...</p>
+  ) : errorEarnings ? (
+    <p className="earnings-error">{errorEarnings}</p>
+  ) : (
+    <div>
+      <div className="year-selector">
+        <label htmlFor="year-select">Select Year:</label>
+        <select
+          id="year-select"
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+          className="year-dropdown"
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      <table className="earnings-table">
+        <thead>
+          <tr>
+            <th>Fiscal Date Ending</th>
+            <th>Reported Date</th>
+            <th>Reported EPS</th>
+            <th>Estimated EPS</th>
+            <th>Surprise</th>
+            <th>Surprise %</th>
+            <th>Report Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredEarnings.map((earning, index) => (
+            <tr key={index}>
+              <td>{earning.fiscalDateEnding}</td>
+              <td>{earning.reportedDate}</td>
+              <td>{earning.reportedEPS}</td>
+              <td>{earning.estimatedEPS}</td>
+              <td>{earning.surprise}</td>
+              <td>{earning.surprisePercentage}%</td>
+              <td>{earning.reportTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
+
+
+
+
+
+
+
+{/* Cash Flow Section */}
+<div className="cashflow-block">
+  <h4 className="cashflow-header">Annual Cash Flow</h4>
+  {loadingCashFlow ? (
+    <p className="cashflow-loading">Loading Annual Cash Flow...</p>
+  ) : errorCashFlow ? (
+    <p className="cashflow-error">{errorCashFlow}</p>
+  ) : (
+    <div>
+      <div className="year-selector">
+        <label htmlFor="cashflow-year-select">Select Year:</label>
+        <select
+          id="cashflow-year-select"
+          value={selectedCashFlowYear}
+          onChange={(e) => setSelectedCashFlowYear(e.target.value)}
+          className="year-dropdown"
+        >
+          {cashFlowYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* First Table */}
+      <table className="cashflow-table">
+        <thead>
+          <tr>
+            <th>Fiscal Date Ending</th>
+            <th>Operating Cash Flow</th>
+            <th>Payments for Operating Activities</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredCashFlow.map((report, index) => (
+            <tr key={`${index}-table1`}>
+              <td>{report.fiscalDateEnding}</td>
+              <td>{formatValue(report.operatingCashflow)}</td>
+              <td>{formatValue(report.paymentsForOperatingActivities)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Second Table */}
+      <table className="cashflow-table">
+        <thead>
+          <tr>
+            <th>Capital Expenditures</th>
+            <th>Change in Operating Assets</th>
+            <th>Change in Operating Liabilities</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredCashFlow.map((report, index) => (
+            <tr key={`${index}-table2`}>
+              <td>{formatValue(report.capitalExpenditures)}</td>
+              <td>{formatValue(report.changeInOperatingAssets)}</td>
+              <td>{formatValue(report.changeInOperatingLiabilities)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Third Table (If necessary) */}
+      <table className="cashflow-table">
+        <thead>
+          <tr>
+            <th>Cashflow from Investment</th>
+            <th>Cashflow from Financing</th>
+            <th>Net Income</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredCashFlow.map((report, index) => (
+            <tr key={`${index}-table3`}>
+              <td>{formatValue(report.cashflowFromInvestment)}</td>
+              <td>{formatValue(report.cashflowFromFinancing)}</td>
+              <td>{formatValue(report.netIncome)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
+
+
+
+
 
 
 
