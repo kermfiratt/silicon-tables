@@ -8,6 +8,7 @@ import Sidebar from './components/Sidebar';
 import OptionTracker from './components/OptionTracker'; // Yeni Option Tracker
 import Portfolio from './components/Portfolio'; // Yeni Portfolio bileşeni
 import BalanceSheet from './components/SidebarDetails/BalanceSheet';
+import Compare from './components/Compare'; // Import Compare component
 
 import './App.css';
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/option-tracker" element={<OptionTracker />} /> {/* Option Tracker rotası */}
             <Route path="/portfolio" element={<Portfolio />} /> {/* Portfolio rotası */}
             <Route path="/balance-sheet" element={<BalanceSheet />} />
+            <Route path="/compare" element={<Compare />} />
             
           </Routes>
         </div>

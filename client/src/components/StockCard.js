@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
 import './StockCard.css';
 
 const StockCard = ({ stock, onRemove }) => {
@@ -7,42 +6,15 @@ const StockCard = ({ stock, onRemove }) => {
     symbol = 'N/A',
     currentPrice = 0,
     previousClose = 0,
-    high = 0,
-    low = 0,
-    marketCap = 'N/A',
     priceChange = 'neutral',
   } = stock;
 
-  const [intradayData, setIntradayData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [timePercentageData, setTimePercentageData] = useState({});
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch intraday data
-        const intradayResponse = await fetch(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${API_KEY}`
-        );
-        const intradayData = await intradayResponse.json();
-        const timeSeries = intradayData['Time Series (5min)'];
-
-        if (timeSeries) {
-          const formattedData = Object.entries(timeSeries).map(([time, values]) => ({
-            time,
-            price: parseFloat(values['4. close']),
-          }));
-
-          // Sort data by time to ensure correct order
-          formattedData.sort((a, b) => new Date(a.time) - new Date(b.time));
-          setIntradayData(formattedData);
-        } else {
-          console.error('No intraday data available:', intradayData);
-          setIntradayData([]);
-        }
-
-        // Fetch daily data for percentage calculations
         const dailyResponse = await fetch(
           `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&outputsize=full&apikey=${API_KEY}`
         );
@@ -61,10 +33,7 @@ const StockCard = ({ stock, onRemove }) => {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        setIntradayData([]);
         setTimePercentageData({});
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -91,7 +60,7 @@ const StockCard = ({ stock, onRemove }) => {
             100
           ).toFixed(2);
         } else {
-          percentages[label] = 'N/A'; // Handle missing data
+          percentages[label] = 'N/A';
         }
       });
 
@@ -101,57 +70,11 @@ const StockCard = ({ stock, onRemove }) => {
     fetchData();
   }, [symbol, API_KEY]);
 
-  // Determine chart color based on price change
-  const chartBorderColor = currentPrice < previousClose ? 'red' : 'green';
-
-  // Chart options for intraday price volatility
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        enabled: true,
-        callbacks: {
-          label: (tooltipItem) => `$${tooltipItem.raw.toFixed(2)}`,
-        },
-      },
-    },
-    scales: {
-      x: {
-        display: true,
-        ticks: {
-          callback: (val, index) =>
-            index % Math.floor(intradayData.length / 6) === 0
-              ? intradayData[index]?.time.slice(11, 16)
-              : '',
-        },
-      },
-      y: { display: false }, // Hide Y-axis
-    },
-    elements: {
-      point: {
-        radius: 2, // Small points for hover
-        hoverRadius: 4, // Increase size on hover
-      },
-    },
-  };
-
-  // Chart dataset for intraday price volatility
-  const chartDataset = {
-    labels: intradayData.map((data) => data.time),
-    datasets: [
-      {
-        label: `${symbol} Intraday Prices`,
-        data: intradayData.map((data) => data.price),
-        borderColor: chartBorderColor,
-        tension: 0.3,
-        pointRadius: 0,
-      },
-    ],
-  };
-
   return (
     <div className="stock-card">
+      {/* Close Button */}
+      <button className="close-button" onClick={() => onRemove(symbol)}>✖</button>
+
       {/* Stock Header */}
       <div className="stock-header">
         <div className="stock-name">{symbol}</div>
@@ -159,11 +82,7 @@ const StockCard = ({ stock, onRemove }) => {
           <div className="current-price">${currentPrice.toFixed(2)}</div>
           <div
             className={`price-change ${
-              priceChange === 'up'
-                ? 'positive'
-                : priceChange === 'down'
-                ? 'negative'
-                : 'neutral'
+              priceChange === 'up' ? 'positive' : priceChange === 'down' ? 'negative' : ''
             }`}
           >
             {priceChange === 'up' ? '+' : ''}
@@ -174,40 +93,6 @@ const StockCard = ({ stock, onRemove }) => {
             %)
           </div>
         </div>
-        <button className="remove-button" onClick={() => onRemove(symbol)}>
-          ✖
-        </button>
-      </div>
-
-      {/* Stock Summary */}
-      <div className="stock-summary">
-        <div className="summary-item">
-          <span>Taban</span>
-          <span>{low.toFixed(2)}</span>
-        </div>
-        <div className="summary-item">
-          <span>Tavan</span>
-          <span>{high.toFixed(2)}</span>
-        </div>
-        <div className="summary-item">
-          <span>Ö.K.</span>
-          <span>{previousClose.toFixed(2)}</span>
-        </div>
-        <div className="summary-item">
-          <span>P.D.</span>
-          <span>{marketCap}</span>
-        </div>
-      </div>
-
-      {/* Intraday Chart */}
-      <div className="chart-container-style">
-        {loading ? (
-          <p>Loading intraday data...</p>
-        ) : intradayData.length > 0 ? (
-          <Line data={chartDataset} options={chartOptions} />
-        ) : (
-          <p>No intraday data available</p>
-        )}
       </div>
 
       {/* Time Percentage Blocks */}

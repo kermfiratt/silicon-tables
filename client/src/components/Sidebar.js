@@ -1,10 +1,11 @@
 // src/components/Sidebar.js
 import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaBackward, FaHome, FaDatabase, FaAngellist, FaChartLine, FaWallet } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaHome, FaUser } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
+import { FaCodeCompare } from 'react-icons/fa6';
 
 const Sidebar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -24,6 +25,10 @@ const Sidebar = () => {
     } else {
       navigate(`/company/Apple`);
     }
+  };
+
+  const handleCompareClick = () => {
+    navigate('/compare'); // Navigate to Compare page
   };
 
   return (
@@ -58,22 +63,16 @@ const Sidebar = () => {
           </div>
         </li>
 
-
         <li>
-          <Link to="/option-tracker" className="sidebar-item">
-            <FaChartLine className="icon" /> Option Tracker
-          </Link>
+          <div className="sidebar-item user" onClick={handleCompareClick}>
+            <FaCodeCompare className="icon" /> Compare
+          </div>
         </li>
 
-        {/* Yeni Portföy butonu */}
         <li>
-          <Link to="/portfolio" className="sidebar-item">
-            <FaWallet className="icon" /> Portfolio
-          </Link>
-        </li>
-
-        <li className="inactive-item">
-          <FaBackward className="icon" /> Inactive Button
+          <div className="sidebar-item user" onClick={handleCompanyInfoClick}>
+            <FaUser className="icon" /> Account
+          </div>
         </li>
       </ul>
 
