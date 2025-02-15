@@ -5,7 +5,7 @@ import { FaSearch, FaBuilding, FaHome, FaUser } from 'react-icons/fa';
 import './Sidebar.css';
 import Search from './Search'; 
 import logo from '../logo.webp';
-import { FaCodeCompare } from 'react-icons/fa6';
+import { FaCodeCompare, FaPaperclip } from 'react-icons/fa6';
 
 const Sidebar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -29,6 +29,10 @@ const Sidebar = () => {
 
   const handleCompareClick = () => {
     navigate('/compare'); // Navigate to Compare page
+  };
+
+  const handleReportClick = () => {
+    navigate('/report'); // Navigate to Compare page
   };
 
   return (
@@ -66,6 +70,12 @@ const Sidebar = () => {
         <li>
           <div className="sidebar-item user" onClick={handleCompareClick}>
             <FaCodeCompare className="icon" /> Compare
+          </div>
+        </li>
+
+        <li>
+          <div className="sidebar-item user" onClick={handleReportClick}>
+            <FaPaperclip className="icon" /> Report
           </div>
         </li>
 
