@@ -14,7 +14,8 @@ const Compare = () => {
   const [data1, setData1] = useState(null);
   const [data2, setData2] = useState(null);
   const [error, setError] = useState(null);
-  const timeoutRef = useRef(null);
+  const timeoutRef1 = useRef(null);
+  const timeoutRef2 = useRef(null);
 
   useEffect(() => {
     fetchStockData();
@@ -22,12 +23,10 @@ const Compare = () => {
 
   const fetchSuggestions = async (query, setSuggestions) => {
     if (!query.trim()) return;
-
     try {
       const response = await axios.get(
         `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${API_KEY}`
       );
-
       if (response.data["bestMatches"]) {
         setSuggestions(response.data["bestMatches"].slice(0, 5));
       } else {
@@ -90,64 +89,100 @@ const Compare = () => {
     <div className="compare_container">
       <h1 className="compare_title">COMPARE STOCKS</h1>
 
+      {/* Search Section */}
+      <div className="compare_search_wrapper">
+        <div className="search_group">
+          <input type="text" className="compare_input" placeholder="Search Stock 1..." value={stock1} onChange={(e) => {
+            setStock1(e.target.value);
+            clearTimeout(timeoutRef1.current);
+            timeoutRef1.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300);
+          }} />
+          <ul className="compare_suggestions">
+            {suggestions1.map((s, index) => (
+              <li key={index} onClick={() => {
+                setStock1(s["1. symbol"]);
+                setSuggestions1([]);
+              }}>
+                {s["1. symbol"]} - {s["2. name"]}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="search_group">
+          <input type="text" className="compare_input" placeholder="Search Stock 2..." value={stock2} onChange={(e) => {
+            setStock2(e.target.value);
+            clearTimeout(timeoutRef2.current);
+            timeoutRef2.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions2), 300);
+          }} />
+          <ul className="compare_suggestions">
+            {suggestions2.map((s, index) => (
+              <li key={index} onClick={() => {
+                setStock2(s["1. symbol"]);
+                setSuggestions2([]);
+              }}>
+                {s["1. symbol"]} - {s["2. name"]}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <button className="compare_button" onClick={fetchStockData}>Compare</button>
+
       {data1 && data2 ? (
         <>
           <div className="compare_result">
-            <button className="compare_reset" onClick={() => {
-              setStock1('');
-              setStock2('');
-              setData1(null);
-              setData2(null);
-            }}>Compare Another</button>
-
+           
             <table className="compare_table">
               <thead>
                 <tr>
-                  <th className="company_name">{data1.Name}</th>
                   <th className="metric_header">Metric</th>
+                  <th className="company_name">{data1.Name}</th>
                   <th className="company_name">{data2.Name}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td colSpan="3" className="table_category">Valuation</td></tr>
+                <tr><td className="table_category">Valuation</td></tr>
                 <tr>
-                  <td className="data_cell">{data1.PERatio}</td>
                   <td className="metric_name">P/E Ratio</td>
+                  <td className="data_cell">{data1.PERatio}</td>
                   <td className="data_cell">{data2.PERatio}</td>
                 </tr>
                 <tr>
-                  <td className="data_cell">{data1.PriceToBookRatio}</td>
                   <td className="metric_name">P/B Ratio</td>
+                  <td className="data_cell">{data1.PriceToBookRatio}</td>
                   <td className="data_cell">{data2.PriceToBookRatio}</td>
                 </tr>
 
-                <tr><td colSpan="3" className="table_category">Profitability</td></tr>
+                <tr><td className="table_category">Profitability</td></tr>
                 <tr>
-                  <td className="data_cell">{data1.ProfitMargin}</td>
                   <td className="metric_name">Profit Margin</td>
+                  <td className="data_cell">{data1.ProfitMargin}</td>
                   <td className="data_cell">{data2.ProfitMargin}</td>
                 </tr>
                 <tr>
-                  <td className="data_cell">{data1.OperatingMarginTTM}</td>
                   <td className="metric_name">Operating Margin</td>
+                  <td className="data_cell">{data1.OperatingMarginTTM}</td>
                   <td className="data_cell">{data2.OperatingMarginTTM}</td>
                 </tr>
 
-                <tr><td colSpan="3" className="table_category">Growth</td></tr>
+                <tr><td className="table_category">Growth</td></tr>
                 <tr>
-                  <td className="data_cell">{data1.QuarterlyRevenueGrowthYOY}</td>
                   <td className="metric_name">Revenue Growth</td>
+                  <td className="data_cell">{data1.QuarterlyRevenueGrowthYOY}</td>
                   <td className="data_cell">{data2.QuarterlyRevenueGrowthYOY}</td>
                 </tr>
                 <tr>
-                  <td className="data_cell">{data1.QuarterlyEarningsGrowthYOY}</td>
                   <td className="metric_name">Earnings Growth</td>
+                  <td className="data_cell">{data1.QuarterlyEarningsGrowthYOY}</td>
                   <td className="data_cell">{data2.QuarterlyEarningsGrowthYOY}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* Charts Section */}
           <div className="chart_section">
             <h2>Performance Charts</h2>
             <div className="chart_grid">
@@ -158,29 +193,7 @@ const Compare = () => {
             </div>
           </div>
         </>
-      ) : (
-        <div className="compare_search_wrapper">
-          <div className="search_group">
-            <input type="text" className="compare_input" placeholder="Search Stock 1..." value={stock1} onChange={(e) => {
-              setStock1(e.target.value);
-              clearTimeout(timeoutRef.current);
-              timeoutRef.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300);
-            }} />
-            <ul className="compare_suggestions">
-              {suggestions1.map((s, index) => (
-                <li key={index} onClick={() => {
-                  setStock1(s["1. symbol"]);
-                  setSuggestions1([]);
-                }}>
-                  {s["1. symbol"]} - {s["2. name"]}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {!data1 || !data2 ? <button className="compare_button" onClick={fetchStockData}>Compare</button> : null}
+      ) : null}
 
       {error && <p className="compare_error">{error}</p>}
     </div>

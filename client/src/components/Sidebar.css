@@ -1,6 +1,6 @@
 .sidebar {
   width: 80px; /* Sidebar'ı daha dar tut */
-  background-color: #333;
+  background-color: #0d0f15;
   color: white;
   height: 100vh;
   padding-top: 1px;
@@ -10,6 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  margin-left: 10px;
 }
 
 .sidebar-header, .sidebar-item, .inactive-item, .search-bar {
@@ -92,8 +93,3 @@
 }
 
 
-/*
-.user{
-  margin-top: 370px;
-}
-*/

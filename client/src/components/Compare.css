@@ -41,6 +41,7 @@
   background-color: #2a2a2a;
   color: #e6e6e6;
   outline: none;
+  border-radius: 6px;
 }
 
 /* Dropdown Suggestions */
@@ -53,7 +54,7 @@
   border-radius: 4px;
   overflow: hidden;
   z-index: 1000;
-  left: 0; /* Aligns directly below input */
+  left: 0;
 }
 
 .compare_suggestions li {
@@ -62,17 +63,11 @@
   color: #ffffff;
   border-bottom: 1px solid #444;
   cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .compare_suggestions li:hover {
   background-color: #4caf50;
-}
-
-/* Divider between search bars */
-.compare_divider {
-  width: 3px;
-  height: 50px;
-  background-color: #666;
 }
 
 /* Compare Button */
@@ -179,6 +174,7 @@
 .company_name {
   font-size: 22px;
   font-weight: bold;
+  text-align: center;
 }
 
 /* Colors for Better/Worse Comparison */
