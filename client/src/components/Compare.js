@@ -7,8 +7,8 @@ import { Line } from 'react-chartjs-2';
 const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
 const Compare = () => {
-  const [stock1, setStock1] = useState('NVDA'); 
-  const [stock2, setStock2] = useState('INTC'); 
+  const [stock1, setStock1] = useState('NVDA');
+  const [stock2, setStock2] = useState('INTC');
   const [suggestions1, setSuggestions1] = useState([]);
   const [suggestions2, setSuggestions2] = useState([]);
   const [data1, setData1] = useState(null);
@@ -44,152 +44,205 @@ const Compare = () => {
     }
 
     try {
-      const response1 = await axios.get(
-        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock1.toUpperCase()}&apikey=${API_KEY}`
-      );
-      const response2 = await axios.get(
-        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock2.toUpperCase()}&apikey=${API_KEY}`
-      );
+      const [overview1, overview2, earnings1, earnings2, balance1, balance2] = await Promise.all([
+        axios.get(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock1}&apikey=${API_KEY}`),
+        axios.get(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock2}&apikey=${API_KEY}`),
+        axios.get(`https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${stock1}&apikey=${API_KEY}`),
+        axios.get(`https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${stock2}&apikey=${API_KEY}`),
+        axios.get(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${stock1}&apikey=${API_KEY}`),
+        axios.get(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${stock2}&apikey=${API_KEY}`)
+      ]);
 
-      if (response1.data && response2.data && response1.data.Symbol && response2.data.Symbol) {
-        setData1(response1.data);
-        setData2(response2.data);
-        setError(null);
-      } else {
-        setError("Invalid stock symbols. Please try again.");
-      }
+      setData1({ overview: overview1.data, earnings: earnings1.data, balance: balance1.data });
+      setData2({ overview: overview2.data, earnings: earnings2.data, balance: balance2.data });
+      setError(null);
     } catch (err) {
       setError("Failed to fetch stock data. Please try again.");
     }
   };
 
-  const generateChartData = (key, label) => {
-    if (!data1 || !data2) return null;
+  const formatNumber = (num) => {
+    if (!num) return 'N/A';
+    num = parseFloat(num);
+    if (num >= 1e9) return (num / 1e9).toFixed(2) + "B";
+    if (num >= 1e6) return (num / 1e6).toFixed(2) + "M";
+    if (num <= -1e9) return (num / 1e9).toFixed(2) + "B";
+    if (num <= -1e6) return (num / 1e6).toFixed(2) + "M";
+    return num.toFixed(2);
+  };
 
-    return {
-      labels: ['2023/9', '2023/12', '2024/3', '2024/6', '2024/9'],
-      datasets: [
-        {
-          label: `${data1.Symbol} - ${label}`,
-          data: [12, 15, 18, 17, 20], 
-          borderColor: 'yellow',
-          backgroundColor: 'rgba(255, 255, 0, 0.5)',
-        },
-        {
-          label: `${data2.Symbol} - ${label}`,
-          data: [25, 30, 28, 27, 26], 
-          borderColor: 'blue',
-          backgroundColor: 'rgba(0, 0, 255, 0.5)',
+  const isBetter = (val1, val2, higherIsBetter = true) => {
+    if (val1 === "N/A" || val2 === "N/A") return "";
+    const num1 = parseFloat(val1);
+    const num2 = parseFloat(val2);
+    if (higherIsBetter) {
+      return num1 > num2 ? "better" : "worse";
+    } else {
+      return num1 < num2 ? "better" : "worse";
+    }
+  };
+
+  const calculateScore = (data1, data2) => {
+    let score = 0;
+    const metrics = [...valuationMetrics, ...profitMetrics, ...earningsMetrics];
+    metrics.forEach(metric => {
+      const val1 = data1.overview[metric.key];
+      const val2 = data2.overview[metric.key];
+      if (val1 !== "N/A" && val2 !== "N/A") {
+        if (parseFloat(val1) > parseFloat(val2)) {
+          score += 1;
+        } else if (parseFloat(val1) < parseFloat(val2)) {
+          score -= 1;
         }
-      ],
-    };
+      }
+    });
+    return score;
+  };
+
+  const valuationMetrics = [
+    { name: "P/E Ratio", key: "PERatio" },
+    { name: "P/B Ratio", key: "PriceToBookRatio" },
+    { name: "PEG Ratio", key: "PEGRatio" },
+    { name: "Book Value", key: "BookValue" },
+    { name: "Dividend Per Share", key: "DividendPerShare" },
+    { name: "EPS", key: "EPS" }
+  ];
+
+  const profitMetrics = [
+    { name: "Profit Margin", key: "ProfitMargin" },
+    { name: "Operating Margin", key: "OperatingMarginTTM" },
+    { name: "Return on Assets", key: "ReturnOnAssetsTTM" },
+    { name: "Return on Equity", key: "ReturnOnEquityTTM" },
+    { name: "Revenue", key: "RevenueTTM" },
+    { name: "Gross Profit", key: "GrossProfitTTM" }
+  ];
+
+  const earningsMetrics = [
+    { name: "Total Revenue", key: "totalRevenue" },
+    { name: "Gross Profit", key: "grossProfit" },
+    { name: "Operating Income", key: "operatingIncome" },
+    { name: "Cost of Revenue", key: "costOfRevenue" },
+    { name: "R&D Expenses", key: "researchAndDevelopment" },
+    { name: "Operating Expenses", key: "operatingExpenses" }
+  ];
+
+  const formatLabel = (label) => {
+    return label.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
   return (
     <div className="compare_container">
       <h1 className="compare_title">COMPARE STOCKS</h1>
 
-      {/* Search Section */}
       <div className="compare_search_wrapper">
-        <div className="search_group">
-          <input type="text" className="compare_input" placeholder="Search Stock 1..." value={stock1} onChange={(e) => {
-            setStock1(e.target.value);
-            clearTimeout(timeoutRef1.current);
-            timeoutRef1.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300);
-          }} />
-          <ul className="compare_suggestions">
-            {suggestions1.map((s, index) => (
-              <li key={index} onClick={() => {
-                setStock1(s["1. symbol"]);
-                setSuggestions1([]);
-              }}>
-                {s["1. symbol"]} - {s["2. name"]}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="search_group">
-          <input type="text" className="compare_input" placeholder="Search Stock 2..." value={stock2} onChange={(e) => {
-            setStock2(e.target.value);
-            clearTimeout(timeoutRef2.current);
-            timeoutRef2.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions2), 300);
-          }} />
-          <ul className="compare_suggestions">
-            {suggestions2.map((s, index) => (
-              <li key={index} onClick={() => {
-                setStock2(s["1. symbol"]);
-                setSuggestions2([]);
-              }}>
-                {s["1. symbol"]} - {s["2. name"]}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <input type="text" className="compare_input" placeholder="Search Stock 1..." value={stock1} 
+          onChange={(e) => { setStock1(e.target.value); clearTimeout(timeoutRef1.current);
+            timeoutRef1.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300); }} />
+        <input type="text" className="compare_input" placeholder="Search Stock 2..." value={stock2} 
+          onChange={(e) => { setStock2(e.target.value); clearTimeout(timeoutRef2.current);
+            timeoutRef2.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions2), 300); }} />
       </div>
 
       <button className="compare_button" onClick={fetchStockData}>Compare</button>
 
       {data1 && data2 ? (
         <>
-          <div className="compare_result">
-           
-            <table className="compare_table">
-              <thead>
-                <tr>
-                  <th className="metric_header">Metric</th>
-                  <th className="company_name">{data1.Name}</th>
-                  <th className="company_name">{data2.Name}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td className="table_category">Valuation</td></tr>
-                <tr>
-                  <td className="metric_name">P/E Ratio</td>
-                  <td className="data_cell">{data1.PERatio}</td>
-                  <td className="data_cell">{data2.PERatio}</td>
-                </tr>
-                <tr>
-                  <td className="metric_name">P/B Ratio</td>
-                  <td className="data_cell">{data1.PriceToBookRatio}</td>
-                  <td className="data_cell">{data2.PriceToBookRatio}</td>
-                </tr>
-
-                <tr><td className="table_category">Profitability</td></tr>
-                <tr>
-                  <td className="metric_name">Profit Margin</td>
-                  <td className="data_cell">{data1.ProfitMargin}</td>
-                  <td className="data_cell">{data2.ProfitMargin}</td>
-                </tr>
-                <tr>
-                  <td className="metric_name">Operating Margin</td>
-                  <td className="data_cell">{data1.OperatingMarginTTM}</td>
-                  <td className="data_cell">{data2.OperatingMarginTTM}</td>
-                </tr>
-
-                <tr><td className="table_category">Growth</td></tr>
-                <tr>
-                  <td className="metric_name">Revenue Growth</td>
-                  <td className="data_cell">{data1.QuarterlyRevenueGrowthYOY}</td>
-                  <td className="data_cell">{data2.QuarterlyRevenueGrowthYOY}</td>
-                </tr>
-                <tr>
-                  <td className="metric_name">Earnings Growth</td>
-                  <td className="data_cell">{data1.QuarterlyEarningsGrowthYOY}</td>
-                  <td className="data_cell">{data2.QuarterlyEarningsGrowthYOY}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="company_score compare_header">
+            <span className={calculateScore(data1, data2) > 0 ? "score good" : "score bad"}>
+              {calculateScore(data1, data2)}
+            </span>
+            <span className="company_name">{data1.overview.Name}</span>
+            <span className="company_name">{data2.overview.Name}</span>
+            <span className={calculateScore(data2, data1) > 0 ? "score good" : "score bad"}>
+              {calculateScore(data2, data1)}
+            </span>
           </div>
 
-          {/* Charts Section */}
+          <div className="compare_table_wrapper">
+            <div className="compare_category">
+              <h3 className="category_title">Valuation</h3>
+              {valuationMetrics.map(metric => (
+                <div key={metric.key} className="metric_row">
+                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key])}`}>
+                    {formatNumber(data1.overview[metric.key])}
+                  </span>
+                  <span className="metric_name">{metric.name}</span>
+                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key])}`}>
+                    {formatNumber(data2.overview[metric.key])}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="compare_category">
+              <h3 className="category_title">Profitability</h3>
+              {profitMetrics.map(metric => (
+                <div key={metric.key} className="metric_row">
+                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key])}`}>
+                    {formatNumber(data1.overview[metric.key])}
+                  </span>
+                  <span className="metric_name">{metric.name}</span>
+                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key])}`}>
+                    {formatNumber(data2.overview[metric.key])}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="compare_category">
+              <h3 className="category_title">Annual Earnings</h3>
+              {earningsMetrics.map(metric => (
+                <div key={metric.key} className="metric_row">
+                  <span className={`metric_value ${isBetter(data1.earnings.annualReports[0][metric.key], data2.earnings.annualReports[0][metric.key])}`}>
+                    {formatNumber(data1.earnings.annualReports[0][metric.key])}
+                  </span>
+                  <span className="metric_name">{metric.name}</span>
+                  <span className={`metric_value ${isBetter(data2.earnings.annualReports[0][metric.key], data1.earnings.annualReports[0][metric.key])}`}>
+                    {formatNumber(data2.earnings.annualReports[0][metric.key])}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="chart_section">
             <h2>Performance Charts</h2>
             <div className="chart_grid">
-              <div className="chart_container"><h3>Profit Margin</h3><Line data={generateChartData("ProfitMargin", "Profit Margin")} /></div>
-              <div className="chart_container"><h3>Revenue Growth</h3><Line data={generateChartData("RevenueTTM", "Revenue Growth")} /></div>
-              <div className="chart_container"><h3>Earnings Per Share</h3><Line data={generateChartData("EPS", "Earnings Per Share")} /></div>
-              <div className="chart_container"><h3>Market Capitalization</h3><Line data={generateChartData("MarketCapitalization", "Market Capitalization")} /></div>
+              {["totalAssets", "cashAndCashEquivalentsAtCarryingValue", "currentDebt", "inventory", "goodwill", "totalNonCurrentLiabilities"].map(metric => (
+                <div key={metric} className="chart_container">
+                  <h3>{formatLabel(metric)}</h3>
+                  <Line
+                    data={{
+                      labels: data1.balance.quarterlyReports.slice(0, 5).map(report => report.fiscalDateEnding),
+                      datasets: [
+                        {
+                          label: `${data1.overview.Symbol} - ${formatLabel(metric)}`,
+                          data: data1.balance.quarterlyReports.slice(0, 5).map(report => parseFloat(report[metric] || 0)),
+                          borderColor: 'yellow',
+                          backgroundColor: 'rgba(255, 255, 0, 0.5)',
+                        },
+                        {
+                          label: `${data2.overview.Symbol} - ${formatLabel(metric)}`,
+                          data: data2.balance.quarterlyReports.slice(0, 5).map(report => parseFloat(report[metric] || 0)),
+                          borderColor: 'blue',
+                          backgroundColor: 'rgba(0, 0, 255, 0.5)',
+                        }
+                      ],
+                    }}
+                    options={{
+                      scales: {
+                        y: {
+                          ticks: {
+                            callback: function(value) {
+                              return formatNumber(value);
+                            }
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </>
