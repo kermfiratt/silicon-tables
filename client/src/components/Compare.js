@@ -8,7 +8,7 @@ const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
 const Compare = () => {
   const [stock1, setStock1] = useState('NVDA');
-  const [stock2, setStock2] = useState('INTC');
+  const [stock2, setStock2] = useState('AAPL');
   const [suggestions1, setSuggestions1] = useState([]);
   const [suggestions2, setSuggestions2] = useState([]);
   const [data1, setData1] = useState(null);
@@ -71,15 +71,17 @@ const Compare = () => {
     return num.toFixed(2);
   };
 
-  const isBetter = (val1, val2, higherIsBetter = true) => {
+  const isBetter = (val1, val2, category) => {
     if (val1 === "N/A" || val2 === "N/A") return "";
     const num1 = parseFloat(val1);
     const num2 = parseFloat(val2);
-    if (higherIsBetter) {
-      return num1 > num2 ? "better" : "worse";
-    } else {
+
+    if (category === "valuation") {
       return num1 < num2 ? "better" : "worse";
+    } else if (category === "profitability" || category === "earnings") {
+      return num1 > num2 ? "better" : "worse";
     }
+    return "";
   };
 
   const calculateScore = (data1, data2) => {
@@ -148,14 +150,10 @@ const Compare = () => {
       {data1 && data2 ? (
         <>
           <div className="company_score compare_header">
-            <span className={calculateScore(data1, data2) > 0 ? "score good" : "score bad"}>
-              {calculateScore(data1, data2)}
-            </span>
+            
             <span className="company_name">{data1.overview.Name}</span>
             <span className="company_name">{data2.overview.Name}</span>
-            <span className={calculateScore(data2, data1) > 0 ? "score good" : "score bad"}>
-              {calculateScore(data2, data1)}
-            </span>
+            
           </div>
 
           <div className="compare_table_wrapper">
@@ -163,11 +161,11 @@ const Compare = () => {
               <h3 className="category_title">Valuation</h3>
               {valuationMetrics.map(metric => (
                 <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "valuation")}`}>
                     {formatNumber(data1.overview[metric.key])}
                   </span>
                   <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "valuation")}`}>
                     {formatNumber(data2.overview[metric.key])}
                   </span>
                 </div>
@@ -178,11 +176,11 @@ const Compare = () => {
               <h3 className="category_title">Profitability</h3>
               {profitMetrics.map(metric => (
                 <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "profitability")}`}>
                     {formatNumber(data1.overview[metric.key])}
                   </span>
                   <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "profitability")}`}>
                     {formatNumber(data2.overview[metric.key])}
                   </span>
                 </div>
@@ -193,11 +191,11 @@ const Compare = () => {
               <h3 className="category_title">Annual Earnings</h3>
               {earningsMetrics.map(metric => (
                 <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.earnings.annualReports[0][metric.key], data2.earnings.annualReports[0][metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data1.earnings.annualReports[0][metric.key], data2.earnings.annualReports[0][metric.key], "earnings")}`}>
                     {formatNumber(data1.earnings.annualReports[0][metric.key])}
                   </span>
                   <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.earnings.annualReports[0][metric.key], data1.earnings.annualReports[0][metric.key])}`}>
+                  <span className={`metric_value ${isBetter(data2.earnings.annualReports[0][metric.key], data1.earnings.annualReports[0][metric.key], "earnings")}`}>
                     {formatNumber(data2.earnings.annualReports[0][metric.key])}
                   </span>
                 </div>

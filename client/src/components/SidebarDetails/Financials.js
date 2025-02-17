@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Financials.css';
 import ReactSpeedometer from 'react-d3-speedometer';
 import BalanceSheet from './BalanceSheet';
-import SecEdgarOwnership from './SecEdgarOwnership';
+
 
 
 
@@ -804,11 +804,7 @@ const speedometerData = [
 
 
 
-    {/* Sec Edgar Section */}
-
-    <div>
-    <SecEdgarOwnership />
-    </div>
+    
 
 
     </div>
