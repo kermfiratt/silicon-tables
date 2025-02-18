@@ -53,6 +53,10 @@ const Compare = () => {
         axios.get(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${stock2}&apikey=${API_KEY}`)
       ]);
 
+      // Log the API responses to verify the structure
+      console.log("Earnings Data for Stock 1:", earnings1.data);
+      console.log("Earnings Data for Stock 2:", earnings2.data);
+
       setData1({ overview: overview1.data, earnings: earnings1.data, balance: balance1.data });
       setData2({ overview: overview2.data, earnings: earnings2.data, balance: balance2.data });
       setError(null);
@@ -132,6 +136,14 @@ const Compare = () => {
     return label.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
+  // Function to format date as "YYYY-MM"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  };
+
   return (
     <div className="compare_container">
       <h1 className="compare_title">COMPARE STOCKS</h1>
@@ -206,22 +218,28 @@ const Compare = () => {
           <div className="chart_section">
             <h2>Performance Charts</h2>
             <div className="chart_grid">
-              {["totalAssets", "cashAndCashEquivalentsAtCarryingValue", "currentDebt", "inventory", "goodwill", "totalNonCurrentLiabilities"].map(metric => (
+              {["totalAssets", "netIncome", "currentDebt", "inventory", "cashAndCashEquivalentsAtCarryingValue", "totalNonCurrentLiabilities"].map(metric => (
                 <div key={metric} className="chart_container">
                   <h3>{formatLabel(metric)}</h3>
                   <Line
                     data={{
-                      labels: data1.balance.quarterlyReports.slice(0, 5).map(report => report.fiscalDateEnding),
+                      labels: metric === "netIncome"
+                        ? data1.earnings.quarterlyReports.slice(0, 5).reverse().map(report => formatDate(report.fiscalDateEnding))
+                        : data1.balance.quarterlyReports.slice(0, 5).reverse().map(report => formatDate(report.fiscalDateEnding)),
                       datasets: [
                         {
                           label: `${data1.overview.Symbol} - ${formatLabel(metric)}`,
-                          data: data1.balance.quarterlyReports.slice(0, 5).map(report => parseFloat(report[metric] || 0)),
+                          data: metric === "netIncome"
+                            ? data1.earnings.quarterlyReports.slice(0, 5).reverse().map(report => parseFloat(report[metric] || 0))
+                            : data1.balance.quarterlyReports.slice(0, 5).reverse().map(report => parseFloat(report[metric] || 0)),
                           borderColor: 'yellow',
                           backgroundColor: 'rgba(255, 255, 0, 0.5)',
                         },
                         {
                           label: `${data2.overview.Symbol} - ${formatLabel(metric)}`,
-                          data: data2.balance.quarterlyReports.slice(0, 5).map(report => parseFloat(report[metric] || 0)),
+                          data: metric === "netIncome"
+                            ? data2.earnings.quarterlyReports.slice(0, 5).reverse().map(report => parseFloat(report[metric] || 0))
+                            : data2.balance.quarterlyReports.slice(0, 5).reverse().map(report => parseFloat(report[metric] || 0)),
                           borderColor: 'blue',
                           backgroundColor: 'rgba(0, 0, 255, 0.5)',
                         }
