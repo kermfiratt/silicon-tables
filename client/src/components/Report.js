@@ -5,7 +5,7 @@ import "./Report.css";
 const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
 const Report = () => {
-  const [stock, setStock] = useState("NVDA"); // Varsayılan hisse senedi
+  const [stock, setStock] = useState("NVDA"); // Default stock
   const [suggestions, setSuggestions] = useState([]);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -40,19 +40,46 @@ const Report = () => {
     }
 
     try {
-      const response = await axios.get(
+      const overviewResponse = await axios.get(
         `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`
       );
+      const incomeResponse = await axios.get(
+        `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`
+      );
+      const balanceSheetResponse = await axios.get(
+        `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`
+      );
+      const cashFlowResponse = await axios.get(
+        `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`
+      );
 
-      if (response.data && response.data.Symbol) {
-        setData(response.data);
+      if (overviewResponse.data && incomeResponse.data && balanceSheetResponse.data && cashFlowResponse.data) {
+        setData({
+          overview: overviewResponse.data,
+          income: incomeResponse.data,
+          balanceSheet: balanceSheetResponse.data,
+          cashFlow: cashFlowResponse.data,
+        });
         setError(null);
       } else {
-        setError("Invalid stock symbol. Please try again.");
+        setError("Invalid stock symbol or data not available. Please try again.");
       }
     } catch (err) {
       setError("Failed to fetch stock data. Please try again.");
     }
+  };
+
+  const calculateChange = (current, previous) => {
+    if (previous === 0) return 0; // Avoid division by zero
+    return ((current - previous) / previous) * 100;
+  };
+
+  const calculateBpsChange = (current, previous) => {
+    return (current - previous) * 10000; // Convert to basis points
+  };
+
+  const getPositiveCount = (values) => {
+    return values.filter(value => value > 0).length;
   };
 
   return (
@@ -91,36 +118,153 @@ const Report = () => {
 
       {data && (
         <div className="report_blocks">
-          {/* Karlılık Bloğu */}
+          {/* Profit Block */}
           <div className="report_block">
-            <h2>Karlılık</h2>
-            <p>Fiscal Year: {data.FiscalYearEnd}</p>
-            <div className="report_score green">✔ {data.ProfitMargin ? `${(data.ProfitMargin * 100).toFixed(2)}%` : "N/A"}</div>
+            <h2>Profit <span className="circle">{getPositiveCount([
+              calculateBpsChange(data.income.annualReports[0].netIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].netIncome / data.income.annualReports[1].totalRevenue),
+              calculateBpsChange(data.income.quarterlyReports[0].netIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].netIncome / data.income.quarterlyReports[1].totalRevenue),
+              calculateBpsChange(data.income.annualReports[0].grossProfit / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].grossProfit / data.income.annualReports[1].totalRevenue),
+              calculateBpsChange(data.income.quarterlyReports[0].grossProfit / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].grossProfit / data.income.quarterlyReports[1].totalRevenue),
+              calculateBpsChange(data.income.annualReports[0].operatingIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].operatingIncome / data.income.annualReports[1].totalRevenue),
+              calculateBpsChange(data.income.quarterlyReports[0].operatingIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].operatingIncome / data.income.quarterlyReports[1].totalRevenue)
+            ])}</span></h2>
             <ul>
-              <li className={data.ProfitMargin > 0 ? "green" : "red"}>Net Kar Marjı: {data.ProfitMargin ? `${(data.ProfitMargin * 100).toFixed(2)}%` : "N/A"}</li>
-              <li className={data.OperatingMarginTTM > 0 ? "green" : "red"}>Faaliyet Kar Marjı: {data.OperatingMarginTTM ? `${(data.OperatingMarginTTM * 100).toFixed(2)}%` : "N/A"}</li>
+              <li>
+                <span className="metric">Net Profit Margin (Annual)</span>
+                <span className={`value ${calculateBpsChange(data.income.annualReports[0].netIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].netIncome / data.income.annualReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.annualReports[0].netIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].netIncome / data.income.annualReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
+              <li>
+                <span className="metric">Net Profit Margin (Quarterly)</span>
+                <span className={`value ${calculateBpsChange(data.income.quarterlyReports[0].netIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].netIncome / data.income.quarterlyReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.quarterlyReports[0].netIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].netIncome / data.income.quarterlyReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
+              <li>
+                <span className="metric">Gross Profit Margin (Annual)</span>
+                <span className={`value ${calculateBpsChange(data.income.annualReports[0].grossProfit / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].grossProfit / data.income.annualReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.annualReports[0].grossProfit / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].grossProfit / data.income.annualReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
+              <li>
+                <span className="metric">Gross Profit Margin (Quarterly)</span>
+                <span className={`value ${calculateBpsChange(data.income.quarterlyReports[0].grossProfit / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].grossProfit / data.income.quarterlyReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.quarterlyReports[0].grossProfit / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].grossProfit / data.income.quarterlyReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
+              <li>
+                <span className="metric">EBIT Margin (Annual)</span>
+                <span className={`value ${calculateBpsChange(data.income.annualReports[0].operatingIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].operatingIncome / data.income.annualReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.annualReports[0].operatingIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].operatingIncome / data.income.annualReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
+              <li>
+                <span className="metric">EBIT Margin (Quarterly)</span>
+                <span className={`value ${calculateBpsChange(data.income.quarterlyReports[0].operatingIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].operatingIncome / data.income.quarterlyReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateBpsChange(data.income.quarterlyReports[0].operatingIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].operatingIncome / data.income.quarterlyReports[1].totalRevenue).toFixed(2)} bps
+                </span>
+              </li>
             </ul>
           </div>
 
-          {/* Büyüme Bloğu */}
+          {/* Growth Block */}
           <div className="report_block">
-            <h2>Büyüme</h2>
-            <p>Latest Quarter: {data.LatestQuarter}</p>
-            <div className="report_score red">📉 {data.QuarterlyRevenueGrowthYOY ? `${(data.QuarterlyRevenueGrowthYOY * 100).toFixed(2)}%` : "N/A"}</div>
+            <h2>Growth <span className="circle">{getPositiveCount([
+              calculateChange(data.income.annualReports[0].totalRevenue, data.income.annualReports[1].totalRevenue),
+              calculateChange(data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].totalRevenue),
+              calculateChange(data.income.annualReports[0].operatingIncome, data.income.annualReports[1].operatingIncome),
+              calculateChange(data.income.quarterlyReports[0].operatingIncome, data.income.quarterlyReports[1].operatingIncome),
+              calculateChange(data.income.annualReports[0].netIncome, data.income.annualReports[1].netIncome),
+              calculateChange(data.income.quarterlyReports[0].netIncome, data.income.quarterlyReports[1].netIncome)
+            ])}</span></h2>
             <ul>
-              <li className={data.QuarterlyRevenueGrowthYOY > 0 ? "green" : "red"}>Satış Büyümesi: {data.QuarterlyRevenueGrowthYOY ? `${(data.QuarterlyRevenueGrowthYOY * 100).toFixed(2)}%` : "N/A"}</li>
-              <li className={data.QuarterlyEarningsGrowthYOY > 0 ? "green" : "red"}>Kâr Büyümesi: {data.QuarterlyEarningsGrowthYOY ? `${(data.QuarterlyEarningsGrowthYOY * 100).toFixed(2)}%` : "N/A"}</li>
+              <li>
+                <span className="metric">Sales (Annual)</span>
+                <span className={`value ${calculateChange(data.income.annualReports[0].totalRevenue, data.income.annualReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.annualReports[0].totalRevenue, data.income.annualReports[1].totalRevenue).toFixed(2)}%
+                </span>
+              </li>
+              <li>
+                <span className="metric">Sales (Quarterly)</span>
+                <span className={`value ${calculateChange(data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].totalRevenue) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].totalRevenue).toFixed(2)}%
+                </span>
+              </li>
+              <li>
+                <span className="metric">EBIT (Annual)</span>
+                <span className={`value ${calculateChange(data.income.annualReports[0].operatingIncome, data.income.annualReports[1].operatingIncome) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.annualReports[0].operatingIncome, data.income.annualReports[1].operatingIncome).toFixed(2)}%
+                </span>
+              </li>
+              <li>
+                <span className="metric">EBIT (Quarterly)</span>
+                <span className={`value ${calculateChange(data.income.quarterlyReports[0].operatingIncome, data.income.quarterlyReports[1].operatingIncome) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.quarterlyReports[0].operatingIncome, data.income.quarterlyReports[1].operatingIncome).toFixed(2)}%
+                </span>
+              </li>
+              <li>
+                <span className="metric">Net Profit (Annual)</span>
+                <span className={`value ${calculateChange(data.income.annualReports[0].netIncome, data.income.annualReports[1].netIncome) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.annualReports[0].netIncome, data.income.annualReports[1].netIncome).toFixed(2)}%
+                </span>
+              </li>
+              <li>
+                <span className="metric">Net Profit (Quarterly)</span>
+                <span className={`value ${calculateChange(data.income.quarterlyReports[0].netIncome, data.income.quarterlyReports[1].netIncome) > 0 ? "green" : "red"}`}>
+                  {calculateChange(data.income.quarterlyReports[0].netIncome, data.income.quarterlyReports[1].netIncome).toFixed(2)}%
+                </span>
+              </li>
             </ul>
           </div>
 
-          {/* Borçluluk Bloğu */}
+          {/* Indebtedness Block */}
           <div className="report_block">
-            <h2>Borçluluk</h2>
-            <p>Debt to Equity Ratio: {data.DebtToEquityTTM ? data.DebtToEquityTTM : "N/A"}</p>
-            <div className="report_score orange">⚠ Debt: {data.MarketCapitalization ? `$${(data.MarketCapitalization / 1e9).toFixed(1)}B` : "N/A"}</div>
+            <h2>Indebtedness <span className="circle">{getPositiveCount([
+              data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalCurrentLiabilities > 0 ? 1 : 0,
+              data.overview.DebtToEquity < 0.5 ? 1 : 0,
+              data.balanceSheet.annualReports[0].totalLiabilities - data.balanceSheet.annualReports[0].totalAssets < 0 ? 1 : 0,
+              data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalLiabilities > 0 ? 1 : 0,
+              data.balanceSheet.annualReports[0].totalCurrentAssets / data.balanceSheet.annualReports[0].totalCurrentLiabilities > 1.5 ? 1 : 0,
+              data.cashFlow.annualReports[0].operatingCashflow / 5 - data.income.annualReports[0].interestExpense > 0 ? 1 : 0
+            ])}</span></h2>
             <ul>
-              <li className={data.PriceToBookRatio < 3 ? "green" : "red"}>P/B Ratio: {data.PriceToBookRatio ? data.PriceToBookRatio : "N/A"}</li>
-              <li className={data.PriceToSalesRatioTTM < 5 ? "green" : "red"}>P/S Ratio: {data.PriceToSalesRatioTTM ? data.PriceToSalesRatioTTM : "N/A"}</li>
+              <li>
+                <span className="metric">Working Capital &gt; 0</span>
+                <span className={`value ${data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalCurrentLiabilities > 0 ? "green" : "red"}`}>
+                  {data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalCurrentLiabilities > 0 ? "✔" : "✘"}
+                </span>
+              </li>
+              <li>
+                <span className="metric">Financial Indebtedness &lt; 50%</span>
+                <span className={`value ${data.overview.DebtToEquity < 0.5 ? "green" : "red"}`}>
+                  {data.overview.DebtToEquity < 0.5 ? "✔" : "✘"}
+                </span>
+              </li>
+              <li>
+                <span className="metric">Net Debt &lt; 0</span>
+                <span className={`value ${data.balanceSheet.annualReports[0].totalLiabilities - data.balanceSheet.annualReports[0].totalAssets < 0 ? "green" : "red"}`}>
+                  {data.balanceSheet.annualReports[0].totalLiabilities - data.balanceSheet.annualReports[0].totalAssets < 0 ? "✔" : "✘"}
+                </span>
+              </li>
+              <li>
+                <span className="metric">Current Assets &gt; Financial Debt</span>
+                <span className={`value ${data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalLiabilities > 0 ? "green" : "red"}`}>
+                  {data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalLiabilities > 0 ? "✔" : "✘"}
+                </span>
+              </li>
+              <li>
+                <span className="metric">Current Ratio &gt; 1.5</span>
+                <span className={`value ${data.balanceSheet.annualReports[0].totalCurrentAssets / data.balanceSheet.annualReports[0].totalCurrentLiabilities > 1.5 ? "green" : "red"}`}>
+                  {data.balanceSheet.annualReports[0].totalCurrentAssets / data.balanceSheet.annualReports[0].totalCurrentLiabilities > 1.5 ? "✔" : "✘"}
+                </span>
+              </li>
+              <li>
+                <span className="metric">Net Financial Expense &lt; (EBITDA / 5)</span>
+                <span className={`value ${data.cashFlow.annualReports[0].operatingCashflow / 5 - data.income.annualReports[0].interestExpense > 0 ? "green" : "red"}`}>
+                  {data.cashFlow.annualReports[0].operatingCashflow / 5 - data.income.annualReports[0].interestExpense > 0 ? "✔" : "✘"}
+                </span>
+              </li>
             </ul>
           </div>
         </div>
