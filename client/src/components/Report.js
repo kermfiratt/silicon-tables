@@ -9,6 +9,7 @@ const Report = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
   const timeoutRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +40,9 @@ const Report = () => {
       return;
     }
 
+    setLoading(true); // Start loading
+    setError(null);
+
     try {
       const overviewResponse = await axios.get(
         `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`
@@ -60,12 +64,13 @@ const Report = () => {
           balanceSheet: balanceSheetResponse.data,
           cashFlow: cashFlowResponse.data,
         });
-        setError(null);
       } else {
         setError("Invalid stock symbol or data not available. Please try again.");
       }
     } catch (err) {
       setError("Failed to fetch stock data. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -113,6 +118,8 @@ const Report = () => {
         </div>
         <button className="search_button" onClick={() => fetchStockData(stock)}>Search</button>
       </div>
+
+      {loading && <div className="loading">Loading...</div>}
 
       {error && <p className="error_message">{error}</p>}
 
@@ -219,7 +226,7 @@ const Report = () => {
           </div>
 
           {/* Indebtedness Block */}
-          <div className="report_block">
+          <div className="report_block indebtedness">
             <h2>Indebtedness <span className="circle">{getPositiveCount([
               data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalCurrentLiabilities > 0 ? 1 : 0,
               data.overview.DebtToEquity < 0.5 ? 1 : 0,

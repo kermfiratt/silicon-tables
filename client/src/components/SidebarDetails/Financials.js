@@ -464,11 +464,14 @@ const speedometerData = [
       ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
     );
 
+    // Reverse the financialData array to display the most recent data on the right
+    const reversedFinancialData = [...financialData].reverse();
+
     return (
       <div className="metric-block" key={index}>
         <h4>{metric.label}</h4>
         <div className="metric-data">
-          {financialData.map((item) => {
+          {reversedFinancialData.map((item) => {
             const metricValue = item[metric.key]; // Access the correct key
             const formattedValue = formatValue(metricValue);
 
@@ -486,7 +489,7 @@ const speedometerData = [
           })}
         </div>
         <div className="graph-dates">
-          {financialData.map((item) => (
+          {reversedFinancialData.map((item) => (
             <span key={item.date}>
               {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
             </span>
