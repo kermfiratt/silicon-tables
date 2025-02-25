@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
 import ProductHuntTop5 from './ProductHuntTop5';
-import DeveloperConferences from './DeveloperConferences';
+import Commodities from './Commodities';
 import TechNews from './TechNews';
-import RecentVCFunds from './RecentVCFunds';
-import HitStartupOfTheWeek from './HitStartupOfTheWeek';
+import Employement from './Employement';
+import Inflation from './Inflation';
 import Ticker from './Ticker';
 import Watchlist from './Watchlist';
 import StockCardContainer from './StockCardContainer';
@@ -26,11 +26,11 @@ const Home = () => {
         <ProductHuntTop5 />
         
         <div className="vc-startup-container">
-          <RecentVCFunds />
-          <HitStartupOfTheWeek />
+          <Employement />
+          <Inflation />
         </div>
 
-        <DeveloperConferences />
+        <Commodities />
       </div>
 
       <div className="news-area">

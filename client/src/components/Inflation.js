@@ -1,6 +1,6 @@
 // src/components/HitStartupOfTheWeek.js
 import React, { useEffect, useState } from 'react';
-import './HitStartupOfTheWeek.css';
+import './Inflation.css';
 
 const HitStartupOfTheWeek = () => {
   const [inflationData, setInflationData] = useState(null);

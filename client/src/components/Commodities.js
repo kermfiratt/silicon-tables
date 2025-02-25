@@ -1,6 +1,6 @@
 // src/components/RecentVCFunds.js
 import React, { useState, useEffect } from 'react';
-import './RecentVCFunds.css';
+import './Commodities.css';
 
 const RecentVCFunds = () => {
   const [commoditiesData, setCommoditiesData] = useState([]);
