@@ -1,4 +1,5 @@
-.product-hunt-container {
+/* src/components/TopTrade.css */
+.top-trade-container {
   display: flex;
   flex-direction: column;
   background-color: #1e1e1e;
@@ -10,71 +11,49 @@
   margin-bottom: 1px;
   width: 40%;
   max-width: 600px;
+  height: 480px; /* Fixed height for the block */
 }
 
-.product-hunt-left {
+.top-trade-left {
   text-align: center;
   margin-bottom: 15px;
 }
 
-.product-hunt-left span {
+.top-trade-left span {
   font-size: 20px;
   color: white;
 }
 
-.product-hunt-right {
+.top-trade-right {
   width: 100%;
-}
-
-.toggle-switch {
+  height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+.top-trade-header {
+  font-size: 20px;
   margin-bottom: 10px;
-}
-
-.toggle-switch button {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.toggle-switch button.active {
-  background-color: #0047ab;
-  color: white;
-}
-
-.toggle-switch button:hover {
-  background-color: #555;
-}
-
-.product-hunt-header {
-  font-size: 22px;
-  margin-bottom: 15px;
   text-align: center;
   border-bottom: 1px solid #333;
   padding-bottom: 10px;
   color: white;
 }
 
-.product-hunt-list {
+.top-trade-list {
   list-style: none;
   padding: 0;
   overflow-y: auto; /* Make the list scrollable */
-  max-height: 280px; /* Limit the height of the block */
+  flex-grow: 1; /* Allow the list to take up remaining space */
   margin: 0;
   scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
-.product-hunt-list::-webkit-scrollbar {
+.top-trade-list::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
 }
 
-.product-hunt-item {
+.top-trade-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,26 +62,25 @@
   font-size: 16px;
 }
 
-.product-hunt-item:last-child {
+.top-trade-item:last-child {
   border-bottom: none;
 }
 
-.product-rank {
+.trade-rank {
   font-weight: bold;
   margin-right: 10px;
   color: #E6E1A5;
 }
 
-.product-name {
+.trade-name {
   flex-grow: 1;
   color: #ffffff;
 }
 
-.product-votes {
+.trade-volume {
   font-weight: bold;
   color: #4CAF50; /* Dollar green color */
 }
-
 
 .error {
   color: red;

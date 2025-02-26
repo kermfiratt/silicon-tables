@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import './Inflation.css';
 
-const HitStartupOfTheWeek = () => {
+const Inflation = () => {
   const [inflationData, setInflationData] = useState(null);
 
   useEffect(() => {
@@ -39,4 +39,4 @@ const HitStartupOfTheWeek = () => {
   );
 };
 
-export default HitStartupOfTheWeek;
+export default Inflation;

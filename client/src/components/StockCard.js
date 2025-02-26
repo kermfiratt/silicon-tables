@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // React Router'dan useNavigate ekleyin
 import './StockCard.css';
 
 const StockCard = ({ stock, onRemove }) => {
@@ -11,6 +12,7 @@ const StockCard = ({ stock, onRemove }) => {
 
   const [timePercentageData, setTimePercentageData] = useState({});
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
+  const navigate = useNavigate(); // useNavigate hook'unu kullanın
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,10 +72,23 @@ const StockCard = ({ stock, onRemove }) => {
     fetchData();
   }, [symbol, API_KEY]);
 
+  // Hisse detay sayfasına yönlendirme fonksiyonu
+  const handleStockClick = () => {
+    navigate(`/company/${symbol}`); // Örneğin: /company/AAPL
+  };
+
   return (
-    <div className="stock-card">
+    <div className="stock-card" onClick={handleStockClick} style={{ cursor: 'pointer' }}>
       {/* Close Button */}
-      <button className="close-button" onClick={() => onRemove(symbol)}>✖</button>
+      <button
+        className="close-button"
+        onClick={(e) => {
+          e.stopPropagation(); // Yönlendirmeyi engellemek için
+          onRemove(symbol);
+        }}
+      >
+        ✖
+      </button>
 
       {/* Stock Header */}
       <div className="stock-header">

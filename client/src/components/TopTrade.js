@@ -1,9 +1,9 @@
-// src/components/ProductHuntTop5.js
+// src/components/TopTrade.js
 import React, { useEffect, useState } from 'react';
-import './ProductHuntTop5.css';
+import './TopTrade.css';
 import axios from 'axios';
 
-const ProductHuntTop5 = () => {
+const TopTrade = () => {
   const [companies, setCompanies] = useState([]); // Holds the top traded companies
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -49,23 +49,23 @@ const ProductHuntTop5 = () => {
   });
 
   return (
-    <div className="product-hunt-container">
-      <div className="product-hunt-left">
+    <div className="top-trade-container">
+      <div className="top-trade-left">
         <span>{currentDate}</span>
       </div>
-      <div className="product-hunt-right">
-        <h2 className="product-hunt-header">Top Traded Companies</h2>
+      <div className="top-trade-right">
+        <h2 className="top-trade-header">Top Traded Companies</h2>
         {loading ? (
           <p>Loading data...</p>
         ) : error ? (
           <p className="error">{error}</p>
         ) : (
-          <ul className="product-hunt-list">
+          <ul className="top-trade-list">
             {companies.map((company, index) => (
-              <li key={company.ticker || index} className="product-hunt-item">
-                <span className="product-rank">{index + 1}.</span>
-                <span className="product-name">{company.ticker}</span>
-                <span className="product-votes">{formatVolume(company.volume)}</span>
+              <li key={company.ticker || index} className="top-trade-item">
+                <span className="trade-rank">{index + 1}.</span>
+                <span className="trade-name">{company.ticker}</span>
+                <span className="trade-volume">{formatVolume(company.volume)}</span>
               </li>
             ))}
           </ul>
@@ -75,4 +75,4 @@ const ProductHuntTop5 = () => {
   );
 };
 
-export default ProductHuntTop5;
+export default TopTrade;

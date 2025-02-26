@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
-import ProductHuntTop5 from './ProductHuntTop5';
+import TopTrade from './TopTrade';
 import Commodities from './Commodities';
 import TechNews from './TechNews';
 import Employement from './Employement';
@@ -23,7 +23,7 @@ const Home = () => {
       <StockCardContainer /> {/* Added Stock Card feature */}
 
       <div className="content-area">
-        <ProductHuntTop5 />
+        <TopTrade />
         
         <div className="vc-startup-container">
           <Employement />

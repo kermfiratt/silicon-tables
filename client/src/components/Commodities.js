@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './Commodities.css';
 
-const RecentVCFunds = () => {
+const Commodities = () => {
   const [commoditiesData, setCommoditiesData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,4 +76,4 @@ const RecentVCFunds = () => {
   );
 };
 
-export default RecentVCFunds;
+export default Commodities;
