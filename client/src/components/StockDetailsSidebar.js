@@ -59,6 +59,24 @@ const StockDetailsSidebar = ({
         }
         break;
 
+        case 'quarterlyEarnings':
+          const quarterlyEarningsSection = document.getElementById('quarterly-earnings-section');
+          if (quarterlyEarningsSection) {
+            const offset = 0; // No offset
+            const yPosition = quarterlyEarningsSection.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo(0, yPosition); // Immediate scroll
+          }
+          break;
+
+          case 'annualCashFlow':
+            const annualCashFlowSection = document.getElementById('annual-cash-flow-section');
+            if (annualCashFlowSection) {
+              const offset = 0; // No offset
+              const yPosition = annualCashFlowSection.getBoundingClientRect().top + window.pageYOffset - offset;
+              window.scrollTo(0, yPosition); // Immediate scroll
+            }
+            break;
+
       case 'about':
         const aboutSection = document.getElementById('about-section');
         if (aboutSection) {
@@ -124,6 +142,18 @@ const StockDetailsSidebar = ({
           className={activeSectionState === 'priceMetrics' ? 'active' : ''}
         >
           Price Metrics
+        </li>
+        <li
+          onClick={() => setActiveSectionState('quarterlyEarnings')}
+          className={activeSectionState === 'quarterlyEarnings' ? 'active' : ''}
+        >
+          Quarterly Earnings
+        </li>
+        <li
+          onClick={() => setActiveSectionState('annualCashFlow')}
+          className={activeSectionState === 'annualCashFlow' ? 'active' : ''}
+        >
+          Annual Cash Flow
         </li>
         <li
           onClick={() => setActiveSectionState('about')}

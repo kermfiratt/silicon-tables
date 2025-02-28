@@ -9,6 +9,7 @@ import Inflation from './Inflation';
 import Ticker from './Ticker';
 import Watchlist from './Watchlist';
 import StockCardContainer from './StockCardContainer';
+import Cpi from './SidebarDetails/Cpi';
 import './Home.css';
 
 const Home = () => {
@@ -29,8 +30,10 @@ const Home = () => {
           <Employement />
           <Inflation />
         </div>
-
+      
+        
         <Commodities />
+        <Cpi />
       </div>
 
       <div className="news-area">

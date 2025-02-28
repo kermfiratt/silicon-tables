@@ -198,12 +198,13 @@ const Financials = ({ symbol, setView }) => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const endDate = new Date().toISOString().split('T')[0];
-        const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         const newsResponse = await axios.get(
-          `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${startDate}&to=${endDate}&token=${FINNHUB_API_KEY}`
+          `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${API_KEY}`
         );
-        setNews(newsResponse.data.slice(0, 20));
+  
+        // Extract the relevant news articles from the response
+        const articles = newsResponse.data.feed || [];
+        setNews(articles.slice(0, 20)); // Limit to 20 articles
         setLoadingNews(false);
       } catch (error) {
         console.error('Error fetching news:', error.message);
@@ -214,7 +215,7 @@ const Financials = ({ symbol, setView }) => {
   
     fetchNews();
   }, [symbol, API_KEY]);
-
+  
   
 
   useEffect(() => {
@@ -604,7 +605,7 @@ const speedometerData = [
 
 
 {/* Earnings Section */}
-<div className="earnings-block">
+<div id='quarterly-earnings-section' className="earnings-block">
   <h4 className="earnings-header">Quarterly Earnings</h4>
   {loadingEarnings ? (
     <p className="earnings-loading">Loading Quarterly Earnings...</p>
@@ -664,7 +665,7 @@ const speedometerData = [
 
 
 {/* Cash Flow Section */}
-<div className="cashflow-block">
+<div id='annual-cash-flow-section' className="cashflow-block">
   <h4 className="cashflow-header">Annual Cash Flow</h4>
   {loadingCashFlow ? (
     <p className="cashflow-loading">Loading Annual Cash Flow...</p>
@@ -767,9 +768,8 @@ const speedometerData = [
 
 
 
-    {/* News Section */}
-
-    <div id="news-section" className="news-block">
+   {/* News Section */}
+   <div id="news-section" className="news-block">
   <h4>Recent News</h4>
   {loadingNews ? (
     <p>Loading news...</p>
@@ -778,9 +778,8 @@ const speedometerData = [
       {news.map((article, index) => (
         <div key={index} className="news-item">
           <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
-            {article.headline}
+            {article.title}
           </a>
-          <p className="news-date">{new Date(article.datetime * 1000).toLocaleDateString()}</p>
           <p className="news-summary">{article.summary}</p>
           {index < news.length - 1 && <hr className="news-divider" />}
         </div>

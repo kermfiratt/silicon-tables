@@ -1,0 +1,67 @@
+.cpi-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .cpi-header {
+    font-size: 22px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    position: relative;
+  }
+  
+  .cpi-header h2 {
+    font-size: 24px;
+    color: white; /* Green for header */
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .hover-chart {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2e2e2e;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 10;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 300px;
+  }
+  
+  .cpi-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .cpi-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .month-name {
+    font-weight: bold;
+  }
+  
+  .cpi-value {
+    color: #ffa500; /* Orange for CPI values */
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: red;
+  }
