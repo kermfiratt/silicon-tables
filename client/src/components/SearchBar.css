@@ -1,48 +1,27 @@
-#root {
-  position: relative;
-  z-index: 0; /* Ensures all components stack below the overlay */
-}
-
-
+/* Ensure the search popup is always on top */
 .search-popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8); /* Dark overlay */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2147483647; /* Use the maximum safe z-index value */
-}
-
-
-
-.search-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: transparent;; /* Darker background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999999; /* Ensures it is on top */
+  z-index: 2147483647; /* Maximum safe z-index */
+  isolation: isolate; /* Creates a new stacking context */
+  will-change: transform; /* Forces a new stacking context */
 }
 
 .search-popup-content {
   background: #2e2e2e;
-  padding: 20px; /* Outer padding for alignment */
+  padding: 20px;
   border-radius: 12px;
   width: 600px;
   color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-  
+  z-index: 2147483647; /* Ensure content is on top */
 }
 
 .search-form {
@@ -54,9 +33,9 @@
   align-items: center;
   background-color: #444;
   border-radius: 8px;
-  padding: 10px 15px; /* Inner padding that aligns with outer padding */
+  padding: 10px 15px;
   width: 100%;
-  box-sizing: border-box; /* Ensures padding is included in width */
+  box-sizing: border-box;
 }
 
 .centered-search-input {
@@ -67,7 +46,7 @@
   background: transparent;
   border: none;
   outline: none;
-  margin-left: 10px; /* Space between icon and text */
+  margin-left: 10px;
   box-sizing: border-box;
 }
 
@@ -88,7 +67,7 @@
 .recent-companies h4 {
   color: #ccc;
   margin-bottom: 15px;
-  padding-left: 15px; /* Aligns with search input padding */
+  padding-left: 15px;
 }
 
 .recent-companies ul {
@@ -100,7 +79,7 @@
 .recent-companies li {
   display: flex;
   align-items: center;
-  padding: 10px 15px; /* Aligns with search input padding */
+  padding: 10px 15px;
   cursor: pointer;
   transition: background 0.3s;
   border-radius: 6px;
@@ -111,47 +90,46 @@
 }
 
 .company-logo {
-  width: 50px; /* Updated to medium size */
+  width: 50px;
   height: 50px;
-  border-radius: 8px; /* Slightly rounded square */
+  border-radius: 8px;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  margin-right: 10px; /* Space between logo and text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-right: 10px;
 }
 
 .placeholder-logo {
-  width: 50px; /* Same size as logo */
+  width: 50px;
   height: 50px;
-  border-radius: 8px; /* Slightly rounded square */
-  background-color: #ccc; /* Gray placeholder */
+  border-radius: 8px;
+  background-color: #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   font-weight: bold;
   color: #555;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .suggestions-dropdown {
-  background-color: #2e2e2e; /* Matches popup content background */
+  background-color: #2e2e2e;
   border-radius: 8px;
-  margin-top: 10px; /* Adds spacing below the search bar */
-  padding: 10px 0; /* Padding around the suggestions */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle shadow for dropdown */
-  max-height: 200px; /* Limits the height for long lists */
-  overflow-y: auto; /* Enables scrolling for long lists */
-  width: 100%; /* Matches the width of the input field */
-  z-index: 1000; /* Ensures it stays above other elements */
+  margin-top: 10px;
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 1000;
 }
 
-/* Hides the scrollbar while keeping the dropdown scrollable */
 .suggestions-dropdown::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Edge */
+  display: none;
 }
 
 .suggestions-dropdown {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .suggestions-dropdown ul {
@@ -164,27 +142,27 @@
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  display: flex; /* For alignment between ticker and name */
+  display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  color: #ccc; /* Subtle text color */
+  color: #ccc;
 }
 
 .suggestions-dropdown li:hover {
-  background-color: #444; /* Slightly darker background on hover */
-  color: #fff; /* Brighter text on hover */
+  background-color: #444;
+  color: #fff;
 }
 
 .suggestions-dropdown strong {
-  color: #fff; /* Highlight ticker symbol */
+  color: #fff;
   font-weight: bold;
 }
 
 .suggestions-dropdown li img {
-  width: 50px; /* Medium size */
+  width: 50px;
   height: 50px;
-  border-radius: 8px; /* Slightly rounded square */
+  border-radius: 8px;
   object-fit: cover;
-  margin-right: 10px; /* Space between image and text */
+  margin-right: 10px;
 }

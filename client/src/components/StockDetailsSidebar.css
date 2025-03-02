@@ -1,18 +1,25 @@
+/* StockDetailsSidebar.css */
 
-.stock-details-sidebar {
-  background-color: #0d0f15;
-  padding: 20px;
-  width: 200px;
-  margin-left: 15px;
-  color: #fff;
-  position: fixed;
-  left: 80px;
-  top: 0;
-  height: 100vh;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  z-index: 1;
+/* Container for the entire sidebar and content */
+.stock-details-container {
+  display: flex;
+  height: 100vh; /* Full height */
+  background-color: #0d0f15; /* Dark background */
+  margin-left: 80px;
 }
 
+/* Sidebar styling */
+.stock-details-sidebar {
+  width: 220px; /* Fixed width for the sidebar */
+  background-color: #0d0f15; /* Dark background */
+  padding-left: 20px;
+  padding-top: 20px;
+  color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+/* Header container for logo and company name */
 .header-container {
   display: flex;
   align-items: center;
@@ -20,6 +27,7 @@
   margin-bottom: 20px;
 }
 
+/* Company logo styling */
 .company-logo {
   width: 60px;
   height: 60px;
@@ -29,6 +37,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Company name styling */
 .company-name {
   font-size: 20px;
   font-weight: bold;
@@ -38,16 +47,16 @@
   margin-right: 40px;
 }
 
-
-
+/* Price value styling */
 .price-value {
-  font-size: 16px; /* Main price font size */
+  font-size: 16px;
   font-weight: bold;
 }
 
+/* Price change styling */
 .price-change {
-  font-size: 14px; /* Font size for percentage change */
-  margin-top: 4px; /* Slight spacing below the price */
+  font-size: 14px;
+  margin-top: 4px;
 }
 
 .price-change.positive {
@@ -58,6 +67,7 @@
   color: #f44336; /* Red for negative change */
 }
 
+/* Sidebar navigation list */
 .stock-details-sidebar ul {
   list-style: none;
   padding: 0;
@@ -80,8 +90,10 @@
   background-color: #333;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Main content area */
+.stock-details-content {
+  flex: 1; /* Take up remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  background-color: #0d0f15; /* Dark background for main content */
 }
-
-

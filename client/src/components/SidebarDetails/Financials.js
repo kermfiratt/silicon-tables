@@ -1,29 +1,22 @@
-// src/components/SidebarDetails/Financials.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import axios from 'axios';
 import './Financials.css';
 import ReactSpeedometer from 'react-d3-speedometer';
 import BalanceSheet from './BalanceSheet';
 
-
-
-
-
-
-
-const Financials = ({ symbol, setView }) => {
+const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [financialData, setFinancialData] = useState([]);
   const [priceMetrics, setPriceMetrics] = useState([]);
   const [companyOverview, setCompanyOverview] = useState({});
   const [loadingFinancials, setLoadingFinancials] = useState(true);
   const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(true);
   const [loadingOverview, setLoadingOverview] = useState(true);
-  const [news, setNews] = useState([]); // Define news state
-  const [loadingNews, setLoadingNews] = useState(true); // Define loading state for news
+  const [news, setNews] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
   const [errorFinancials, setErrorFinancials] = useState(null);
   const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const [errorOverview, setErrorOverview] = useState(null);
-  const [errorNews, setErrorNews] = useState(null); // Define error state for news
+  const [errorNews, setErrorNews] = useState(null);
   const [quarterlyEarnings, setQuarterlyEarnings] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
@@ -37,39 +30,23 @@ const Financials = ({ symbol, setView }) => {
   const [loadingCashFlow, setLoadingCashFlow] = useState(true);
   const [errorCashFlow, setErrorCashFlow] = useState(null);
 
-  
-
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
-  const FINNHUB_API_KEY = process.env.REACT_APP_API_KEY
-
-
 
   const formatValue = (value) => {
-    if (value === null || value === undefined || isNaN(value)) return 'N/A'; // Handle invalid numbers
-    const absValue = Math.abs(value); // Use absolute value for formatting
-    const sign = value < 0 ? '-' : ''; // Keep the sign if the value is negative
-  
-    if (absValue >= 1e9) return `${sign}${(absValue / 1e9).toFixed(2)}B`; // Billion
-    if (absValue >= 1e6) return `${sign}${(absValue / 1e6).toFixed(2)}M`; // Million
-    if (absValue >= 1e3) return `${sign}${(absValue / 1e3).toFixed(2)}K`; // Thousand
-    return `${sign}${absValue.toLocaleString()}`; // Smaller numbers
+    if (value === null || value === undefined || isNaN(value)) return 'N/A';
+    const absValue = Math.abs(value);
+    const sign = value < 0 ? '-' : '';
+    if (absValue >= 1e9) return `${sign}${(absValue / 1e9).toFixed(2)}B`;
+    if (absValue >= 1e6) return `${sign}${(absValue / 1e6).toFixed(2)}M`;
+    if (absValue >= 1e3) return `${sign}${(absValue / 1e3).toFixed(2)}K`;
+    return `${sign}${absValue.toLocaleString()}`;
   };
-  
-  
-
-  
-
 
   const calculatePercentageChange = (latest, previous) => {
-    if (previous === 0) return 'N/A'; // Avoid division by zero
+    if (previous === 0) return 'N/A';
     const change = ((latest - previous) / previous) * 100;
     return `${change.toFixed(2)}%`;
   };
-
-
-
-
-
 
   useEffect(() => {
     const fetchCashFlowData = async () => {
@@ -78,20 +55,19 @@ const Financials = ({ symbol, setView }) => {
           `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol}&apikey=${API_KEY}`
         );
         const data = response.data;
-  
+
         if (data && data.annualReports) {
           setCashFlowData(data.annualReports);
-  
-          // Extract unique years from fiscalDateEnding
+
           const uniqueYears = Array.from(
-            new Set(data.annualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
+            new Set(data.annualReports.map((report) => report.fiscalDateEnding.slice(0, 4))) // Added closing parenthesis
           );
           setCashFlowYears(uniqueYears);
-  
+
           // Set the latest year as default
           const latestYear = uniqueYears[0];
           setSelectedCashFlowYear(latestYear);
-  
+
           // Filter cash flow data by the latest year
           const filtered = data.annualReports.filter((report) =>
             report.fiscalDateEnding.startsWith(latestYear)
@@ -100,7 +76,7 @@ const Financials = ({ symbol, setView }) => {
         } else {
           throw new Error('No cash flow data available.');
         }
-  
+
         setLoadingCashFlow(false);
       } catch (err) {
         console.error('Error fetching cash flow data:', err.message);
@@ -108,15 +84,9 @@ const Financials = ({ symbol, setView }) => {
         setLoadingCashFlow(false);
       }
     };
-  
+
     fetchCashFlowData();
   }, [symbol, API_KEY]);
-  
-
-
-
-
-
 
   useEffect(() => {
     if (selectedCashFlowYear && cashFlowData.length > 0) {
@@ -126,11 +96,6 @@ const Financials = ({ symbol, setView }) => {
       setFilteredCashFlow(filtered);
     }
   }, [selectedCashFlowYear, cashFlowData]);
-  
-
-
-
-
 
   useEffect(() => {
     const fetchEarningsData = async () => {
@@ -140,12 +105,19 @@ const Financials = ({ symbol, setView }) => {
         );
         const data = response.data;
   
+        console.log('API Response:', data); // Log the API response
+  
+        if (data.Note) {
+          // Handle rate limit error
+          throw new Error('API rate limit exceeded. Please try again later.');
+        }
+  
         if (data && data.quarterlyEarnings) {
           setQuarterlyEarnings(data.quarterlyEarnings);
   
           // Extract unique years from fiscalDateEnding
           const uniqueYears = Array.from(
-            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
+            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4))) // Fixed: Added closing parenthesis
           );
           setYears(uniqueYears);
   
@@ -165,18 +137,13 @@ const Financials = ({ symbol, setView }) => {
         setLoadingEarnings(false);
       } catch (err) {
         console.error('Error fetching quarterly earnings:', err.message);
-        setErrorEarnings('Failed to load quarterly earnings data.');
+        setErrorEarnings(err.message); // Display the actual error message
         setLoadingEarnings(false);
       }
     };
   
     fetchEarningsData();
   }, [symbol, API_KEY]);
-
-
-
-
-
 
   useEffect(() => {
     if (selectedYear && quarterlyEarnings.length > 0) {
@@ -186,14 +153,6 @@ const Financials = ({ symbol, setView }) => {
       setFilteredEarnings(filtered);
     }
   }, [selectedYear, quarterlyEarnings]);
-  
-  
-
-
-
-
-  
-
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -201,7 +160,7 @@ const Financials = ({ symbol, setView }) => {
         const newsResponse = await axios.get(
           `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${API_KEY}`
         );
-  
+
         // Extract the relevant news articles from the response
         const articles = newsResponse.data.feed || [];
         setNews(articles.slice(0, 20)); // Limit to 20 articles
@@ -212,11 +171,9 @@ const Financials = ({ symbol, setView }) => {
         setLoadingNews(false);
       }
     };
-  
+
     fetchNews();
   }, [symbol, API_KEY]);
-  
-  
 
   useEffect(() => {
     const fetchFinancialData = async () => {
@@ -294,7 +251,6 @@ const Financials = ({ symbol, setView }) => {
       }
     };
 
-
     const fetchCompanyOverview = async () => {
       try {
         const response = await axios.get(
@@ -318,499 +274,392 @@ const Financials = ({ symbol, setView }) => {
   if (errorFinancials || errorPriceMetrics) return <p>{errorFinancials || errorPriceMetrics}</p>;
   if (!financialData.length && !priceMetrics.length) return <p>No data available for this company.</p>;
   if (loadingFinancials || loadingOverview) return <p>Loading data...</p>;
-if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOverview}</p>;
+  if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOverview}</p>;
 
-
-
-
-
-const speedometerData = [
-  {
-    label: 'Strong Buy',
-    value: parseInt(companyOverview.AnalystRatingStrongBuy) || 0,
-  },
-  {
-    label: 'Neutral',
-    value: parseInt(companyOverview.AnalystRatingHold) || 0,
-  },
-  {
-    label: 'Strong Sell',
-    value: parseInt(companyOverview.AnalystRatingStrongSell) || 0,
-  },
-];
-
+  const speedometerData = [
+    {
+      label: 'Strong Buy',
+      value: parseInt(companyOverview.AnalystRatingStrongBuy) || 0,
+    },
+    {
+      label: 'Neutral',
+      value: parseInt(companyOverview.AnalystRatingHold) || 0,
+    },
+    {
+      label: 'Strong Sell',
+      value: parseInt(companyOverview.AnalystRatingStrongSell) || 0,
+    },
+  ];
 
   return (
-   <div>
-    
+    <div className='financials-container' ref={ref}>
+      {/* Conditional Rendering Based on Active Section */}
+      {activeSection === 'financials' && (
+        <div ref={refs.financialsRef}>
+          {/* Summary Income Statement */}
+          <div className="financials-block">
+            <h4>Summary Income Statement</h4>
+            <table className="financials-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  {financialData.map((item) => (
+                    <th key={item.date}>
+                      {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sales</td>
+                  {financialData.map((item, index) => {
+                    const previousYearIndex = index + 4;
+                    const percentageChange =
+                      previousYearIndex < financialData.length
+                        ? calculatePercentageChange(item.revenue, financialData[previousYearIndex]?.revenue)
+                        : null;
+                    return (
+                      <td key={item.date}>
+                        {formatValue(item.revenue)}{' '}
+                        {percentageChange && (
+                          <span
+                            style={{
+                              color: percentageChange.includes('-') ? 'red' : 'green',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            ({percentageChange})
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+                <tr>
+                  <td>Gross Profit</td>
+                  {financialData.map((item, index) => {
+                    const previousYearIndex = index + 4;
+                    const percentageChange =
+                      previousYearIndex < financialData.length
+                        ? calculatePercentageChange(item.grossProfit, financialData[previousYearIndex]?.grossProfit)
+                        : null;
+                    return (
+                      <td key={item.date}>
+                        {formatValue(item.grossProfit)}{' '}
+                        {percentageChange && (
+                          <span
+                            style={{
+                              color: percentageChange.includes('-') ? 'red' : 'green',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            ({percentageChange})
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+                <tr>
+                  <td>Net Income</td>
+                  {financialData.map((item, index) => {
+                    const previousYearIndex = index + 4;
+                    const percentageChange =
+                      previousYearIndex < financialData.length
+                        ? calculatePercentageChange(item.netIncome, financialData[previousYearIndex]?.netIncome)
+                        : null;
+                    return (
+                      <td key={item.date}>
+                        {formatValue(item.netIncome)}{' '}
+                        {percentageChange && (
+                          <span
+                            style={{
+                              color: percentageChange.includes('-') ? 'red' : 'green',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            ({percentageChange})
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-    {/* Summary Income Statement */}
-    <div className="financials-block">
-        <h4>Summary Income Statement</h4>
-        <table className="financials-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              {financialData.map((item) => (
-                <th key={item.date}>
-                  {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-          <tr>
-              <td>Sales</td>
-              {financialData.map((item, index) => {
-                const previousYearIndex = index + 4;
-                const percentageChange =
-                  previousYearIndex < financialData.length
-                    ? calculatePercentageChange(item.revenue, financialData[previousYearIndex]?.revenue)
-                    : null;
-                return (
-                  <td key={item.date}>
-                    {formatValue(item.revenue)}{' '}
-                    {percentageChange && (
-                      <span
-                        style={{
-                          color: percentageChange.includes('-') ? 'red' : 'green',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        ({percentageChange})
+          {/* Financial Metrics */}
+          <div className="metrics-grid">
+            {[
+              { label: 'Assets', key: 'assets' },
+              { label: 'Liabilities', key: 'liabilities' },
+              { label: 'Equity', key: 'equity' },
+              { label: 'Quarterly Sales', key: 'revenue' },
+              { label: 'Quarterly Gross Profit', key: 'grossProfit' },
+              { label: 'Quarterly Net Income', key: 'netIncome' },
+            ].map((metric, index) => {
+              const maxMetricValue = Math.max(
+                ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
+              );
+
+              // Reverse the financialData array to display the most recent data on the right
+              const reversedFinancialData = [...financialData].reverse();
+
+              return (
+                <div className="metric-block" key={index}>
+                  <h4>{metric.label}</h4>
+                  <div className="metric-data">
+                    {reversedFinancialData.map((item) => {
+                      const metricValue = item[metric.key]; // Access the correct key
+                      const formattedValue = formatValue(metricValue);
+
+                      return (
+                        <div
+                          key={item.date}
+                          className={`metric-bar ${metricValue < 0 ? 'negative-bar' : 'positive-bar'}`}
+                          style={{
+                            height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Adjust bar height
+                          }}
+                        >
+                          <span>{formattedValue}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="graph-dates">
+                    {reversedFinancialData.map((item) => (
+                      <span key={item.date}>
+                        {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
                       </span>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-            <tr>
-              <td>Gross Profit</td>
-              {financialData.map((item, index) => {
-                const previousYearIndex = index + 4;
-                const percentageChange =
-                  previousYearIndex < financialData.length
-                    ? calculatePercentageChange(item.grossProfit, financialData[previousYearIndex]?.grossProfit)
-                    : null;
-                return (
-                  <td key={item.date}>
-                    {formatValue(item.grossProfit)}{' '}
-                    {percentageChange && (
-                      <span
-                        style={{
-                          color: percentageChange.includes('-') ? 'red' : 'green',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        ({percentageChange})
-                      </span>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-            <tr>
-              <td>Net Income</td>
-              {financialData.map((item, index) => {
-                const previousYearIndex = index + 4;
-                const percentageChange =
-                  previousYearIndex < financialData.length
-                    ? calculatePercentageChange(item.netIncome, financialData[previousYearIndex]?.netIncome)
-                    : null;
-                return (
-                  <td key={item.date}>
-                    {formatValue(item.netIncome)}{' '}
-                    {percentageChange && (
-                      <span
-                        style={{
-                          color: percentageChange.includes('-') ? 'red' : 'green',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        ({percentageChange})
-                      </span>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-          </tbody>
-        </table>
-      
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-
-
-
-      
-
-      
-
-      
-    
-    </div>
-
-
-    
-{/* Financial Metrics */}
-<div className="metrics-grid">
-  {[
-    { label: 'Assets', key: 'assets' },
-    { label: 'Liabilities', key: 'liabilities' },
-    { label: 'Equity', key: 'equity' },
-    { label: 'Quarterly Sales', key: 'revenue' },
-    { label: 'Quarterly Gross Profit', key: 'grossProfit' },
-    { label: 'Quarterly Net Income', key: 'netIncome' },
-  ].map((metric, index) => {
-    const maxMetricValue = Math.max(
-      ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
-    );
-
-    // Reverse the financialData array to display the most recent data on the right
-    const reversedFinancialData = [...financialData].reverse();
-
-    return (
-      <div className="metric-block" key={index}>
-        <h4>{metric.label}</h4>
-        <div className="metric-data">
-          {reversedFinancialData.map((item) => {
-            const metricValue = item[metric.key]; // Access the correct key
-            const formattedValue = formatValue(metricValue);
-
-            return (
-              <div
-                key={item.date}
-                className={`metric-bar ${metricValue < 0 ? 'negative-bar' : 'positive-bar'}`}
-                style={{
-                  height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Adjust bar height
-                }}
-              >
-                <span>{formattedValue}</span>
+      {activeSection === 'priceMetrics' && (
+        <div ref={refs.priceMetricsRef}>
+          {/* Price Metrics */}
+          <div className="price-metrics-container">
+            <section id='price-metrics-section'>
+              <h3>Price Metrics</h3>
+              <div className="metrics-blocks">
+                {priceMetrics.map((metric, index) => (
+                  <div
+                    key={index}
+                    className="metric-block"
+                    style={{ borderLeft: `5px solid ${metric.color}` }}
+                  >
+                    <h4 style={{ color: metric.color }}>{metric.label}</h4>
+                    <p>{metric.value}</p>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            </section>
+          </div>
         </div>
-        <div className="graph-dates">
-          {reversedFinancialData.map((item) => (
-            <span key={item.date}>
-              {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-            </span>
-          ))}
+      )}
+
+      {activeSection === 'quarterlyEarnings' && (
+        <div ref={refs.quarterlyEarningsRef}>
+          {/* Earnings Section */}
+          <div id='quarterly-earnings-section' className="earnings-block">
+            <h4 className="earnings-header">Quarterly Earnings</h4>
+            {loadingEarnings ? (
+              <p className="earnings-loading">Loading Quarterly Earnings...</p>
+            ) : errorEarnings ? (
+              <p className="earnings-error">{errorEarnings}</p>
+            ) : (
+              <div>
+                <div className="year-selector">
+                  <label htmlFor="year-select">Select Year:</label>
+                  <select
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="year-dropdown"
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <table className="earnings-table">
+                  <thead>
+                    <tr>
+                      <th>Fiscal Date Ending</th>
+                      <th>Reported Date</th>
+                      <th>Reported EPS</th>
+                      <th>Estimated EPS</th>
+                      <th>Surprise</th>
+                      <th>Surprise %</th>
+                      <th>Report Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredEarnings.map((earning, index) => (
+                      <tr key={index}>
+                        <td>{earning.fiscalDateEnding}</td>
+                        <td>{earning.reportedDate}</td>
+                        <td>{earning.reportedEPS}</td>
+                        <td>{earning.estimatedEPS}</td>
+                        <td>{earning.surprise}</td>
+                        <td>{earning.surprisePercentage}%</td>
+                        <td>{earning.reportTime}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    );
-  })}
-</div>
+      )}
 
+      {activeSection === 'annualCashFlow' && (
+        <div ref={refs.annualCashFlowRef}>
+          {/* Cash Flow Section */}
+          <div id='annual-cash-flow-section' className="cashflow-block">
+            <h4 className="cashflow-header">Annual Cash Flow</h4>
+            {loadingCashFlow ? (
+              <p className="cashflow-loading">Loading Annual Cash Flow...</p>
+            ) : errorCashFlow ? (
+              <p className="cashflow-error">{errorCashFlow}</p>
+            ) : (
+              <div>
+                <div className="year-selector">
+                  <label htmlFor="cashflow-year-select">Select Year:</label>
+                  <select
+                    id="cashflow-year-select"
+                    value={selectedCashFlowYear}
+                    onChange={(e) => setSelectedCashFlowYear(e.target.value)}
+                    className="year-dropdown"
+                  >
+                    {cashFlowYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* First Table */}
+                <table className="cashflow-table">
+                  <thead>
+                    <tr>
+                      <th>Fiscal Date Ending</th>
+                      <th>Operating Cash Flow</th>
+                      <th>Payments for Operating Activities</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCashFlow.map((report, index) => (
+                      <tr key={`${index}-table1`}>
+                        <td>{report.fiscalDateEnding}</td>
+                        <td>{formatValue(report.operatingCashflow)}</td>
+                        <td>{formatValue(report.paymentsForOperatingActivities)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
+                {/* Second Table */}
+                <table className="cashflow-table">
+                  <thead>
+                    <tr>
+                      <th>Capital Expenditures</th>
+                      <th>Change in Operating Assets</th>
+                      <th>Change in Operating Liabilities</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCashFlow.map((report, index) => (
+                      <tr key={`${index}-table2`}>
+                        <td>{formatValue(report.capitalExpenditures)}</td>
+                        <td>{formatValue(report.changeInOperatingAssets)}</td>
+                        <td>{formatValue(report.changeInOperatingLiabilities)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-
-
-
-
-
-    {/* Price Metrics */}
-    <div className="price-metrics-container">
-      <section id='price-metrics-section'>
-        <h3>Price Metrics</h3>
-        <div className="metrics-blocks">
-          {priceMetrics.map((metric, index) => (
-            <div
-              key={index}
-              className="metric-block"
-              style={{ borderLeft: `5px solid ${metric.color}` }}
-            >
-              <h4 style={{ color: metric.color }}>{metric.label}</h4>
-              <p>{metric.value}</p>
-            </div>
-          ))}
+                {/* Third Table */}
+                <table className="cashflow-table">
+                  <thead>
+                    <tr>
+                      <th>Cashflow from Investment</th>
+                      <th>Cashflow from Financing</th>
+                      <th>Net Income</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCashFlow.map((report, index) => (
+                      <tr key={`${index}-table3`}>
+                        <td>{formatValue(report.cashflowFromInvestment)}</td>
+                        <td>{formatValue(report.cashflowFromFinancing)}</td>
+                        <td>{formatValue(report.netIncome)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
-        </section>
-      </div>
+      )}
 
-      
-
-
-      <div className="special-blocks-container">
-  {/* Dividend Details Block */}
-  <div className="special-block">
-    <h4>Dividend Details</h4>
-    <div className="block-content-stock">
-      <p><strong>Dividend Date:</strong> {companyOverview.DividendDate || 'N/A'}</p>
-      <p><strong>Ex-Dividend Date:</strong> {companyOverview.ExDividendDate || 'N/A'}</p>
-      <p><strong>Dividend Per Share:</strong> {companyOverview.DividendPerShare || 'N/A'}</p>
-      <p>
-        <strong>Dividend Yield:</strong>{' '}
-        {companyOverview.DividendYield
-          ? `${(parseFloat(companyOverview.DividendYield) * 100).toFixed(2)}%`
-          : 'N/A'}
-      </p>
-    </div>
-  </div>
-
-  {/* 52 Week & Moving Averages Block */}
-  <div className="special-block">
-    <h4>52 Week & Moving Averages</h4>
-    <div className="block-content-stock">
-      <p><strong>Market Cap:</strong> {formatValue(companyOverview.MarketCapitalization) || 'N/A'}</p>
-      <p><strong>52 Week High:</strong> {companyOverview['52WeekHigh'] || 'N/A'}</p>
-      <p><strong>52 Week Low:</strong> {companyOverview['52WeekLow'] || 'N/A'}</p>
-      <p><strong>50 Day Moving Avg:</strong> {companyOverview['50DayMovingAverage'] || 'N/A'}</p>
-      <p><strong>200 Day Moving Avg:</strong> {companyOverview['200DayMovingAverage'] || 'N/A'}</p>
-    </div>
-  </div>
-
-  {/* Analyst Ratings Block */}
-  <div className="special-block">
-    <h4>Analyst Ratings</h4>
-    <div className="block-content-stock">
-      <p><strong>Target Price:</strong> {companyOverview.AnalystTargetPrice || 'N/A'}</p>
-      <p><strong>Strong Buy:</strong> {companyOverview.AnalystRatingStrongBuy || 'N/A'}</p>
-      <p><strong>Buy:</strong> {companyOverview.AnalystRatingBuy || 'N/A'}</p>
-      <p><strong>Hold:</strong> {companyOverview.AnalystRatingHold || 'N/A'}</p>
-      <p><strong>Sell:</strong> {companyOverview.AnalystRatingSell || 'N/A'}</p>
-      <p><strong>Strong Sell:</strong> {companyOverview.AnalystRatingStrongSell || 'N/A'}</p>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div className="special-blocks-container">
-      {speedometerData.map((speedometer, index) => (
-        <div key={index} className="special-block speedometer-special-block">
-          <ReactSpeedometer
-            maxValue={50}
-            value={speedometer.value}
-            needleColor="gray"
-            segments={5}
-            startColor="red"
-            endColor="green"
-            textColor="white"
-            width={200} /* Matches special block size */
-            height={200} /* Matches special block size */
-            ringWidth={25} /* Matches the design */
-          />
-          <h4 className="speedometer-label">{speedometer.label}</h4>
+      {activeSection === 'about' && (
+        <div ref={refs.aboutRef}>
+          {/* About Section */}
+          <div id='about-section' className="about-company-block">
+            <h4>About The Company</h4>
+            <div>{companyOverview.Description}</div>
+          </div>
         </div>
-      ))}
-    </div>
+      )}
 
-
-
-
-
-
-
-
-
-{/* Earnings Section */}
-<div id='quarterly-earnings-section' className="earnings-block">
-  <h4 className="earnings-header">Quarterly Earnings</h4>
-  {loadingEarnings ? (
-    <p className="earnings-loading">Loading Quarterly Earnings...</p>
-  ) : errorEarnings ? (
-    <p className="earnings-error">{errorEarnings}</p>
-  ) : (
-    <div>
-      <div className="year-selector">
-        <label htmlFor="year-select">Select Year:</label>
-        <select
-          id="year-select"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-          className="year-dropdown"
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-      <table className="earnings-table">
-        <thead>
-          <tr>
-            <th>Fiscal Date Ending</th>
-            <th>Reported Date</th>
-            <th>Reported EPS</th>
-            <th>Estimated EPS</th>
-            <th>Surprise</th>
-            <th>Surprise %</th>
-            <th>Report Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEarnings.map((earning, index) => (
-            <tr key={index}>
-              <td>{earning.fiscalDateEnding}</td>
-              <td>{earning.reportedDate}</td>
-              <td>{earning.reportedEPS}</td>
-              <td>{earning.estimatedEPS}</td>
-              <td>{earning.surprise}</td>
-              <td>{earning.surprisePercentage}%</td>
-              <td>{earning.reportTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
-</div>
-
-
-
-
-
-
-
-{/* Cash Flow Section */}
-<div id='annual-cash-flow-section' className="cashflow-block">
-  <h4 className="cashflow-header">Annual Cash Flow</h4>
-  {loadingCashFlow ? (
-    <p className="cashflow-loading">Loading Annual Cash Flow...</p>
-  ) : errorCashFlow ? (
-    <p className="cashflow-error">{errorCashFlow}</p>
-  ) : (
-    <div>
-      <div className="year-selector">
-        <label htmlFor="cashflow-year-select">Select Year:</label>
-        <select
-          id="cashflow-year-select"
-          value={selectedCashFlowYear}
-          onChange={(e) => setSelectedCashFlowYear(e.target.value)}
-          className="year-dropdown"
-        >
-          {cashFlowYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-      {/* First Table */}
-      <table className="cashflow-table">
-        <thead>
-          <tr>
-            <th>Fiscal Date Ending</th>
-            <th>Operating Cash Flow</th>
-            <th>Payments for Operating Activities</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCashFlow.map((report, index) => (
-            <tr key={`${index}-table1`}>
-              <td>{report.fiscalDateEnding}</td>
-              <td>{formatValue(report.operatingCashflow)}</td>
-              <td>{formatValue(report.paymentsForOperatingActivities)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Second Table */}
-      <table className="cashflow-table">
-        <thead>
-          <tr>
-            <th>Capital Expenditures</th>
-            <th>Change in Operating Assets</th>
-            <th>Change in Operating Liabilities</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCashFlow.map((report, index) => (
-            <tr key={`${index}-table2`}>
-              <td>{formatValue(report.capitalExpenditures)}</td>
-              <td>{formatValue(report.changeInOperatingAssets)}</td>
-              <td>{formatValue(report.changeInOperatingLiabilities)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Third Table (If necessary) */}
-      <table className="cashflow-table">
-        <thead>
-          <tr>
-            <th>Cashflow from Investment</th>
-            <th>Cashflow from Financing</th>
-            <th>Net Income</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCashFlow.map((report, index) => (
-            <tr key={`${index}-table3`}>
-              <td>{formatValue(report.cashflowFromInvestment)}</td>
-              <td>{formatValue(report.cashflowFromFinancing)}</td>
-              <td>{formatValue(report.netIncome)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
-</div>
-
-
-
-
-
-
-
-
-
-    {/* About Section */}
-    <div id='about-section' className="about-company-block">
-        <h4> About The Company </h4>
-        <div> {companyOverview.Description} </div>
-    </div>
-
-
-
-
-   {/* News Section */}
-   <div id="news-section" className="news-block">
-  <h4>Recent News</h4>
-  {loadingNews ? (
-    <p>Loading news...</p>
-  ) : news.length > 0 ? (
-    <div className="news-list">
-      {news.map((article, index) => (
-        <div key={index} className="news-item">
-          <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
-            {article.title}
-          </a>
-          <p className="news-summary">{article.summary}</p>
-          {index < news.length - 1 && <hr className="news-divider" />}
+      {activeSection === 'news' && (
+        <div ref={refs.newsRef}>
+          {/* News Section */}
+          <div id="news-section" className="news-block">
+            <h4>Recent News</h4>
+            {loadingNews ? (
+              <p>Loading news...</p>
+            ) : news.length > 0 ? (
+              <div className="news-list">
+                {news.map((article, index) => (
+                  <div key={index} className="news-item">
+                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
+                      {article.title}
+                    </a>
+                    <p className="news-summary">{article.summary}</p>
+                    {index < news.length - 1 && <hr className="news-divider" />}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No recent news available.</p>
+            )}
+          </div>
         </div>
-      ))}
-    </div>
-  ) : (
-    <p>No recent news available.</p>
-  )}
-</div>
+      )}
 
-
-
-
-
-
-    {/* Balance Sheet Section */}
-
-    <div id="balance-sheet-section" className="balance-sheet-block">
-        <BalanceSheet symbol={symbol} />
-    </div>
-
-
-
-
-
-
-    
-
-
+      {activeSection === 'balanceSheet' && (
+        <div ref={refs.balanceSheetRef}>
+          {/* Balance Sheet Section */}
+          <div id="balance-sheet-section" className="balance-sheet-block">
+            <BalanceSheet symbol={symbol} />
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+});
 
 export default Financials;

@@ -7,6 +7,8 @@
     margin: 20px auto;
     max-width: 600px;
     text-align: center;
+    margin-top: 10px;
+    padding-top: 5px;
   }
   
   .cpi-header {
@@ -14,7 +16,7 @@
     margin-bottom: 15px;
     border-bottom: 1px solid #333;
     padding-bottom: 10px;
-    position: relative;
+    
   }
   
   .cpi-header h2 {

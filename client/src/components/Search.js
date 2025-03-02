@@ -27,27 +27,27 @@ const Search = ({ setSearchOpen }) => {
       const response = await axios.get(API_URL);
       const suggestionData = response.data?.bestMatches || [];
 
-      // Sembol filtresi: Yalnızca NASDAQ hisseleri
+      // Filter and sort suggestions
       const filteredSuggestions = suggestionData
-        .filter((item) => !item["1. symbol"].includes('.')) // Uzantısız sembolleri al
-        .sort((a, b) => parseFloat(b["9. matchScore"]) - parseFloat(a["9. matchScore"])) // matchScore'a göre sırala
+        .filter((item) => !item["1. symbol"].includes('.')) // Remove symbols with extensions
+        .sort((a, b) => parseFloat(b["9. matchScore"]) - parseFloat(a["9. matchScore"])) // Sort by match score
         .map((item) => ({
           ticker: item["1. symbol"],
           name: item["2. name"],
         }));
 
-      // Logoları Finnhub'dan getir ve zaman aşımı ekle
+      // Fetch logos from Finnhub
       const logoPromises = filteredSuggestions.map(async (company) => {
         const logoURL = `https://finnhub.io/api/v1/stock/profile2?symbol=${company.ticker}&token=${process.env.REACT_APP_API_KEY}`;
         const timeoutPromise = new Promise((resolve) =>
-          setTimeout(() => resolve({ ...company, logo: '' }), 2500) // 2.5 saniye içinde cevap gelmezse logo boş
+          setTimeout(() => resolve({ ...company, logo: '' }), 2500) // Timeout after 2.5 seconds
         );
 
         const logoResponsePromise = axios
           .get(logoURL)
           .then((res) => ({
             ...company,
-            logo: res.data?.logo || '', // Logo varsa ekle, yoksa boş bırak
+            logo: res.data?.logo || '', // Add logo if available
           }))
           .catch(() => ({
             ...company,
@@ -69,7 +69,7 @@ const Search = ({ setSearchOpen }) => {
     // Add the clicked company to recentCompanies
     setRecentCompanies((prev) => {
       const exists = prev.find((company) => company.ticker === ticker);
-      if (exists) return prev; // If the company already exists, don't add it again
+      if (exists) return prev; // Avoid duplicates
       const newCompany = { ticker, name };
       return [newCompany, ...prev.slice(0, 4)]; // Keep only the last 5 companies
     });
@@ -152,7 +152,7 @@ const Search = ({ setSearchOpen }) => {
                         className="company-logo"
                       />
                     ) : (
-                      <div className="placeholder-logo">N/A</div> // Placeholder logo with N/A text
+                      <div className="placeholder-logo">N/A</div> // Placeholder logo
                     )}
                     <div>
                       <strong>{suggestion.ticker}</strong> - {suggestion.name}

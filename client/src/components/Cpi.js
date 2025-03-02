@@ -36,19 +36,22 @@ const Cpi = () => {
       const data = await response.json();
 
       if (data && data.data) {
-        // Get the last 9 CPI data points for the regular block
-        const lastNineData = data.data.slice(0, 9).map((item) => ({
-          ...item,
-          formattedDate: formatDate(item.date), // Format the date
-        }));
-        setCpiData(lastNineData);
+        // Sort data by date in descending order (most recent first)
+        const sortedData = data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Get the last 13 CPI data points for the hover chart
-        const lastThirteenData = data.data.slice(0, 13).map((item) => ({
+        // Get the latest 3 months for the block
+        const latestThreeData = sortedData.slice(0, 3).map((item) => ({
           ...item,
           formattedDate: formatDate(item.date), // Format the date
         }));
-        prepareChartData(lastThirteenData);
+        setCpiData(latestThreeData);
+
+        // Get the latest 13 months for the hover chart
+        const latestThirteenData = sortedData.slice(0, 13).map((item) => ({
+          ...item,
+          formattedDate: formatDate(item.date), // Format the date
+        }));
+        prepareChartData(latestThirteenData);
       }
     };
 

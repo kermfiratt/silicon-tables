@@ -8,6 +8,9 @@
   margin: 20px auto;
   max-width: 600px;
   text-align: center;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  padding-left: 5px;
 }
 
 .unemployment-header {
@@ -20,7 +23,7 @@
 
 .unemployment-header h2 {
   font-size: 24px;
-  color: #4caf50; /* Green for header */
+  color: white; /* Green for header */
   margin-bottom: 20px;
   cursor: pointer;
 }
