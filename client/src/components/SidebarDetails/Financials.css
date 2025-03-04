@@ -540,6 +540,18 @@
   margin: 0;
 }
 
+/* Category Headers */
+.metrics-category h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 
 
 .about-company-block {

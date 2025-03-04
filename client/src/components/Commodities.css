@@ -1,54 +1,53 @@
-/* src/components/RecentVCFunds.css */
-.recent-vc-funds-container {
+.commodities-container {
   background-color: #1e1e1e;
   padding: 20px;
-  padding-bottom: 5px;
+  padding-top: 10px;
   border-radius: 8px;
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   max-width: 600px;
-  height: 250px;
   text-align: center;
-  margin-bottom: 0px;
-  padding-top: 5px;
+  padding-right: 5px;
+  margin-bottom: 5px;
+  padding-left: 5px;
 }
 
-.recent-vc-funds-header {
-  font-size: 22px;
-  margin-bottom: 15px;
-  border-bottom: 1px solid hsl(0, 0%, 20%);
-  padding-bottom: 10px;
+.commodities-header {
+  font-size: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+  position: relative;
 }
 
-.yearly-inflation h2 {
-  font-size: 24px;
-  color: #4caf50; /* Green for yearly inflation */
-  margin-bottom: 20px;
-}
-
-.recent-vc-funds-list {
+.commodities-list {
   list-style: none;
-  padding: 0;
+  padding: 5px;
   margin: 0;
 }
 
-.recent-vc-funds-item {
+.commodities-item {
   display: flex;
   justify-content: space-between;
+  align-items: center; /* Align items vertically */
   font-size: 16px;
   margin-bottom: 10px;
   padding-bottom: 5px;
   border-bottom: 1px solid #444;
 }
 
-.month-name {
+.commodity-name {
   font-weight: bold;
+  text-align: left; /* Align commodity names to the left */
+  flex: 1; /* Allow the name to take up available space */
 }
 
-.inflation-value {
-  color: #ffa500; /* Orange for monthly inflation values */
+.commodity-price {
+  color: #4caf50; /* Green for commodity prices */
   font-weight: bold;
+  text-align: right; /* Align prices to the right */
+  margin-left: 10px; /* Add some spacing between name and price */
 }
 
 .error-message {

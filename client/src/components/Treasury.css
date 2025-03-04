@@ -1,0 +1,42 @@
+.treasury-container {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.treasury-header {
+  font-size: 22px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+  margin-top: 10px;
+}
+
+.treasury-rate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.treasury-date {
+  font-weight: bold;
+  text-align: left; /* Align date to the left */
+}
+
+.treasury-value {
+  color: #4caf50; /* Green for treasury value */
+  font-weight: bold;
+  text-align: right; /* Align value to the right */
+}
+
+.error-message {
+  color: red;
+}

@@ -5,12 +5,13 @@ import TopTrade from './TopTrade';
 import Commodities from './Commodities';
 import TechNews from './TechNews';
 import Employement from './Employement';
-import Inflation from './Inflation';
+import Treasury from './Treasury';
 import Ticker from './Ticker';
 import Watchlist from './Watchlist';
 import StockCardContainer from './StockCardContainer';
 import Cpi from './Cpi';
 import './Home.css';
+import Explanation from './Explanation';
 
 const Home = () => {
   return (
@@ -21,18 +22,19 @@ const Home = () => {
         <MarketData />
       </div>
       
+      <Explanation />
       <StockCardContainer /> {/* Added Stock Card feature */}
 
       <div className="content-area">
         <TopTrade />
         
         <div className="vc-startup-container">
-          <Employement />
-          <Inflation />
+          <Commodities />
+          <Treasury />
         </div>
       
         <div>
-        <Commodities />
+        <Employement />
         <Cpi />
         </div>
 

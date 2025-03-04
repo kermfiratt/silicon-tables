@@ -1,6 +1,5 @@
-// src/components/RecentVCFunds.js
 import React, { useState, useEffect } from 'react';
-import './Commodities.css';
+import './Commodities.css'; // Use updated Commodities.css
 
 const Commodities = () => {
   const [commoditiesData, setCommoditiesData] = useState([]);
@@ -11,11 +10,12 @@ const Commodities = () => {
 
   const fetchCommoditiesData = async () => {
     const commodityEndpoints = [
-      { name: 'Crude Oil (WTI)', function: 'WTI', interval: 'monthly' },
-      { name: 'Crude Oil (Brent)', function: 'BRENT', interval: 'monthly' },
+  
       { name: 'Natural Gas', function: 'NATURAL_GAS', interval: 'monthly' },
       { name: 'Aluminum', function: 'ALUMINUM', interval: 'monthly' },
       { name: 'Copper', function: 'COPPER', interval: 'monthly' },
+      { name: 'Crude Oil (WTI)', function: 'WTI', interval: 'monthly' },
+      { name: 'Crude Oil (Brent)', function: 'BRENT', interval: 'monthly' },
     ];
 
     try {
@@ -54,20 +54,18 @@ const Commodities = () => {
   }, []);
 
   return (
-    <div className="recent-vc-funds-container">
-      <h3 className="recent-vc-funds-header">Popular Commodities Prices</h3>
+    <div className="commodities-container">
+      <h3 className="commodities-header">Popular Commodities Prices</h3>
       {isLoading ? (
         <p>Loading data...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
-        <ul className="recent-vc-funds-list">
+        <ul className="commodities-list">
           {commoditiesData.map((commodity, index) => (
-            <li key={index} className="recent-vc-funds-item">
+            <li key={index} className="commodities-item">
               <span className="commodity-name">{commodity.name}</span>
-              <span className="commodity-price" style={{ color: '#4caf50' }}>
-                ${commodity.price}
-              </span>
+              <span className="commodity-price">${commodity.price}</span>
             </li>
           ))}
         </ul>

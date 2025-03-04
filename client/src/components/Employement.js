@@ -1,6 +1,5 @@
-// src/components/Employement.js
 import React, { useEffect, useState } from 'react';
-import './Employement.css';
+import './Employement.css'; // Use Commodities.css
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -24,8 +23,6 @@ ChartJS.register(
 );
 
 const Employement = () => {
-  const [unemploymentData, setUnemploymentData] = useState([]);
-  const [hovered, setHovered] = useState(false);
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -37,29 +34,26 @@ const Employement = () => {
       const data = await response.json();
 
       if (data && data.data) {
-        // Get the last 5 unemployment data points for the block
-        const lastFiveData = data.data.slice(0, 5).map((item) => ({
-          ...item,
-          formattedDate: formatDate(item.date), // Format the date
-        }));
-        setUnemploymentData(lastFiveData);
+        // Sort data by date in descending order (most recent first)
+        const sortedData = data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Get the last 13 unemployment data points for the hover chart
-        const lastThirteenData = data.data.slice(0, 13).map((item) => ({
+        // Get the latest 13 months for the chart
+        const latestThirteenData = sortedData.slice(0, 13).map((item) => ({
           ...item,
           formattedDate: formatDate(item.date), // Format the date
         }));
-        prepareChartData(lastThirteenData);
+        prepareChartData(latestThirteenData);
       }
     };
 
     fetchUnemploymentData();
   }, []);
 
-  // Function to format the date as "MM / YYYY"
+  // Function to format the date as "MM / YY"
   const formatDate = (dateString) => {
     const [year, month] = dateString.split('-'); // Split the date string
-    return `${month} / ${year}`; // Format as "MM / YYYY"
+    const shortYear = year.slice(-2); // Get the last two digits of the year
+    return `${month} / ${shortYear}`; // Format as "MM / YY"
   };
 
   // Prepare data for the chart
@@ -68,7 +62,7 @@ const Employement = () => {
       labels: data.map((item) => item.formattedDate).reverse(),
       datasets: [
         {
-          label: 'Unemployment Rate (%)',
+          label: '', // Empty label to remove legend
           data: data.map((item) => item.value).reverse(),
           borderColor: '#4caf50', // Green line
           backgroundColor: 'rgba(76, 175, 80, 0.1)', // Light green fill
@@ -91,19 +85,10 @@ const Employement = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true,
-        position: 'top',
-        labels: {
-          color: '#fff', // White legend text
-        },
+        display: false, // Hide the legend
       },
       title: {
-        display: true,
-        text: 'Last 13 Months Unemployment Rate',
-        color: '#fff', // White title text
-        font: {
-          size: 16,
-        },
+        display: false, // Hide the title
       },
       tooltip: {
         backgroundColor: '#2e2e2e', // Dark tooltip background
@@ -120,6 +105,9 @@ const Employement = () => {
         },
         ticks: {
           color: '#fff', // White x-axis labels
+          font: {
+            size: 10, // Smaller font size for x-axis labels
+          },
         },
       },
       y: {
@@ -128,33 +116,22 @@ const Employement = () => {
         },
         ticks: {
           color: '#fff', // White y-axis labels
+          font: {
+            size: 10, // Smaller font size for y-axis labels
+          },
         },
       },
     },
   };
 
   return (
-    <div className="unemployment-container">
-      <div
-        className="unemployment-header"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+    <div className="recent-vc-funds-container">
+      <div className="recent-vc-funds-header">
         <h2>US Unemployment Rate</h2>
-        {hovered && chartData && (
-          <div className="hover-chart">
-            <Line data={chartData} options={options} />
-          </div>
-        )}
       </div>
-      <ul className="unemployment-list">
-        {unemploymentData.map((item, index) => (
-          <li key={index} className="unemployment-item">
-            <span className="month-name">{item.formattedDate}</span>
-            <span className="unemployment-value">{item.value}%</span>
-          </li>
-        ))}
-      </ul>
+      <div className="chart-block">
+        {chartData && <Line data={chartData} options={options} />}
+      </div>
     </div>
   );
 };

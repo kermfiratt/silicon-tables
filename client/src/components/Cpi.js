@@ -23,8 +23,6 @@ ChartJS.register(
 );
 
 const Cpi = () => {
-  const [cpiData, setCpiData] = useState([]);
-  const [hovered, setHovered] = useState(false);
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -39,14 +37,7 @@ const Cpi = () => {
         // Sort data by date in descending order (most recent first)
         const sortedData = data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Get the latest 3 months for the block
-        const latestThreeData = sortedData.slice(0, 3).map((item) => ({
-          ...item,
-          formattedDate: formatDate(item.date), // Format the date
-        }));
-        setCpiData(latestThreeData);
-
-        // Get the latest 13 months for the hover chart
+        // Get the latest 13 months for the chart
         const latestThirteenData = sortedData.slice(0, 13).map((item) => ({
           ...item,
           formattedDate: formatDate(item.date), // Format the date
@@ -58,10 +49,11 @@ const Cpi = () => {
     fetchCpiData();
   }, []);
 
-  // Function to format the date as "MM / YYYY"
+  // Function to format the date as "MM / YY"
   const formatDate = (dateString) => {
     const [year, month] = dateString.split('-'); // Split the date string
-    return `${month} / ${year}`; // Format as "MM / YYYY"
+    const shortYear = year.slice(-2); // Get the last two digits of the year
+    return `${month} / ${shortYear}`; // Format as "MM / YY"
   };
 
   // Prepare data for the chart
@@ -70,7 +62,7 @@ const Cpi = () => {
       labels: data.map((item) => item.formattedDate).reverse(),
       datasets: [
         {
-          label: 'Consumer Price Index (CPI)',
+          label: '', // Empty label to remove legend
           data: data.map((item) => item.value).reverse(),
           borderColor: '#4caf50', // Green line
           backgroundColor: 'rgba(76, 175, 80, 0.1)', // Light green fill
@@ -93,19 +85,10 @@ const Cpi = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true,
-        position: 'top',
-        labels: {
-          color: '#fff', // White legend text
-        },
+        display: false, // Hide the legend
       },
       title: {
-        display: true,
-        text: 'Last 13 Months Consumer Price Index (CPI)', // Hover chart title
-        color: '#fff', // White title text
-        font: {
-          size: 16,
-        },
+        display: false, // Hide the title
       },
       tooltip: {
         backgroundColor: '#2e2e2e', // Dark tooltip background
@@ -122,6 +105,9 @@ const Cpi = () => {
         },
         ticks: {
           color: '#fff', // White x-axis labels
+          font: {
+            size: 10, // Smaller font size for x-axis labels
+          },
         },
       },
       y: {
@@ -130,6 +116,9 @@ const Cpi = () => {
         },
         ticks: {
           color: '#fff', // White y-axis labels
+          font: {
+            size: 10, // Smaller font size for y-axis labels
+          },
         },
       },
     },
@@ -137,26 +126,12 @@ const Cpi = () => {
 
   return (
     <div className="cpi-container">
-      <div
-        className="cpi-header"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+      <div className="cpi-header">
         <h2>US Consumer Price Index (CPI)</h2>
-        {hovered && chartData && (
-          <div className="hover-chart">
-            <Line data={chartData} options={options} />
-          </div>
-        )}
       </div>
-      <ul className="cpi-list">
-        {cpiData.map((item, index) => (
-          <li key={index} className="cpi-item">
-            <span className="month-name">{item.formattedDate}</span>
-            <span className="cpi-value">{item.value}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="chart-block">
+        {chartData && <Line data={chartData} options={options} />}
+      </div>
     </div>
   );
 };

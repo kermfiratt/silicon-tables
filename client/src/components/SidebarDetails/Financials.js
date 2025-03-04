@@ -201,15 +201,35 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           .slice(0, 5);
 
         // Parse financial data
-        const quarters = filteredIncomeData.map((report, index) => ({
-          date: report.fiscalDateEnding,
-          revenue: parseFloat(report.totalRevenue) || 0,
-          grossProfit: parseFloat(report.grossProfit) || 0,
-          netIncome: parseFloat(report.netIncome) || 0,
-          assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
-          liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
-          equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
-        }));
+const quarters = filteredIncomeData.map((report, index) => ({
+  date: report.fiscalDateEnding,
+  revenue: parseFloat(report.totalRevenue) || 0,
+  grossProfit: parseFloat(report.grossProfit) || 0,
+  netIncome: parseFloat(report.netIncome) || 0,
+  assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
+  liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
+  equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
+
+  // New Metrics
+  costOfRevenue: parseFloat(report.costOfRevenue) || 0,
+  operatingIncome: parseFloat(report.operatingIncome) || 0,
+  sellingGeneralAndAdministrative: parseFloat(report.sellingGeneralAndAdministrative) || 0,
+  researchAndDevelopment: parseFloat(report.researchAndDevelopment) || 0,
+  operatingExpenses: parseFloat(report.operatingExpenses) || 0,
+  netInterestIncome: parseFloat(report.netInterestIncome) || 0,
+  interestIncome: parseFloat(report.interestIncome) || 0,
+  interestExpense: parseFloat(report.interestExpense) || 0,
+  nonInterestIncome: parseFloat(report.nonInterestIncome) || 0,
+  otherNonOperatingIncome: parseFloat(report.otherNonOperatingIncome) || 0,
+  depreciation: parseFloat(report.depreciation) || 0,
+  depreciationAndAmortization: parseFloat(report.depreciationAndAmortization) || 0,
+  incomeBeforeTax: parseFloat(report.incomeBeforeTax) || 0,
+  incomeTaxExpense: parseFloat(report.incomeTaxExpense) || 0,
+  netIncomeFromContinuingOperations: parseFloat(report.netIncomeFromContinuingOperations) || 0,
+  comprehensiveIncomeNetOfTax: parseFloat(report.comprehensiveIncomeNetOfTax) || 0,
+  ebit: parseFloat(report.ebit) || 0,
+  ebitda: parseFloat(report.ebitda) || 0,
+}));
 
         setFinancialData(quarters);
         setLoadingFinancials(false);
@@ -389,24 +409,45 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
               </tbody>
             </table>
           </div>
-
+  
           {/* Financial Metrics */}
           <div className="metrics-grid">
             {[
+              // Existing Metrics
               { label: 'Assets', key: 'assets' },
               { label: 'Liabilities', key: 'liabilities' },
               { label: 'Equity', key: 'equity' },
               { label: 'Quarterly Sales', key: 'revenue' },
               { label: 'Quarterly Gross Profit', key: 'grossProfit' },
               { label: 'Quarterly Net Income', key: 'netIncome' },
+  
+              // New Metrics
+              { label: 'Cost of Revenue', key: 'costOfRevenue' },
+              { label: 'Operating Income', key: 'operatingIncome' },
+              { label: 'Selling, General & Admin', key: 'sellingGeneralAndAdministrative' },
+              { label: 'Research & Development', key: 'researchAndDevelopment' },
+              { label: 'Operating Expenses', key: 'operatingExpenses' },
+              { label: 'Net Interest Income', key: 'netInterestIncome' },
+              { label: 'Interest Income', key: 'interestIncome' },
+              { label: 'Interest Expense', key: 'interestExpense' },
+              { label: 'Non-Interest Income', key: 'nonInterestIncome' },
+              { label: 'Other Non-Operating Income', key: 'otherNonOperatingIncome' },
+              { label: 'Depreciation', key: 'depreciation' },
+              { label: 'Depreciation & Amortization', key: 'depreciationAndAmortization' },
+              { label: 'Income Before Tax', key: 'incomeBeforeTax' },
+              { label: 'Income Tax Expense', key: 'incomeTaxExpense' },
+              { label: 'Net Income from Continuing Operations', key: 'netIncomeFromContinuingOperations' },
+              { label: 'Comprehensive Income Net of Tax', key: 'comprehensiveIncomeNetOfTax' },
+              { label: 'EBIT', key: 'ebit' },
+              { label: 'EBITDA', key: 'ebitda' },
             ].map((metric, index) => {
               const maxMetricValue = Math.max(
                 ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
               );
-
+  
               // Reverse the financialData array to display the most recent data on the right
               const reversedFinancialData = [...financialData].reverse();
-
+  
               return (
                 <div className="metric-block" key={index}>
                   <h4>{metric.label}</h4>
@@ -414,7 +455,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
                     {reversedFinancialData.map((item) => {
                       const metricValue = item[metric.key]; // Access the correct key
                       const formattedValue = formatValue(metricValue);
-
+  
                       return (
                         <div
                           key={item.date}
@@ -441,88 +482,145 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
+  
+  {activeSection === 'priceMetrics' && (
+  <div ref={refs.priceMetricsRef}>
+    {/* Price Metrics */}
+    <div className="price-metrics-container">
+      <section id='price-metrics-section'>
+        <h3>Price Metrics</h3>
 
-      {activeSection === 'priceMetrics' && (
-        <div ref={refs.priceMetricsRef}>
-          {/* Price Metrics */}
-          <div className="price-metrics-container">
-            <section id='price-metrics-section'>
-              <h3>Price Metrics</h3>
-              <div className="metrics-blocks">
-                {priceMetrics.map((metric, index) => (
-                  <div
-                    key={index}
-                    className="metric-block"
-                    style={{ borderLeft: `5px solid ${metric.color}` }}
-                  >
-                    <h4 style={{ color: metric.color }}>{metric.label}</h4>
-                    <p>{metric.value}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
+        {/* Valuation Metrics */}
+        <div className="metrics-category">
+          <h4>Valuation</h4>
+          <div className="metrics-blocks">
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>Market Cap</h4>
+              <p>{formatValue(companyOverview.MarketCapitalization)}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>Trailing P/E</h4>
+              <p>{companyOverview.TrailingPE}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>Forward P/E</h4>
+              <p>{companyOverview.ForwardPE}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>Price to Sales (TTM)</h4>
+              <p>{companyOverview.PriceToSalesRatioTTM}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>Price to Book</h4>
+              <p>{companyOverview.PriceToBookRatio}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>EV/Revenue</h4>
+              <p>{companyOverview.EVToRevenue}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+              <h4 style={{ color: '#4CAF50' }}>EV/EBITDA</h4>
+              <p>{companyOverview.EVToEBITDA}</p>
+            </div>
           </div>
         </div>
-      )}
 
-      {activeSection === 'quarterlyEarnings' && (
-        <div ref={refs.quarterlyEarningsRef}>
-          {/* Earnings Section */}
-          <div id='quarterly-earnings-section' className="earnings-block">
-            <h4 className="earnings-header">Quarterly Earnings</h4>
-            {loadingEarnings ? (
-              <p className="earnings-loading">Loading Quarterly Earnings...</p>
-            ) : errorEarnings ? (
-              <p className="earnings-error">{errorEarnings}</p>
-            ) : (
-              <div>
-                <div className="year-selector">
-                  <label htmlFor="year-select">Select Year:</label>
-                  <select
-                    id="year-select"
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="year-dropdown"
-                  >
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <table className="earnings-table">
-                  <thead>
-                    <tr>
-                      <th>Fiscal Date Ending</th>
-                      <th>Reported Date</th>
-                      <th>Reported EPS</th>
-                      <th>Estimated EPS</th>
-                      <th>Surprise</th>
-                      <th>Surprise %</th>
-                      <th>Report Time</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredEarnings.map((earning, index) => (
-                      <tr key={index}>
-                        <td>{earning.fiscalDateEnding}</td>
-                        <td>{earning.reportedDate}</td>
-                        <td>{earning.reportedEPS}</td>
-                        <td>{earning.estimatedEPS}</td>
-                        <td>{earning.surprise}</td>
-                        <td>{earning.surprisePercentage}%</td>
-                        <td>{earning.reportTime}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+        {/* Dividend Metrics */}
+        <div className="metrics-category">
+          <h4>Dividends</h4>
+          <div className="metrics-blocks">
+            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+              <h4 style={{ color: '#2196F3' }}>Dividend Per Share</h4>
+              <p>{companyOverview.DividendPerShare}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+              <h4 style={{ color: '#2196F3' }}>Dividend Yield</h4>
+              <p>{companyOverview.DividendYield}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+              <h4 style={{ color: '#2196F3' }}>Dividend Date</h4>
+              <p>{companyOverview.DividendDate}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+              <h4 style={{ color: '#2196F3' }}>Ex-Dividend Date</h4>
+              <p>{companyOverview.ExDividendDate}</p>
+            </div>
           </div>
         </div>
-      )}
 
+        {/* Profitability Metrics */}
+        <div className="metrics-category">
+          <h4>Profitability</h4>
+          <div className="metrics-blocks">
+            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+              <h4 style={{ color: '#FF9800' }}>Profit Margin</h4>
+              <p>{companyOverview.ProfitMargin}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+              <h4 style={{ color: '#FF9800' }}>Operating Margin (TTM)</h4>
+              <p>{companyOverview.OperatingMarginTTM}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+              <h4 style={{ color: '#FF9800' }}>Return on Assets (TTM)</h4>
+              <p>{companyOverview.ReturnOnAssetsTTM}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+              <h4 style={{ color: '#FF9800' }}>Return on Equity (TTM)</h4>
+              <p>{companyOverview.ReturnOnEquityTTM}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Growth Metrics */}
+        <div className="metrics-category">
+          <h4>Growth</h4>
+          <div className="metrics-blocks">
+            <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
+              <h4 style={{ color: '#9C27B0' }}>Quarterly Earnings Growth (YoY)</h4>
+              <p>{companyOverview.QuarterlyEarningsGrowthYOY}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
+              <h4 style={{ color: '#9C27B0' }}>Quarterly Revenue Growth (YoY)</h4>
+              <p>{companyOverview.QuarterlyRevenueGrowthYOY}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Analyst Ratings */}
+        <div className="metrics-category">
+          <h4>Analyst Ratings</h4>
+          <div className="metrics-blocks">
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Analyst Target Price</h4>
+              <p>{companyOverview.AnalystTargetPrice}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Strong Buy</h4>
+              <p>{companyOverview.AnalystRatingStrongBuy}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Buy</h4>
+              <p>{companyOverview.AnalystRatingBuy}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Hold</h4>
+              <p>{companyOverview.AnalystRatingHold}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Sell</h4>
+              <p>{companyOverview.AnalystRatingSell}</p>
+            </div>
+            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+              <h4 style={{ color: '#E91E63' }}>Strong Sell</h4>
+              <p>{companyOverview.AnalystRatingStrongSell}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+)}
+  
       {activeSection === 'annualCashFlow' && (
         <div ref={refs.annualCashFlowRef}>
           {/* Cash Flow Section */}
@@ -568,7 +666,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
                     ))}
                   </tbody>
                 </table>
-
+  
                 {/* Second Table */}
                 <table className="cashflow-table">
                   <thead>
@@ -588,7 +686,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
                     ))}
                   </tbody>
                 </table>
-
+  
                 {/* Third Table */}
                 <table className="cashflow-table">
                   <thead>
@@ -613,7 +711,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-
+  
       {activeSection === 'about' && (
         <div ref={refs.aboutRef}>
           {/* About Section */}
@@ -623,7 +721,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-
+  
       {activeSection === 'news' && (
         <div ref={refs.newsRef}>
           {/* News Section */}
@@ -649,7 +747,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-
+  
       {activeSection === 'balanceSheet' && (
         <div ref={refs.balanceSheetRef}>
           {/* Balance Sheet Section */}
