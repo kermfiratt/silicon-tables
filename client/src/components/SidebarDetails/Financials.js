@@ -19,7 +19,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [errorNews, setErrorNews] = useState(null);
   const [quarterlyEarnings, setQuarterlyEarnings] = useState([]);
   const [years, setYears] = useState([]);
-  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedYear, setSelectedYear] = useState("2024");
   const [filteredEarnings, setFilteredEarnings] = useState([]);
   const [loadingEarnings, setLoadingEarnings] = useState(true);
   const [errorEarnings, setErrorEarnings] = useState(null);
@@ -620,6 +620,62 @@ const quarters = filteredIncomeData.map((report, index) => ({
     </div>
   </div>
 )}
+
+
+
+
+<div className="quarterly-earnings-section">
+  <h4>Quarterly Earnings</h4>
+  {loadingEarnings ? (
+    <p>Loading earnings data...</p>
+  ) : errorEarnings ? (
+    <p>Error: {errorEarnings}</p>
+  ) : (
+    <div>
+      <select
+        value={selectedYear}
+        onChange={(e) => setSelectedYear(e.target.value)}
+      >
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+      <table>
+        <thead>
+          <tr>
+            <th>Fiscal Date Ending</th>
+            <th>Reported Date</th>
+            <th>Reported EPS</th>
+            <th>Estimated EPS</th>
+            <th>Surprise</th>
+            <th>Surprise Percentage</th>
+            <th>Report Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredEarnings.map((earning, index) => (
+            <tr key={index}>
+              <td>{earning.fiscalDateEnding}</td>
+              <td>{earning.reportedDate}</td>
+              <td>{earning.reportedEPS}</td>
+              <td>{earning.estimatedEPS}</td>
+              <td>{earning.surprise}</td>
+              <td>{earning.surprisePercentage}</td>
+              <td>{earning.reportTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
+
+
+
+     
+
   
       {activeSection === 'annualCashFlow' && (
         <div ref={refs.annualCashFlowRef}>
