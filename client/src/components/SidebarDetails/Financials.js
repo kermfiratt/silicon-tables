@@ -123,7 +123,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   
           // Set the latest year as default
           const latestYear = uniqueYears[0];
-          setSelectedYear(latestYear);
+          setSelectedYear("2024");
   
           // Filter earnings by the latest year
           const filtered = data.quarterlyEarnings.filter((e) =>
@@ -624,7 +624,11 @@ const quarters = filteredIncomeData.map((report, index) => ({
 
 
 
-<div className="quarterly-earnings-section">
+
+{activeSection === 'quarterlyEarnings' && (
+        <div ref={refs.quarterlyEarningsRef}>
+          {/* Earnings Section */}
+          <div className="quarterly-earnings-section">
   <h4>Quarterly Earnings</h4>
   {loadingEarnings ? (
     <p>Loading earnings data...</p>
@@ -655,7 +659,7 @@ const quarters = filteredIncomeData.map((report, index) => ({
           </tr>
         </thead>
         <tbody>
-          {filteredEarnings.map((earning, index) => (
+        {filteredEarnings.map((earning, index) => (
             <tr key={index}>
               <td>{earning.fiscalDateEnding}</td>
               <td>{earning.reportedDate}</td>
@@ -670,9 +674,9 @@ const quarters = filteredIncomeData.map((report, index) => ({
       </table>
     </div>
   )}
-</div>
-
-
+</div>  
+        </div>
+      )}
 
      
 
