@@ -134,12 +134,14 @@
 
 
 
+
+
 /* Cash Flow Block */
 .cashflow-block {
   width: 96%;
   margin: 20px 0;
   padding: 20px;
-  background-color: #1e1e1e;
+  background-color: #1e1e1e; /* Block background color */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -147,68 +149,70 @@
   align-items: center;
 }
 
-/* Headers */
 .cashflow-header {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 15px;
-  color: #fff;
+  color: #fff; /* White header for dark background */
 }
 
-/* Year Selector Styling */
 .year-selector {
   margin-bottom: 20px;
   text-align: center;
 }
 
+.year-selector label {
+  font-size: 1rem;
+  margin-right: 10px;
+  color: #ddd; /* Light gray for the label */
+}
+
 .year-dropdown {
   padding: 8px 10px;
   font-size: 1rem;
-  border: 1px solid #444;
+  border: 1px solid #444; /* Darker border for dropdown */
   border-radius: 4px;
-  background-color: #333;
-  color: #fff;
+  background-color: #333; /* Dark dropdown background */
+  color: #fff; /* Light text for dropdown */
+  cursor: pointer;
 }
 
-/* Table Styling */
+.year-dropdown:hover {
+  border-color: #555; /* Slightly lighter border on hover */
+}
+
+/* Cash Flow Table */
 .cashflow-table {
   width: 100%;
-  margin-bottom: 20px;
   border-collapse: collapse;
   text-align: center;
-  background-color: #1e1e1e;
+  background-color: #1e1e1e; /* Table background color */
 }
 
 .cashflow-table th,
 .cashflow-table td {
-  border: 1px solid #444;
+  border: 1px solid #444; /* Subtle dark border */
   padding: 10px;
-  color: #ddd;
+  color: #ddd; /* Light gray text */
 }
 
 .cashflow-table th {
-  background-color: #333;
+  background-color: #333; /* Slightly lighter than table background */
   font-weight: bold;
 }
 
 .cashflow-table tr:nth-child(even) {
-  background-color: #2a2a2a;
+  background-color: #2a2a2a; /* Darker row background for even rows */
 }
 
 .cashflow-table tr:nth-child(odd) {
-  background-color: #252525;
+  background-color: #252525; /* Slightly lighter than even rows */
 }
 
 .cashflow-table tr:hover {
-  background-color: #3a3a3a;
+  background-color: #3a3a3a; /* Highlight on hover */
 }
-
-
-
-
-
-
 
 
 /* Earnings Block */
@@ -827,3 +831,15 @@
     overflow-x: auto;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+

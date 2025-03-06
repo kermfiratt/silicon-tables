@@ -29,6 +29,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [filteredCashFlow, setFilteredCashFlow] = useState([]);
   const [loadingCashFlow, setLoadingCashFlow] = useState(true);
   const [errorCashFlow, setErrorCashFlow] = useState(null);
+  const [showAllYears, setShowAllYears] = useState(false);
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -57,19 +58,21 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         const data = response.data;
 
         if (data && data.annualReports) {
-          setCashFlowData(data.annualReports);
+          const sortedAnnualReports = data.annualReports.sort((a, b) =>
+            b.fiscalDateEnding.localeCompare(a.fiscalDateEnding)
+          );
+
+          setCashFlowData(sortedAnnualReports);
 
           const uniqueYears = Array.from(
-            new Set(data.annualReports.map((report) => report.fiscalDateEnding.slice(0, 4))) // Added closing parenthesis
+            new Set(sortedAnnualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
           );
           setCashFlowYears(uniqueYears);
 
-          // Set the latest year as default
           const latestYear = uniqueYears[0];
           setSelectedCashFlowYear(latestYear);
 
-          // Filter cash flow data by the latest year
-          const filtered = data.annualReports.filter((report) =>
+          const filtered = sortedAnnualReports.filter((report) =>
             report.fiscalDateEnding.startsWith(latestYear)
           );
           setFilteredCashFlow(filtered);
@@ -93,9 +96,14 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
       const filtered = cashFlowData.filter((report) =>
         report.fiscalDateEnding.startsWith(selectedCashFlowYear)
       );
-      setFilteredCashFlow(filtered);
+
+      if (!showAllYears) {
+        setFilteredCashFlow(filtered.slice(0, 3));
+      } else {
+        setFilteredCashFlow(filtered);
+      }
     }
-  }, [selectedCashFlowYear, cashFlowData]);
+  }, [selectedCashFlowYear, cashFlowData, showAllYears]);
 
   useEffect(() => {
     const fetchEarningsData = async () => {
@@ -104,28 +112,24 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           `https://www.alphavantage.co/query?function=EARNINGS&symbol=${symbol}&apikey=${API_KEY}`
         );
         const data = response.data;
-  
-        console.log('API Response:', data); // Log the API response
-  
+
+        console.log('API Response:', data);
+
         if (data.Note) {
-          // Handle rate limit error
           throw new Error('API rate limit exceeded. Please try again later.');
         }
-  
+
         if (data && data.quarterlyEarnings) {
           setQuarterlyEarnings(data.quarterlyEarnings);
-  
-          // Extract unique years from fiscalDateEnding
+
           const uniqueYears = Array.from(
-            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4))) // Fixed: Added closing parenthesis
+            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
           );
           setYears(uniqueYears);
-  
-          // Set the latest year as default
+
           const latestYear = uniqueYears[0];
           setSelectedYear("2024");
-  
-          // Filter earnings by the latest year
+
           const filtered = data.quarterlyEarnings.filter((e) =>
             e.fiscalDateEnding.startsWith(latestYear)
           );
@@ -133,15 +137,15 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         } else {
           throw new Error('No quarterly earnings data available.');
         }
-  
+
         setLoadingEarnings(false);
       } catch (err) {
         console.error('Error fetching quarterly earnings:', err.message);
-        setErrorEarnings(err.message); // Display the actual error message
+        setErrorEarnings(err.message);
         setLoadingEarnings(false);
       }
     };
-  
+
     fetchEarningsData();
   }, [symbol, API_KEY]);
 
@@ -161,9 +165,8 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${API_KEY}`
         );
 
-        // Extract the relevant news articles from the response
         const articles = newsResponse.data.feed || [];
-        setNews(articles.slice(0, 20)); // Limit to 20 articles
+        setNews(articles.slice(0, 20));
         setLoadingNews(false);
       } catch (error) {
         console.error('Error fetching news:', error.message);
@@ -178,12 +181,10 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   useEffect(() => {
     const fetchFinancialData = async () => {
       try {
-        // Fetch income statement
         const incomeResponse = await axios.get(
           `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${symbol}&apikey=${API_KEY}`
         );
 
-        // Fetch balance sheet
         const balanceResponse = await axios.get(
           `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
         );
@@ -191,7 +192,6 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         const incomeData = incomeResponse.data.quarterlyReports;
         const balanceData = balanceResponse.data.quarterlyReports;
 
-        // Filter and sort data to include only the last 5 quarters
         const filteredIncomeData = incomeData
           .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
           .slice(0, 5);
@@ -200,36 +200,33 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
           .slice(0, 5);
 
-        // Parse financial data
-const quarters = filteredIncomeData.map((report, index) => ({
-  date: report.fiscalDateEnding,
-  revenue: parseFloat(report.totalRevenue) || 0,
-  grossProfit: parseFloat(report.grossProfit) || 0,
-  netIncome: parseFloat(report.netIncome) || 0,
-  assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
-  liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
-  equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
-
-  // New Metrics
-  costOfRevenue: parseFloat(report.costOfRevenue) || 0,
-  operatingIncome: parseFloat(report.operatingIncome) || 0,
-  sellingGeneralAndAdministrative: parseFloat(report.sellingGeneralAndAdministrative) || 0,
-  researchAndDevelopment: parseFloat(report.researchAndDevelopment) || 0,
-  operatingExpenses: parseFloat(report.operatingExpenses) || 0,
-  netInterestIncome: parseFloat(report.netInterestIncome) || 0,
-  interestIncome: parseFloat(report.interestIncome) || 0,
-  interestExpense: parseFloat(report.interestExpense) || 0,
-  nonInterestIncome: parseFloat(report.nonInterestIncome) || 0,
-  otherNonOperatingIncome: parseFloat(report.otherNonOperatingIncome) || 0,
-  depreciation: parseFloat(report.depreciation) || 0,
-  depreciationAndAmortization: parseFloat(report.depreciationAndAmortization) || 0,
-  incomeBeforeTax: parseFloat(report.incomeBeforeTax) || 0,
-  incomeTaxExpense: parseFloat(report.incomeTaxExpense) || 0,
-  netIncomeFromContinuingOperations: parseFloat(report.netIncomeFromContinuingOperations) || 0,
-  comprehensiveIncomeNetOfTax: parseFloat(report.comprehensiveIncomeNetOfTax) || 0,
-  ebit: parseFloat(report.ebit) || 0,
-  ebitda: parseFloat(report.ebitda) || 0,
-}));
+        const quarters = filteredIncomeData.map((report, index) => ({
+          date: report.fiscalDateEnding,
+          revenue: parseFloat(report.totalRevenue) || 0,
+          grossProfit: parseFloat(report.grossProfit) || 0,
+          netIncome: parseFloat(report.netIncome) || 0,
+          assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
+          liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
+          equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
+          costOfRevenue: parseFloat(report.costOfRevenue) || 0,
+          operatingIncome: parseFloat(report.operatingIncome) || 0,
+          sellingGeneralAndAdministrative: parseFloat(report.sellingGeneralAndAdministrative) || 0,
+          researchAndDevelopment: parseFloat(report.researchAndDevelopment) || 0,
+          operatingExpenses: parseFloat(report.operatingExpenses) || 0,
+          netInterestIncome: parseFloat(report.netInterestIncome) || 0,
+          interestIncome: parseFloat(report.interestIncome) || 0,
+          interestExpense: parseFloat(report.interestExpense) || 0,
+          nonInterestIncome: parseFloat(report.nonInterestIncome) || 0,
+          otherNonOperatingIncome: parseFloat(report.otherNonOperatingIncome) || 0,
+          depreciation: parseFloat(report.depreciation) || 0,
+          depreciationAndAmortization: parseFloat(report.depreciationAndAmortization) || 0,
+          incomeBeforeTax: parseFloat(report.incomeBeforeTax) || 0,
+          incomeTaxExpense: parseFloat(report.incomeTaxExpense) || 0,
+          netIncomeFromContinuingOperations: parseFloat(report.netIncomeFromContinuingOperations) || 0,
+          comprehensiveIncomeNetOfTax: parseFloat(report.comprehensiveIncomeNetOfTax) || 0,
+          ebit: parseFloat(report.ebit) || 0,
+          ebitda: parseFloat(report.ebitda) || 0,
+        }));
 
         setFinancialData(quarters);
         setLoadingFinancials(false);
@@ -409,19 +406,16 @@ const quarters = filteredIncomeData.map((report, index) => ({
               </tbody>
             </table>
           </div>
-  
+
           {/* Financial Metrics */}
           <div className="metrics-grid">
             {[
-              // Existing Metrics
               { label: 'Assets', key: 'assets' },
               { label: 'Liabilities', key: 'liabilities' },
               { label: 'Equity', key: 'equity' },
               { label: 'Quarterly Sales', key: 'revenue' },
               { label: 'Quarterly Gross Profit', key: 'grossProfit' },
               { label: 'Quarterly Net Income', key: 'netIncome' },
-  
-              // New Metrics
               { label: 'Cost of Revenue', key: 'costOfRevenue' },
               { label: 'Operating Income', key: 'operatingIncome' },
               { label: 'Selling, General & Admin', key: 'sellingGeneralAndAdministrative' },
@@ -442,26 +436,25 @@ const quarters = filteredIncomeData.map((report, index) => ({
               { label: 'EBITDA', key: 'ebitda' },
             ].map((metric, index) => {
               const maxMetricValue = Math.max(
-                ...financialData.map((d) => Math.abs(d[metric.key] || 0)) // Absolute max value for scaling
+                ...financialData.map((d) => Math.abs(d[metric.key] || 0))
               );
-  
-              // Reverse the financialData array to display the most recent data on the right
+
               const reversedFinancialData = [...financialData].reverse();
-  
+
               return (
                 <div className="metric-block" key={index}>
                   <h4>{metric.label}</h4>
                   <div className="metric-data">
                     {reversedFinancialData.map((item) => {
-                      const metricValue = item[metric.key]; // Access the correct key
+                      const metricValue = item[metric.key];
                       const formattedValue = formatValue(metricValue);
-  
+
                       return (
                         <div
                           key={item.date}
                           className={`metric-bar ${metricValue < 0 ? 'negative-bar' : 'positive-bar'}`}
                           style={{
-                            height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`, // Adjust bar height
+                            height: `${(Math.abs(metricValue) / maxMetricValue) * 100 || 0}%`,
                           }}
                         >
                           <span>{formattedValue}</span>
@@ -482,286 +475,188 @@ const quarters = filteredIncomeData.map((report, index) => ({
           </div>
         </div>
       )}
-  
-  {activeSection === 'priceMetrics' && (
-  <div ref={refs.priceMetricsRef}>
-    {/* Price Metrics */}
-    <div className="price-metrics-container">
-      <section id='price-metrics-section'>
-        <h3>Price Metrics</h3>
 
-        {/* Valuation Metrics */}
-        <div className="metrics-category">
-          <h4>Valuation</h4>
-          <div className="metrics-blocks">
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>Market Cap</h4>
-              <p>{formatValue(companyOverview.MarketCapitalization)}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>Trailing P/E</h4>
-              <p>{companyOverview.TrailingPE}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>Forward P/E</h4>
-              <p>{companyOverview.ForwardPE}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>Price to Sales (TTM)</h4>
-              <p>{companyOverview.PriceToSalesRatioTTM}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>Price to Book</h4>
-              <p>{companyOverview.PriceToBookRatio}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>EV/Revenue</h4>
-              <p>{companyOverview.EVToRevenue}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-              <h4 style={{ color: '#4CAF50' }}>EV/EBITDA</h4>
-              <p>{companyOverview.EVToEBITDA}</p>
-            </div>
+      {activeSection === 'priceMetrics' && (
+        <div ref={refs.priceMetricsRef}>
+          {/* Price Metrics */}
+          <div className="price-metrics-container">
+            <section id='price-metrics-section'>
+              <h3>Price Metrics</h3>
+
+              {/* Valuation Metrics */}
+              <div className="metrics-category">
+                <h4>Valuation</h4>
+                <div className="metrics-blocks">
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>Market Cap</h4>
+                    <p>{formatValue(companyOverview.MarketCapitalization)}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>Trailing P/E</h4>
+                    <p>{companyOverview.TrailingPE}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>Forward P/E</h4>
+                    <p>{companyOverview.ForwardPE}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>Price to Sales (TTM)</h4>
+                    <p>{companyOverview.PriceToSalesRatioTTM}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>Price to Book</h4>
+                    <p>{companyOverview.PriceToBookRatio}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>EV/Revenue</h4>
+                    <p>{companyOverview.EVToRevenue}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
+                    <h4 style={{ color: '#4CAF50' }}>EV/EBITDA</h4>
+                    <p>{companyOverview.EVToEBITDA}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dividend Metrics */}
+              <div className="metrics-category">
+                <h4>Dividends</h4>
+                <div className="metrics-blocks">
+                  <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+                    <h4 style={{ color: '#2196F3' }}>Dividend Per Share</h4>
+                    <p>{companyOverview.DividendPerShare}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+                    <h4 style={{ color: '#2196F3' }}>Dividend Yield</h4>
+                    <p>{companyOverview.DividendYield}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+                    <h4 style={{ color: '#2196F3' }}>Dividend Date</h4>
+                    <p>{companyOverview.DividendDate}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
+                    <h4 style={{ color: '#2196F3' }}>Ex-Dividend Date</h4>
+                    <p>{companyOverview.ExDividendDate}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Profitability Metrics */}
+              <div className="metrics-category">
+                <h4>Profitability</h4>
+                <div className="metrics-blocks">
+                  <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+                    <h4 style={{ color: '#FF9800' }}>Profit Margin</h4>
+                    <p>{companyOverview.ProfitMargin}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+                    <h4 style={{ color: '#FF9800' }}>Operating Margin (TTM)</h4>
+                    <p>{companyOverview.OperatingMarginTTM}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+                    <h4 style={{ color: '#FF9800' }}>Return on Assets (TTM)</h4>
+                    <p>{companyOverview.ReturnOnAssetsTTM}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
+                    <h4 style={{ color: '#FF9800' }}>Return on Equity (TTM)</h4>
+                    <p>{companyOverview.ReturnOnEquityTTM}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Growth Metrics */}
+              <div className="metrics-category">
+                <h4>Growth</h4>
+                <div className="metrics-blocks">
+                  <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
+                    <h4 style={{ color: '#9C27B0' }}>Quarterly Earnings Growth (YoY)</h4>
+                    <p>{companyOverview.QuarterlyEarningsGrowthYOY}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
+                    <h4 style={{ color: '#9C27B0' }}>Quarterly Revenue Growth (YoY)</h4>
+                    <p>{companyOverview.QuarterlyRevenueGrowthYOY}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Analyst Ratings */}
+              <div className="metrics-category">
+                <h4>Analyst Ratings</h4>
+                <div className="metrics-blocks">
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Analyst Target Price</h4>
+                    <p>{companyOverview.AnalystTargetPrice}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Strong Buy</h4>
+                    <p>{companyOverview.AnalystRatingStrongBuy}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Buy</h4>
+                    <p>{companyOverview.AnalystRatingBuy}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Hold</h4>
+                    <p>{companyOverview.AnalystRatingHold}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Sell</h4>
+                    <p>{companyOverview.AnalystRatingSell}</p>
+                  </div>
+                  <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
+                    <h4 style={{ color: '#E91E63' }}>Strong Sell</h4>
+                    <p>{companyOverview.AnalystRatingStrongSell}</p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        </div>
-
-        {/* Dividend Metrics */}
-        <div className="metrics-category">
-          <h4>Dividends</h4>
-          <div className="metrics-blocks">
-            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-              <h4 style={{ color: '#2196F3' }}>Dividend Per Share</h4>
-              <p>{companyOverview.DividendPerShare}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-              <h4 style={{ color: '#2196F3' }}>Dividend Yield</h4>
-              <p>{companyOverview.DividendYield}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-              <h4 style={{ color: '#2196F3' }}>Dividend Date</h4>
-              <p>{companyOverview.DividendDate}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-              <h4 style={{ color: '#2196F3' }}>Ex-Dividend Date</h4>
-              <p>{companyOverview.ExDividendDate}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Profitability Metrics */}
-        <div className="metrics-category">
-          <h4>Profitability</h4>
-          <div className="metrics-blocks">
-            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-              <h4 style={{ color: '#FF9800' }}>Profit Margin</h4>
-              <p>{companyOverview.ProfitMargin}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-              <h4 style={{ color: '#FF9800' }}>Operating Margin (TTM)</h4>
-              <p>{companyOverview.OperatingMarginTTM}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-              <h4 style={{ color: '#FF9800' }}>Return on Assets (TTM)</h4>
-              <p>{companyOverview.ReturnOnAssetsTTM}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-              <h4 style={{ color: '#FF9800' }}>Return on Equity (TTM)</h4>
-              <p>{companyOverview.ReturnOnEquityTTM}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Growth Metrics */}
-        <div className="metrics-category">
-          <h4>Growth</h4>
-          <div className="metrics-blocks">
-            <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
-              <h4 style={{ color: '#9C27B0' }}>Quarterly Earnings Growth (YoY)</h4>
-              <p>{companyOverview.QuarterlyEarningsGrowthYOY}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
-              <h4 style={{ color: '#9C27B0' }}>Quarterly Revenue Growth (YoY)</h4>
-              <p>{companyOverview.QuarterlyRevenueGrowthYOY}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Analyst Ratings */}
-        <div className="metrics-category">
-          <h4>Analyst Ratings</h4>
-          <div className="metrics-blocks">
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Analyst Target Price</h4>
-              <p>{companyOverview.AnalystTargetPrice}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Strong Buy</h4>
-              <p>{companyOverview.AnalystRatingStrongBuy}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Buy</h4>
-              <p>{companyOverview.AnalystRatingBuy}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Hold</h4>
-              <p>{companyOverview.AnalystRatingHold}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Sell</h4>
-              <p>{companyOverview.AnalystRatingSell}</p>
-            </div>
-            <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-              <h4 style={{ color: '#E91E63' }}>Strong Sell</h4>
-              <p>{companyOverview.AnalystRatingStrongSell}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-)}
-
-
-
-
-
-{activeSection === 'quarterlyEarnings' && (
-        <div ref={refs.quarterlyEarningsRef}>
-          {/* Earnings Section */}
-          <div className="quarterly-earnings-section">
-  <h4>Quarterly Earnings</h4>
-  {loadingEarnings ? (
-    <p>Loading earnings data...</p>
-  ) : errorEarnings ? (
-    <p>Error: {errorEarnings}</p>
-  ) : (
-    <div>
-      <select
-        value={selectedYear}
-        onChange={(e) => setSelectedYear(e.target.value)}
-      >
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
-      <table>
-        <thead>
-          <tr>
-            <th>Fiscal Date Ending</th>
-            <th>Reported Date</th>
-            <th>Reported EPS</th>
-            <th>Estimated EPS</th>
-            <th>Surprise</th>
-            <th>Surprise Percentage</th>
-            <th>Report Time</th>
-          </tr>
-        </thead>
-        <tbody>
-        {filteredEarnings.map((earning, index) => (
-            <tr key={index}>
-              <td>{earning.fiscalDateEnding}</td>
-              <td>{earning.reportedDate}</td>
-              <td>{earning.reportedEPS}</td>
-              <td>{earning.estimatedEPS}</td>
-              <td>{earning.surprise}</td>
-              <td>{earning.surprisePercentage}</td>
-              <td>{earning.reportTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
-</div>  
         </div>
       )}
 
-     
-
-  
-      {activeSection === 'annualCashFlow' && (
-        <div ref={refs.annualCashFlowRef}>
-          {/* Cash Flow Section */}
-          <div id='annual-cash-flow-section' className="cashflow-block">
-            <h4 className="cashflow-header">Annual Cash Flow</h4>
-            {loadingCashFlow ? (
-              <p className="cashflow-loading">Loading Annual Cash Flow...</p>
-            ) : errorCashFlow ? (
-              <p className="cashflow-error">{errorCashFlow}</p>
+      {activeSection === 'quarterlyEarnings' && (
+        <div ref={refs.quarterlyEarningsRef}>
+          {/* Earnings Section */}
+          <div className="quarterly-earnings-section">
+            <h4>Quarterly Earnings</h4>
+            {loadingEarnings ? (
+              <p>Loading earnings data...</p>
+            ) : errorEarnings ? (
+              <p>Error: {errorEarnings}</p>
             ) : (
               <div>
-                <div className="year-selector">
-                  <label htmlFor="cashflow-year-select">Select Year:</label>
-                  <select
-                    id="cashflow-year-select"
-                    value={selectedCashFlowYear}
-                    onChange={(e) => setSelectedCashFlowYear(e.target.value)}
-                    className="year-dropdown"
-                  >
-                    {cashFlowYears.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {/* First Table */}
-                <table className="cashflow-table">
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                  {years.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+                <table>
                   <thead>
                     <tr>
                       <th>Fiscal Date Ending</th>
-                      <th>Operating Cash Flow</th>
-                      <th>Payments for Operating Activities</th>
+                      <th>Reported Date</th>
+                      <th>Reported EPS</th>
+                      <th>Estimated EPS</th>
+                      <th>Surprise</th>
+                      <th>Surprise Percentage</th>
+                      <th>Report Time</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCashFlow.map((report, index) => (
-                      <tr key={`${index}-table1`}>
-                        <td>{report.fiscalDateEnding}</td>
-                        <td>{formatValue(report.operatingCashflow)}</td>
-                        <td>{formatValue(report.paymentsForOperatingActivities)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-  
-                {/* Second Table */}
-                <table className="cashflow-table">
-                  <thead>
-                    <tr>
-                      <th>Capital Expenditures</th>
-                      <th>Change in Operating Assets</th>
-                      <th>Change in Operating Liabilities</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredCashFlow.map((report, index) => (
-                      <tr key={`${index}-table2`}>
-                        <td>{formatValue(report.capitalExpenditures)}</td>
-                        <td>{formatValue(report.changeInOperatingAssets)}</td>
-                        <td>{formatValue(report.changeInOperatingLiabilities)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-  
-                {/* Third Table */}
-                <table className="cashflow-table">
-                  <thead>
-                    <tr>
-                      <th>Cashflow from Investment</th>
-                      <th>Cashflow from Financing</th>
-                      <th>Net Income</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredCashFlow.map((report, index) => (
-                      <tr key={`${index}-table3`}>
-                        <td>{formatValue(report.cashflowFromInvestment)}</td>
-                        <td>{formatValue(report.cashflowFromFinancing)}</td>
-                        <td>{formatValue(report.netIncome)}</td>
+                    {filteredEarnings.map((earning, index) => (
+                      <tr key={index}>
+                        <td>{earning.fiscalDateEnding}</td>
+                        <td>{earning.reportedDate}</td>
+                        <td>{earning.reportedEPS}</td>
+                        <td>{earning.estimatedEPS}</td>
+                        <td>{earning.surprise}</td>
+                        <td>{earning.surprisePercentage}</td>
+                        <td>{earning.reportTime}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -771,7 +666,105 @@ const quarters = filteredIncomeData.map((report, index) => ({
           </div>
         </div>
       )}
-  
+   
+
+
+
+ 
+   {activeSection === 'annualCashFlow' && (
+  <div ref={refs.annualCashFlowRef}>
+    {/* Cash Flow Section */}
+    <div className="quarterly-earnings-section">
+      <h4>Annual Cash Flow</h4>
+      {loadingCashFlow ? (
+        <p>Loading Annual Cash Flow...</p>
+      ) : errorCashFlow ? (
+        <p>{errorCashFlow}</p>
+      ) : (
+        <div>
+          {/* Year Selector */}
+          <div className="year-selector">
+            <label htmlFor="cashflow-year-select">Select Year:</label>
+            <select
+              id="cashflow-year-select"
+              value={selectedCashFlowYear}
+              onChange={(e) => setSelectedCashFlowYear(e.target.value)}
+              className="year-dropdown"
+            >
+              {cashFlowYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Cash Flow Table */}
+          <table>
+            <thead>
+              <tr>
+                <th>Fiscal Date Ending</th>
+                <th>Operating Cash Flow</th>
+                <th>Payments for Operating Activities</th>
+                <th>Capital Expenditures</th>
+                <th>Change in Operating Assets</th>
+                <th>Change in Operating Liabilities</th>
+                <th>Cashflow from Investment</th>
+                <th>Cashflow from Financing</th>
+                <th>Net Income</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCashFlow
+                .slice(0, showAllYears ? filteredCashFlow.length : 3) // Show 3 years by default, or all if "Show More" is clicked
+                .map((report, index) => (
+                  <tr key={index}>
+                    <td>{report.fiscalDateEnding}</td>
+                    <td>{formatValue(report.operatingCashflow)}</td>
+                    <td>{formatValue(report.paymentsForOperatingActivities)}</td>
+                    <td>{formatValue(report.capitalExpenditures)}</td>
+                    <td>{formatValue(report.changeInOperatingAssets)}</td>
+                    <td>{formatValue(report.changeInOperatingLiabilities)}</td>
+                    <td>{formatValue(report.cashflowFromInvestment)}</td>
+                    <td>{formatValue(report.cashflowFromFinancing)}</td>
+                    <td>{formatValue(report.netIncome)}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+
+          {/* Show More/Show Less Button */}
+          {filteredCashFlow.length > 3 && (
+            <button
+              onClick={() => setShowAllYears(!showAllYears)}
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#007bff", /* Blue button */
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease",
+              }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")} /* Darker blue on hover */
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+            >
+              {showAllYears ? "Show Less" : "Show More Years"}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
       {activeSection === 'about' && (
         <div ref={refs.aboutRef}>
           {/* About Section */}
@@ -781,7 +774,7 @@ const quarters = filteredIncomeData.map((report, index) => ({
           </div>
         </div>
       )}
-  
+
       {activeSection === 'news' && (
         <div ref={refs.newsRef}>
           {/* News Section */}
@@ -793,7 +786,7 @@ const quarters = filteredIncomeData.map((report, index) => ({
               <div className="news-list">
                 {news.map((article, index) => (
                   <div key={index} className="news-item">
-                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title">
+                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="news-title-blue">
                       {article.title}
                     </a>
                     <p className="news-summary">{article.summary}</p>
@@ -807,7 +800,7 @@ const quarters = filteredIncomeData.map((report, index) => ({
           </div>
         </div>
       )}
-  
+
       {activeSection === 'balanceSheet' && (
         <div ref={refs.balanceSheetRef}>
           {/* Balance Sheet Section */}
