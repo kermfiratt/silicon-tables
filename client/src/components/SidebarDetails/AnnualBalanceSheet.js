@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './BalanceSheet.css';
+import './AnnualBalanceSheet.css';
 
-const BalanceSheet = ({ symbol }) => {
+const AnnualBalanceSheet = ({ symbol }) => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedYear, setSelectedYear] = useState(null); // Default to null initially
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   // Function to format large numbers, including negative values
@@ -25,14 +26,17 @@ const BalanceSheet = ({ symbol }) => {
         );
         const data = await response.json();
 
-        if (data['quarterlyReports']) {
-          const reports = data['quarterlyReports'].slice(0, 5); // Last 5 quarters
-          setBalanceSheet(reports);
+        if (data['annualReports']) {
+          setBalanceSheet(data['annualReports']);
+
+          // Set the default selected year to the latest year
+          const latestYear = new Date(data['annualReports'][0].fiscalDateEnding).getFullYear();
+          setSelectedYear(latestYear);
         } else {
-          setError('No balance sheet data available');
+          setError('No annual balance sheet data available');
         }
       } catch (error) {
-        setError('Failed to fetch balance sheet data.');
+        setError('Failed to fetch annual balance sheet data.');
       } finally {
         setLoading(false);
       }
@@ -40,6 +44,22 @@ const BalanceSheet = ({ symbol }) => {
 
     fetchBalanceSheet();
   }, [symbol, API_KEY]);
+
+  // Get unique years from the annual reports
+  const getAvailableYears = () => {
+    if (!balanceSheet) return [];
+    return balanceSheet
+      .map((report) => new Date(report.fiscalDateEnding).getFullYear())
+      .filter((year, index, self) => self.indexOf(year) === index) // Remove duplicates
+      .sort((a, b) => b - a); // Sort in descending order
+  };
+
+  // Filter reports by selected year
+  const filteredReports = balanceSheet
+    ? balanceSheet.filter(
+        (report) => new Date(report.fiscalDateEnding).getFullYear() === selectedYear
+      )
+    : [];
 
   // Define categorized fields for each table
   const tableCategories = [
@@ -83,55 +103,62 @@ const BalanceSheet = ({ symbol }) => {
     },
   ];
 
-  // Function to get the quarter label (Q1, Q2, Q3, Q4)
-  const getQuarterLabel = (fiscalDateEnding) => {
-    const date = new Date(fiscalDateEnding);
-    const month = date.getMonth() + 1; // Months are 0-indexed
-    if (month >= 1 && month <= 3) return 'Q1';
-    if (month >= 4 && month <= 6) return 'Q2';
-    if (month >= 7 && month <= 9) return 'Q3';
-    return 'Q4';
-  };
-
   return (
-    <div className="balance-sheet-wrapper">
-      <h1 className="balance-sheet-header">Balance Sheet</h1>
-      <div className="balance-sheet-container">
+    <div className="annual-balance-sheet-wrapper">
+      <h1 className="annual-balance-sheet-header">Annual Balance Sheet</h1>
+      <div className="annual-balance-sheet-container">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
           <p className="error">{error}</p>
         ) : (
           <>
-            {tableCategories.map((category, index) => (
-              <div key={index} className="table-category">
-                <h3>{category.title}</h3>
-                <table className="balance-sheet-table">
-                  <thead>
-                    <tr>
-                      <th>Quarter</th>
-                      <th>Period</th>
-                      {category.fields.map((field, idx) => (
-                        <th key={idx}>{field.label}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {balanceSheet.map((report, idx) => (
-                      <tr key={idx}>
-                        <td>{getQuarterLabel(report.fiscalDateEnding)}</td>
-                        <td>{report.fiscalDateEnding}</td>
+            <div className="year-selector">
+              <label htmlFor="year-select">Select Year:</label>
+              <select
+                id="year-select"
+                value={selectedYear || ''}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              >
+                {getAvailableYears().map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {filteredReports.length > 0 ? (
+              tableCategories.map((category, index) => (
+                <div key={index} className="table-category">
+                  <h3>{category.title}</h3>
+                  <table className="annual-balance-sheet-table">
+                    <thead>
+                      <tr>
+                        <th>Year</th>
                         {category.fields.map((field, idx) => (
-                          <td key={idx}>
-                            {field.format(parseInt(report[field.key] || 0))}
-                          </td>
+                          <th key={idx}>{field.label}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
+                    </thead>
+                    <tbody>
+                      {filteredReports.map((report, idx) => (
+                        <tr key={idx}>
+                          <td>{new Date(report.fiscalDateEnding).getFullYear()}</td>
+                          {category.fields.map((field, idx) => (
+                            <td key={idx}>
+                              {field.format(parseInt(report[field.key] || 0))}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))
+            ) : (
+              <p>No data available for the selected year.</p>
+            )}
           </>
         )}
       </div>
@@ -139,4 +166,4 @@ const BalanceSheet = ({ symbol }) => {
   );
 };
 
-export default BalanceSheet;
+export default AnnualBalanceSheet;

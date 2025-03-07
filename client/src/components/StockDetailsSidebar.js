@@ -20,6 +20,7 @@ const StockDetailsSidebar = ({ symbol }) => {
   const aboutRef = useRef(null);
   const newsRef = useRef(null);
   const balanceSheetRef = useRef(null);
+  const annualBalanceSheetRef = useRef(null);
 
   // Fetch company logo and price data
   useEffect(() => {
@@ -131,6 +132,12 @@ const StockDetailsSidebar = ({ symbol }) => {
           >
             Balance Sheet
           </li>
+          <li
+            onClick={() => handleSectionClick('annualBalanceSheet', annualBalanceSheetRef)}
+            className={activeSection === 'annualBalanceSheet' ? 'active' : ''}
+          >
+            Annual Balance Sheet
+          </li>
         </ul>
       </div>
 
@@ -146,6 +153,7 @@ const StockDetailsSidebar = ({ symbol }) => {
             aboutRef,
             newsRef,
             balanceSheetRef,
+            annualBalanceSheetRef
           }}
           activeSection={activeSection}
         />
