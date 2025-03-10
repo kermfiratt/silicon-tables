@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
 import TopTrade from './TopTrade';
@@ -13,46 +13,54 @@ import Cpi from './Cpi';
 import './Home.css';
 import Explanation from './Explanation';
 
-const Home = () => {
+const Home = ({ isSearchOpen }) => {
   return (
-    <div className="home-container">
-
+    <div className={`home-container ${isSearchOpen ? 'blur-background' : ''}`}>
+      {/* Top Bar with Live Date/Time and Market Data */}
       <div className="top-bar">
         <LiveDateTime />
         <MarketData />
       </div>
-      
-      <Explanation />
-      <StockCardContainer /> {/* Added Stock Card feature */}
 
+      {/* Explanation Section */}
+      <Explanation />
+
+      {/* Stock Card Container */}
+      <StockCardContainer />
+
+      {/* Main Content Area */}
       <div className="content-area">
+        {/* Top Trade Section */}
         <TopTrade />
-        
+
+        {/* Commodities and Treasury Section */}
         <div className="vc-startup-container">
           <Commodities />
           <Treasury />
         </div>
-      
+
+        {/* Employment and CPI Section */}
         <div>
-        <Employement />
-        <Cpi />
+          <Employement />
+          <Cpi isSearchOpen={isSearchOpen} />
         </div>
-
-
       </div>
 
+      {/* Tech News Section */}
       <div className="news-area">
         <TechNews />
       </div>
 
+      {/* Ticker Section */}
       <div className="ticker-wrapper">
         <Ticker />
       </div>
-     
 
-      <Watchlist />
-    
-
+      {/* Watchlist Section */}
+      <div>
+      <Watchlist isSearchOpen={isSearchOpen} />
+      </div>
+      
     </div>
   );
 };

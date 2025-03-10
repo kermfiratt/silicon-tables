@@ -13,6 +13,10 @@
   position: relative; /* Ensure relative positioning for child elements */
 }
 
+.blur-background {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
 
 .cpi-header h2 {
   font-size: 18px; /* Smaller font size for header */

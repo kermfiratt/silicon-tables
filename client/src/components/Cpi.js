@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const Cpi = () => {
+const Cpi = ({ isSearchOpen }) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -125,7 +125,7 @@ const Cpi = () => {
   };
 
   return (
-    <div className="cpi-container">
+    <div className={`cpi-container ${isSearchOpen ? 'blur-background' : ''}`}>
       <div className="cpi-header">
         <h2>US Consumer Price Index (CPI)</h2>
       </div>
