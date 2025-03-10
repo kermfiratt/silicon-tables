@@ -3,7 +3,8 @@ import axios from 'axios';
 import './Financials.css';
 import ReactSpeedometer from 'react-d3-speedometer';
 import BalanceSheet from './BalanceSheet';
-import AnnualBalanceSheet from './AnnualBalanceSheet'
+import AnnualBalanceSheet from './AnnualBalanceSheet';
+import Report from './Report';
 
 const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [financialData, setFinancialData] = useState([]);
@@ -801,6 +802,21 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
+
+
+
+
+{activeSection === 'report' && (
+        <div ref={refs.reportRef}>
+          {/* Balance Sheet Section */}
+          <div id="report-section" className="balance-sheet-block">
+            <Report symbol={symbol} />
+          </div>
+        </div>
+      )}
+
+
+
 
       {activeSection === 'balanceSheet' && (
         <div ref={refs.balanceSheetRef}>

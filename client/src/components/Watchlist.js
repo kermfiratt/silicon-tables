@@ -22,7 +22,7 @@ const Watchlist = () => {
       for (let item of watchlist) {
         try {
           const response = await axios.get(
-            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.symbol}&entitlement=delayed&apikey=${ALPHA_VANTAGE_KEY}`
+            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.symbol}&entitlement=endofday&apikey=${ALPHA_VANTAGE_KEY}`
           );
 
           const globalQuote =

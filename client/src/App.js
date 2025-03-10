@@ -7,7 +7,7 @@ import OptionTracker from './components/OptionTracker'; // Yeni Option Tracker
 import Portfolio from './components/Portfolio'; // Yeni Portfolio bileşeni
 import BalanceSheet from './components/SidebarDetails/BalanceSheet';
 import Compare from './components/Compare'; // Import Compare component
-import Report from './components/Report'; // 
+import Report from './components/SidebarDetails/Report'; // 
 import './App.css';
 import StockDetailsSidebar from './components/StockDetailsSidebar';
 

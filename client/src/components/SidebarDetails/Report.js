@@ -1,38 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Report.css";
 
 const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
-const Report = () => {
-  const [stock, setStock] = useState("NVDA"); // Default stock
-  const [suggestions, setSuggestions] = useState([]);
+const Report = ({ symbol }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Loading state
-  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    fetchStockData("NVDA");
-  }, []);
-
-  const fetchSuggestions = async (query) => {
-    if (!query.trim()) return;
-
-    try {
-      const response = await axios.get(
-        `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${API_KEY}`
-      );
-
-      if (response.data["bestMatches"]) {
-        setSuggestions(response.data["bestMatches"].slice(0, 5));
-      } else {
-        setSuggestions([]);
-      }
-    } catch (err) {
-      console.error("Error fetching suggestions:", err);
-    }
-  };
+    fetchStockData(symbol);
+  }, [symbol]);
 
   const fetchStockData = async (symbol) => {
     if (!symbol.trim()) {
@@ -89,35 +68,7 @@ const Report = () => {
 
   return (
     <div className="report_container">
-      <h1 className="report_title">Report</h1>
-
-      <div className="search_section">
-        <div className="search_group">
-          <input
-            type="text"
-            className="search_input"
-            placeholder="Search Stock..."
-            value={stock}
-            onChange={(e) => {
-              setStock(e.target.value);
-              clearTimeout(timeoutRef.current);
-              timeoutRef.current = setTimeout(() => fetchSuggestions(e.target.value), 300);
-            }}
-          />
-          <ul className="search_suggestions">
-            {suggestions.map((s, index) => (
-              <li key={index} onClick={() => {
-                setStock(s["1. symbol"]);
-                fetchStockData(s["1. symbol"]);
-                setSuggestions([]);
-              }}>
-                {s["1. symbol"]} - {s["2. name"]}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button className="search_button" onClick={() => fetchStockData(stock)}>Search</button>
-      </div>
+      <h1 className="report_title">Financial Report</h1>
 
       {loading && <div className="loading">Loading...</div>}
 

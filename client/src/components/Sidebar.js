@@ -31,10 +31,7 @@ const Sidebar = () => {
     navigate('/compare'); // Navigate to Compare page
   };
 
-  const handleReportClick = () => {
-    navigate('/report'); // Navigate to Compare page
-  };
-
+  
   return (
     <div className="sidebar">
       <ul className="menu">
@@ -73,11 +70,6 @@ const Sidebar = () => {
           </div>
         </li>
 
-        <li>
-          <div className="sidebar-item user" onClick={handleReportClick}>
-            <FaPaperclip className="icon" /> Report
-          </div>
-        </li>
 
         <li>
           <div className="sidebar-item user" onClick={handleCompanyInfoClick}>
