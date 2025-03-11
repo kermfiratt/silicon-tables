@@ -67,17 +67,17 @@ const Report = ({ symbol }) => {
   };
 
   return (
-    <div className="report_container">
-      <h1 className="report_title">Financial Report</h1>
+    <div className="report-container">
+      <h1 className="report-title">Financial Report</h1>
 
       {loading && <div className="loading">Loading...</div>}
 
-      {error && <p className="error_message">{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       {data && (
-        <div className="report_blocks">
+        <div className="report-blocks">
           {/* Profit Block */}
-          <div className="report_block">
+          <div className="report-block">
             <h2>Profit <span className="circle">{getPositiveCount([
               calculateBpsChange(data.income.annualReports[0].netIncome / data.income.annualReports[0].totalRevenue, data.income.annualReports[1].netIncome / data.income.annualReports[1].totalRevenue),
               calculateBpsChange(data.income.quarterlyReports[0].netIncome / data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].netIncome / data.income.quarterlyReports[1].totalRevenue),
@@ -127,7 +127,7 @@ const Report = ({ symbol }) => {
           </div>
 
           {/* Growth Block */}
-          <div className="report_block">
+          <div className="report-block">
             <h2>Growth <span className="circle">{getPositiveCount([
               calculateChange(data.income.annualReports[0].totalRevenue, data.income.annualReports[1].totalRevenue),
               calculateChange(data.income.quarterlyReports[0].totalRevenue, data.income.quarterlyReports[1].totalRevenue),
@@ -177,7 +177,7 @@ const Report = ({ symbol }) => {
           </div>
 
           {/* Indebtedness Block */}
-          <div className="report_block indebtedness">
+          <div className="report-block indebtedness">
             <h2>Indebtedness <span className="circle">{getPositiveCount([
               data.balanceSheet.annualReports[0].totalCurrentAssets - data.balanceSheet.annualReports[0].totalCurrentLiabilities > 0 ? 1 : 0,
               data.overview.DebtToEquity < 0.5 ? 1 : 0,

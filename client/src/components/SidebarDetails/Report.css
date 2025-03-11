@@ -1,4 +1,4 @@
-.report_container {
+.report-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,56 +9,56 @@
   box-sizing: border-box;
 }
 
-.report_title {
-  font-size: 32px; /* Slightly smaller for better fit */
+.report-title {
+  font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
 }
 
-.report_blocks {
+.report-blocks {
   display: flex;
-  gap: 15px; /* Reduced gap for better fit */
+  gap: 15px; /* Gap between blocks */
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
   max-width: 1200px; /* Limit maximum width for larger screens */
 }
 
-.report_block {
+.report-block {
   background: #181c23;
-  padding: 15px; /* Reduced padding for compactness */
+  padding: 15px;
   border-radius: 10px;
-  flex: 1; /* Allow blocks to grow and shrink */
-  min-width: 300px; /* Minimum width for each block */
-  max-width: 350px; /* Maximum width for each block */
+  flex: 1 1 30%; /* Allow blocks to grow and shrink, taking up 30% of the container width */
+  min-width: 280px; /* Slightly reduced minimum width */
+  max-width: calc(30% - 15px); /* Slightly reduced maximum width, accounting for the gap */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-left: 5px solid #333;
 }
 
-.report_block h2 {
-  font-size: 20px; /* Smaller font size for compactness */
-  margin-bottom: 10px; /* Reduced margin */
+.report-block h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
 }
 
-.report_block h2 .circle {
+.report-block h2 .circle {
   display: inline-block;
-  width: 22px; /* Smaller circle */
+  width: 22px;
   height: 22px;
   border-radius: 50%;
   background-color: #4caf50;
   color: white;
   text-align: center;
   line-height: 22px;
-  margin-left: 8px; /* Reduced margin */
-  font-size: 12px; /* Smaller font size */
+  margin-left: 8px;
+  font-size: 12px;
 }
 
-.report_block ul {
+.report-block ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -68,90 +68,91 @@
   justify-content: space-around;
 }
 
-.report_block ul li {
+.report-block ul li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0; /* Reduced padding */
+  padding: 8px 0;
   border-bottom: 1px solid #333;
 }
 
-.report_block ul li:last-child {
+.report-block ul li:last-child {
   border-bottom: none;
 }
 
-.report_block ul li .metric {
+.report-block ul li .metric {
   text-align: left;
   flex: 1;
-  font-size: 14px; /* Smaller font size */
+  font-size: 14px;
 }
 
-.report_block ul li .value {
-  padding: 4px 8px; /* Reduced padding */
+.report-block ul li .value {
+  padding: 4px 8px;
   border-radius: 5px;
   font-weight: bold;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 26px; /* Smaller height */
-  min-width: 80px; /* Smaller minimum width */
+  height: 26px;
+  min-width: 80px;
   white-space: nowrap;
-  font-size: 14px; /* Smaller font size */
+  font-size: 14px;
 }
 
 /* Indebtedness Block */
-.report_block.indebtedness ul li .value {
-  min-width: 50px; /* Smaller minimum width */
+.report-block.indebtedness ul li .value {
+  min-width: 50px;
 }
 
-.report_block ul li .value.green {
+.report-block ul li .value.green {
   background-color: #4caf50;
 }
 
-.report_block ul li .value.red {
+.report-block ul li .value.red {
   background-color: #ff4d4d;
 }
 
 /* Loading Indicator */
 .loading {
-  font-size: 20px; /* Smaller font size */
+  font-size: 20px;
   font-weight: bold;
   color: #4caf50;
   margin-top: 20px;
 }
 
-.error_message {
+.error-message {
   color: #ff4d4d;
-  font-size: 16px; /* Smaller font size */
+  font-size: 16px;
   margin-top: 20px;
 }
 
 /* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
-  .report_blocks {
+  .report-blocks {
     flex-direction: column;
     align-items: center;
   }
 
-  .report_block {
+  .report-block {
     width: 100%; /* Full width on smaller screens */
     max-width: 100%;
+    flex: 1 1 100%; /* Allow blocks to take full width on smaller screens */
   }
 
-  .report_title {
-    font-size: 28px; /* Smaller font size for mobile */
+  .report-title {
+    font-size: 28px;
   }
 
-  .report_block h2 {
-    font-size: 18px; /* Smaller font size for mobile */
+  .report-block h2 {
+    font-size: 18px;
   }
 
-  .report_block ul li .metric {
-    font-size: 13px; /* Smaller font size for mobile */
+  .report-block ul li .metric {
+    font-size: 13px;
   }
 
-  .report_block ul li .value {
-    font-size: 13px; /* Smaller font size for mobile */
+  .report-block ul li .value {
+    font-size: 13px;
   }
 }
