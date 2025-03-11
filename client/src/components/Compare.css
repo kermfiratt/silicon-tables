@@ -1,5 +1,5 @@
 /* General Page Layout */
-.compare_container {
+.compare-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,7 @@
 }
 
 /* Title */
-.compare_title {
+.compare-title {
   font-size: 36px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -19,15 +19,21 @@
 }
 
 /* Search Bars */
-.compare_search_wrapper {
+.compare-search-wrapper {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 50px;
   margin-bottom: 20px;
+  position: relative;
 }
 
-.compare_input {
+.compare-search-input-wrapper {
+  position: relative;
   width: 280px;
+}
+
+.compare-input {
+  width: 100%;
   padding: 12px;
   font-size: 18px;
   background: #222;
@@ -37,8 +43,45 @@
   outline: none;
 }
 
+/* Suggestions Dropdown */
+.compare-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 110%;
+  background-color: #3a3a3a;
+  border-radius: 6px;
+  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.compare-suggestions-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.compare-suggestions-dropdown li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.compare-suggestions-dropdown li:hover {
+  background-color: #444;
+}
+
+.compare-suggestions-dropdown strong {
+  color: #fff;
+  font-weight: bold;
+}
+
 /* Compare Button */
-.compare_button {
+.compare-button {
   padding: 15px 30px;
   font-size: 20px;
   font-weight: bold;
@@ -50,13 +93,13 @@
   transition: 0.3s ease-in-out;
 }
 
-.compare_button:hover {
+.compare-button:hover {
   background: linear-gradient(135deg, #3b8d40, #2a6d30);
   transform: scale(1.05);
 }
 
 /* Company Score Block */
-.compare_header {
+.compare-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,7 +109,7 @@
   max-width: 800px;
 }
 
-.company_score {
+.compare-company-score {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -80,16 +123,16 @@
 }
 
 /* Score Colors */
-.score.good {
+.compare-score.good {
   color: #4caf50;
 }
 
-.score.bad {
+.compare-score.bad {
   color: red;
 }
 
 /* Compare Table */
-.compare_table_wrapper {
+.compare-table-wrapper {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -99,14 +142,14 @@
 }
 
 /* Category Blocks */
-.compare_category {
+.compare-category {
   background: #222;
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
 }
 
-.category_title {
+.compare-category-title {
   font-size: 22px;
   font-weight: bold;
   text-align: center;
@@ -117,7 +160,7 @@
 }
 
 /* Metric Row */
-.metric_row {
+.compare-metric-row {
   display: flex;
   justify-content: space-between;
   padding: 12px 15px;
@@ -126,43 +169,43 @@
 }
 
 /* Metric Name */
-.metric_name {
+.compare-metric-name {
   text-align: center;
   flex: 1;
   font-weight: bold;
 }
 
 /* Metric Values */
-.metric_value {
+.compare-metric-value {
   flex: 1;
   text-align: center;
   font-weight: bold;
 }
 
 /* Green if Better, Red if Worse */
-.metric_value.better {
+.compare-metric-value.better {
   color: #4caf50;
 }
 
-.metric_value.worse {
+.compare-metric-value.worse {
   color: red;
 }
 
 /* Chart Section */
-.chart_section {
+.compare-chart-section {
   margin-top: 40px;
   text-align: center;
   width: 100%;
   max-width: 1100px;
 }
 
-.chart_section h2 {
+.compare-chart-section h2 {
   font-size: 26px;
   margin-bottom: 15px;
 }
 
 /* Chart Grid */
-.chart_grid {
+.compare-chart-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -170,7 +213,7 @@
 }
 
 /* Chart Container */
-.chart_container {
+.compare-chart-container {
   flex: 1 1 calc(50% - 20px);
   max-width: 500px;
   background-color: #2a2a2a;
@@ -185,7 +228,7 @@
 }
 
 /* Chart Headers */
-.chart_container h3 {
+.compare-chart-container h3 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -193,7 +236,7 @@
 }
 
 /* Error Message */
-.compare_error {
+.compare-error {
   color: red;
   font-size: 18px;
   margin-top: 20px;

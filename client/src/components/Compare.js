@@ -21,20 +21,38 @@ const Compare = () => {
     fetchStockData();
   }, []);
 
+  // Fetch suggestions from Alpha Vantage API
   const fetchSuggestions = async (query, setSuggestions) => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
     try {
       const response = await axios.get(
         `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${API_KEY}`
       );
-      if (response.data["bestMatches"]) {
-        setSuggestions(response.data["bestMatches"].slice(0, 5));
-      } else {
-        setSuggestions([]);
-      }
-    } catch (err) {
-      console.error('Error fetching suggestions:', err);
+      const suggestionData = response.data?.bestMatches || [];
+
+      // Filter and map suggestions
+      const filteredSuggestions = suggestionData
+        .filter((item) => !item["1. symbol"].includes('.')) // Remove symbols with extensions
+        .map((item) => ({
+          ticker: item["1. symbol"],
+          name: item["2. name"],
+        }));
+
+      setSuggestions(filteredSuggestions);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
     }
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (ticker, setStock, setSuggestions) => {
+    setStock(ticker); // Set the selected stock
+    setSuggestions([]); // Clear suggestions
   };
 
   const fetchStockData = async () => {
@@ -52,10 +70,6 @@ const Compare = () => {
         axios.get(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${stock1}&apikey=${API_KEY}`),
         axios.get(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${stock2}&apikey=${API_KEY}`)
       ]);
-
-      // Log the API responses to verify the structure
-      console.log("Earnings Data for Stock 1:", earnings1.data);
-      console.log("Earnings Data for Stock 2:", earnings2.data);
 
       setData1({ overview: overview1.data, earnings: earnings1.data, balance: balance1.data });
       setData2({ overview: overview2.data, earnings: earnings2.data, balance: balance2.data });
@@ -136,7 +150,6 @@ const Compare = () => {
     return label.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
-  // Function to format date as "YYYY-MM"
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -145,69 +158,116 @@ const Compare = () => {
   };
 
   return (
-    <div className="compare_container">
-      <h1 className="compare_title">COMPARE STOCKS</h1>
+    <div className="compare-container">
+      <h1 className="compare-title">COMPARE STOCKS</h1>
 
-      <div className="compare_search_wrapper">
-        <input type="text" className="compare_input" placeholder="Search Stock 1..." value={stock1} 
-          onChange={(e) => { setStock1(e.target.value); clearTimeout(timeoutRef1.current);
-            timeoutRef1.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300); }} />
-        <input type="text" className="compare_input" placeholder="Search Stock 2..." value={stock2} 
-          onChange={(e) => { setStock2(e.target.value); clearTimeout(timeoutRef2.current);
-            timeoutRef2.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions2), 300); }} />
+      <div className="compare-search-wrapper">
+        <div className="compare-search-input-wrapper">
+          <input
+            type="text"
+            className="compare-input"
+            placeholder="Search Stock 1..."
+            value={stock1}
+            onChange={(e) => {
+              setStock1(e.target.value);
+              clearTimeout(timeoutRef1.current);
+              timeoutRef1.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions1), 300);
+            }}
+          />
+          {suggestions1.length > 0 && (
+            <div className="compare-suggestions-dropdown">
+              <ul>
+                {suggestions1.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestion.ticker, setStock1, setSuggestions1)}
+                  >
+                    <strong>{suggestion.ticker}</strong> - {suggestion.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="compare-search-input-wrapper">
+          <input
+            type="text"
+            className="compare-input"
+            placeholder="Search Stock 2..."
+            value={stock2}
+            onChange={(e) => {
+              setStock2(e.target.value);
+              clearTimeout(timeoutRef2.current);
+              timeoutRef2.current = setTimeout(() => fetchSuggestions(e.target.value, setSuggestions2), 300);
+            }}
+          />
+          {suggestions2.length > 0 && (
+            <div className="compare-suggestions-dropdown">
+              <ul>
+                {suggestions2.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestion.ticker, setStock2, setSuggestions2)}
+                  >
+                    <strong>{suggestion.ticker}</strong> - {suggestion.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
-      <button className="compare_button" onClick={fetchStockData}>Compare</button>
+      <button className="compare-button" onClick={fetchStockData}>Compare</button>
 
       {data1 && data2 ? (
         <>
-          <div className="company_score compare_header">
-            
-            <span className="company_name">{data1.overview.Name}</span>
-            <span className="company_name">{data2.overview.Name}</span>
-            
+          <div className="compare-company-score compare-header">
+            <span className="compare-company-name">{data1.overview.Name}</span>
+            <span className="compare-company-name">{data2.overview.Name}</span>
           </div>
 
-          <div className="compare_table_wrapper">
-            <div className="compare_category">
-              <h3 className="category_title">Valuation</h3>
+          <div className="compare-table-wrapper">
+            <div className="compare-category">
+              <h3 className="compare-category-title">Valuation</h3>
               {valuationMetrics.map(metric => (
-                <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "valuation")}`}>
+                <div key={metric.key} className="compare-metric-row">
+                  <span className={`compare-metric-value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "valuation")}`}>
                     {formatNumber(data1.overview[metric.key])}
                   </span>
-                  <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "valuation")}`}>
+                  <span className="compare-metric-name">{metric.name}</span>
+                  <span className={`compare-metric-value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "valuation")}`}>
                     {formatNumber(data2.overview[metric.key])}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="compare_category">
-              <h3 className="category_title">Profitability</h3>
+            <div className="compare-category">
+              <h3 className="compare-category-title">Profitability</h3>
               {profitMetrics.map(metric => (
-                <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "profitability")}`}>
+                <div key={metric.key} className="compare-metric-row">
+                  <span className={`compare-metric-value ${isBetter(data1.overview[metric.key], data2.overview[metric.key], "profitability")}`}>
                     {formatNumber(data1.overview[metric.key])}
                   </span>
-                  <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "profitability")}`}>
+                  <span className="compare-metric-name">{metric.name}</span>
+                  <span className={`compare-metric-value ${isBetter(data2.overview[metric.key], data1.overview[metric.key], "profitability")}`}>
                     {formatNumber(data2.overview[metric.key])}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="compare_category">
-              <h3 className="category_title">Annual Earnings</h3>
+            <div className="compare-category">
+              <h3 className="compare-category-title">Annual Earnings</h3>
               {earningsMetrics.map(metric => (
-                <div key={metric.key} className="metric_row">
-                  <span className={`metric_value ${isBetter(data1.earnings.annualReports[0][metric.key], data2.earnings.annualReports[0][metric.key], "earnings")}`}>
+                <div key={metric.key} className="compare-metric-row">
+                  <span className={`compare-metric-value ${isBetter(data1.earnings.annualReports[0][metric.key], data2.earnings.annualReports[0][metric.key], "earnings")}`}>
                     {formatNumber(data1.earnings.annualReports[0][metric.key])}
                   </span>
-                  <span className="metric_name">{metric.name}</span>
-                  <span className={`metric_value ${isBetter(data2.earnings.annualReports[0][metric.key], data1.earnings.annualReports[0][metric.key], "earnings")}`}>
+                  <span className="compare-metric-name">{metric.name}</span>
+                  <span className={`compare-metric-value ${isBetter(data2.earnings.annualReports[0][metric.key], data1.earnings.annualReports[0][metric.key], "earnings")}`}>
                     {formatNumber(data2.earnings.annualReports[0][metric.key])}
                   </span>
                 </div>
@@ -215,11 +275,11 @@ const Compare = () => {
             </div>
           </div>
 
-          <div className="chart_section">
+          <div className="compare-chart-section">
             <h2>Performance Charts</h2>
-            <div className="chart_grid">
+            <div className="compare-chart-grid">
               {["totalAssets", "netIncome", "currentDebt", "inventory", "cashAndCashEquivalentsAtCarryingValue", "totalNonCurrentLiabilities"].map(metric => (
-                <div key={metric} className="chart_container">
+                <div key={metric} className="compare-chart-container">
                   <h3>{formatLabel(metric)}</h3>
                   <Line
                     data={{
@@ -264,7 +324,7 @@ const Compare = () => {
         </>
       ) : null}
 
-      {error && <p className="compare_error">{error}</p>}
+      {error && <p className="compare-error">{error}</p>}
     </div>
   );
 };

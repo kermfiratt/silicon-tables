@@ -1,44 +1,49 @@
-/* Stock Wrapper */
-.stock-wrapper {
-  display: flex;
-  flex-wrap: wrap; /* Allows cards to wrap to the next line */
-  justify-content: center; /* Centers cards horizontally */
-  gap: 20px; /* Adds spacing between cards */
-  padding: 20px; /* Adds padding around the wrapper */
+/* StockCard.css */
+
+/* Dark Theme Colors */
+:root {
+  --background: #1e1e1e;
+  --card-background: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --positive: #4caf50;
+  --negative: #ff4d4d;
+  --border: #3a3a3a;
+  --hover-border: #4caf50;
+  --shadow: rgba(0, 0, 0, 0.3);
 }
 
-/* Individual Stock Card */
+/* Stock Card */
 .stock-card {
-  background-color: #2a2a2a;
-  color: white;
+  background-color: var(--card-background);
+  color: var(--text-primary);
   border-radius: 12px;
   padding: 20px;
-  width: 300px; /* Ensures a fixed small rectangular size */
-  max-width: 320px; /* Prevents excessive stretching */
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  max-width: 320px;
+  box-shadow: 0px 6px 15px var(--shadow);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px; /* Adds spacing between cards */
+  margin: 10px;
   box-sizing: border-box;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  border: 1px solid #3a3a3a; /* Adds a subtle border */
+  border: 1px solid var(--border);
 }
 
-/* Hover Effect */
 .stock-card:hover {
-  transform: translateY(-5px); /* Slight lift effect */
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
-  border-color: #4caf50; /* Highlight border on hover */
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px var(--shadow);
+  border-color: var(--hover-border);
 }
 
-/* Close Button (Appears on Hover) */
+/* Close Button */
 .close-button {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #ff4d4d;
+  background: var(--negative);
   color: white;
   border: none;
   font-size: 14px;
@@ -47,23 +52,21 @@
   width: 28px;
   height: 28px;
   cursor: pointer;
-  display: none; /* Initially hidden */
+  display: none;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease-in-out;
 }
 
-/* Show Close Button on Hover */
 .stock-card:hover .close-button {
   display: flex;
 }
 
-/* Close Button Hover Effect */
 .close-button:hover {
   background-color: #ff1a1a;
 }
 
-/* Stock Card Header */
+/* Stock Header */
 .stock-header {
   display: flex;
   justify-content: space-between;
@@ -73,14 +76,10 @@
 }
 
 .stock-header .stock-name {
-  background-color: #1e1e1e;
-  padding: 12px 18px;
-  border-radius: 8px;
+  font-size: 24px;
   font-weight: bold;
-  text-align: center;
-  font-size: 20px;
-  color: #4caf50; /* Green color for stock name */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 /* Price Section */
@@ -91,82 +90,44 @@
 }
 
 .current-price {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
-  background-color: #1e1e1e;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  color: #ffffff;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
 }
 
 .price-change {
   font-size: 16px;
   font-weight: bold;
-  margin-top: 8px;
-  background-color: #1e1e1e;
-  padding: 8px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 4px;
 }
 
 .price-change.positive {
-  color: #4caf50; /* Green for positive change */
+  color: var(--positive);
 }
 
 .price-change.negative {
-  color: #ff4d4d; /* Red for negative change */
+  color: var(--negative);
 }
 
-/* Time Percentage Blocks */
-.time-percentages {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-top: 20px;
-  text-align: center;
+/* Stock Details */
+.stock-details {
   width: 100%;
+  margin-top: 15px;
 }
 
-.time-percentage-block {
-  background-color: #3a3a3a;
-  color: white;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: center;
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
   font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  color: var(--text-secondary);
 }
 
-.time-percentage-block.positive {
-  border: 1px solid #4caf50;
-  color: #4caf50;
+.detail-row:last-child {
+  border-bottom: none;
 }
 
-.time-percentage-block.negative {
-  border: 1px solid #ff4d4d;
-  color: #ff4d4d;
-}
-
-.time-percentage-block:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .stock-wrapper {
-    flex-direction: column; /* Ensures cards are stacked in smaller screens */
-    align-items: center;
-    gap: 15px; /* Adjusts gap for smaller screens */
-  }
-
-  .stock-card {
-    width: 100%; /* Adjusts the card width for smaller screens */
-    max-width: 90%; /* Ensures cards don't overflow */
-  }
+.detail-row span:last-child {
+  color: var(--text-primary);
 }

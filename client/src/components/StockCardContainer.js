@@ -9,7 +9,9 @@ const StockCardContainer = () => {
   const [stockData, setStockData] = useState({});
   const [searchInput, setSearchInput] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
+  // Fetch stock data for the list of stocks
   const fetchStockData = async () => {
     const updatedStockData = {};
     for (let stock of stocks) {
@@ -22,10 +24,11 @@ const StockCardContainer = () => {
 
         if (quote && quote['05. price']) {
           updatedStockData[stock.symbol] = {
-            currentPrice: parseFloat(quote['05. price']),
-            previousClose: parseFloat(quote['08. previous close']),
-            high: parseFloat(quote['03. high']),
-            low: parseFloat(quote['04. low']),
+            currentPrice: parseFloat(quote['05. price']).toFixed(2), // Two decimal places
+            previousClose: parseFloat(quote['08. previous close']).toFixed(2), // Two decimal places
+            high: parseFloat(quote['03. high']).toFixed(2), // Two decimal places
+            low: parseFloat(quote['04. low']).toFixed(2), // Two decimal places
+            volume: formatVolume(quote['06. volume']), // Shorten volume
             priceChange: parseFloat(quote['09. change']) > 0 ? 'up' : 'down',
           };
         } else {
@@ -40,37 +43,63 @@ const StockCardContainer = () => {
     setStockData(updatedStockData);
   };
 
-  const addStock = async (event) => {
-    if (event.key !== 'Enter') return;
-    if (!searchInput.trim()) return;
+  // Format volume to shortened form (e.g., 4.56M, 1.23B)
+  const formatVolume = (volume) => {
+    const volumeNum = parseFloat(volume);
+    if (volumeNum >= 1e9) {
+      return `${(volumeNum / 1e9).toFixed(2)}B`; // Billions
+    } else if (volumeNum >= 1e6) {
+      return `${(volumeNum / 1e6).toFixed(2)}M`; // Millions
+    } else if (volumeNum >= 1e3) {
+      return `${(volumeNum / 1e3).toFixed(2)}K`; // Thousands
+    } else {
+      return volumeNum.toString(); // Less than 1,000
+    }
+  };
 
-    const symbol = searchInput.toUpperCase();
-    if (stocks.some((stock) => stock.symbol === symbol)) {
-      alert('This stock is already in your list!');
-      setSearchInput('');
+  // Fetch stock suggestions based on user input
+  const fetchSuggestions = async (input) => {
+    if (!input) {
+      setSuggestions([]);
       return;
     }
 
     try {
       const response = await fetch(
-        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
+        `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${input}&apikey=${ALPHA_VANTAGE_KEY}`
       );
       const data = await response.json();
-      const quote = data['Global Quote'];
+      const suggestionData = data.bestMatches || [];
 
-      if (!quote || !quote['05. price']) {
-        alert('Stock not found or invalid symbol');
-        return;
-      }
+      // Filter and map suggestions
+      const filteredSuggestions = suggestionData
+        .filter((item) => !item['1. symbol'].includes('.')) // Remove symbols with extensions
+        .map((item) => ({
+          symbol: item['1. symbol'],
+          name: item['2. name'],
+        }));
 
-      setStocks([...stocks, { symbol }]);
-      setSearchInput('');
-      setShowSearch(false);
+      setSuggestions(filteredSuggestions);
     } catch (error) {
-      console.error('Error fetching stock data:', error);
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
     }
   };
 
+  // Add a stock to the list
+  const addStock = (symbol) => {
+    if (stocks.some((stock) => stock.symbol === symbol)) {
+      alert('This stock is already in your list!');
+      return;
+    }
+
+    setStocks([...stocks, { symbol }]);
+    setSearchInput('');
+    setShowSearch(false);
+    setSuggestions([]);
+  };
+
+  // Remove a stock from the list
   const removeStock = (symbol) => {
     setStocks(stocks.filter((stock) => stock.symbol !== symbol));
     setStockData((prevData) => {
@@ -78,6 +107,20 @@ const StockCardContainer = () => {
       delete newData[symbol];
       return newData;
     });
+  };
+
+  // Handle search input changes
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
+    fetchSuggestions(e.target.value);
+  };
+
+  // Close search box when clicking outside
+  const handleClickOutside = (e) => {
+    if (!e.target.closest('.stock-search')) {
+      setShowSearch(false);
+      setSuggestions([]);
+    }
   };
 
   useEffect(() => {
@@ -97,14 +140,30 @@ const StockCardContainer = () => {
           </button>
         )}
         {showSearch && (
-          <div className="stock-search">
-            <input
-              type="text"
-              placeholder="Enter stock code (e.g., AAPL)"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyPress={addStock}
-            />
+          <div className="stock-search-wrapper" onClick={handleClickOutside}>
+            <div className="stock-search">
+              <input
+                type="text"
+                placeholder="Enter stock code (e.g., AAPL)"
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                autoFocus
+              />
+              {suggestions.length > 0 && (
+                <div className="suggestions-dropdown-card">
+                  <ul>
+                    {suggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        onClick={() => addStock(suggestion.symbol)}
+                      >
+                        <strong>{suggestion.symbol}</strong> - {suggestion.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
