@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Employement.css'; // Use Commodities.css
+import './Employement.css';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -24,6 +24,7 @@ ChartJS.register(
 
 const Employement = () => {
   const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchUnemploymentData = async () => {
@@ -44,6 +45,7 @@ const Employement = () => {
         }));
         prepareChartData(latestThirteenData);
       }
+      setLoading(false); // Set loading to false once data is fetched
     };
 
     fetchUnemploymentData();
@@ -130,7 +132,14 @@ const Employement = () => {
         <h2>US Unemployment Rate</h2>
       </div>
       <div className="chart-block">
-        {chartData && <Line data={chartData} options={options} />}
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-text">Loading...</div>
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          chartData && <Line data={chartData} options={options} />
+        )}
       </div>
     </div>
   );

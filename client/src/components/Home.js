@@ -2,7 +2,7 @@ import React from 'react';
 import LiveDateTime from './LiveDateTime';
 import MarketData from './MarketData';
 import TopTrade from './TopTrade';
-import Commodities from './Commodities';
+import Nonfarm from './Nonfarm';
 import TechNews from './TechNews';
 import Employement from './Employement';
 import Treasury from './Treasury';
@@ -12,6 +12,7 @@ import StockCardContainer from './StockCardContainer';
 import Cpi from './Cpi';
 import './Home.css';
 import Explanation from './Explanation';
+import RetailSales from './RetailSales';
 
 const Home = ({ isSearchOpen }) => {
   return (
@@ -33,10 +34,11 @@ const Home = ({ isSearchOpen }) => {
         {/* Top Trade Section */}
         <TopTrade />
 
-        {/* Commodities and Treasury Section */}
+        {/* Nonfarm and Treasury Section */}
         <div className="vc-startup-container">
-          <Commodities />
+          <Nonfarm />
           <Treasury />
+          <RetailSales />
         </div>
 
         {/* Employment and CPI Section */}

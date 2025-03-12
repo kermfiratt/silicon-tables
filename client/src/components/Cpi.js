@@ -24,6 +24,7 @@ ChartJS.register(
 
 const Cpi = ({ isSearchOpen }) => {
   const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCpiData = async () => {
@@ -44,6 +45,7 @@ const Cpi = ({ isSearchOpen }) => {
         }));
         prepareChartData(latestThirteenData);
       }
+      setLoading(false); // Set loading to false once data is fetched
     };
 
     fetchCpiData();
@@ -130,7 +132,14 @@ const Cpi = ({ isSearchOpen }) => {
         <h2>US Consumer Price Index (CPI)</h2>
       </div>
       <div className="chart-block">
-        {chartData && <Line data={chartData} options={options} />}
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-text">Loading...</div>
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          chartData && <Line data={chartData} options={options} />
+        )}
       </div>
     </div>
   );
