@@ -58,22 +58,23 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol}&apikey=${API_KEY}`
         );
         const data = response.data;
-
+  
         if (data && data.annualReports) {
           const sortedAnnualReports = data.annualReports.sort((a, b) =>
             b.fiscalDateEnding.localeCompare(a.fiscalDateEnding)
           );
-
+  
           setCashFlowData(sortedAnnualReports);
-
+  
+          // Fixed code here
           const uniqueYears = Array.from(
             new Set(sortedAnnualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
           );
           setCashFlowYears(uniqueYears);
-
+  
           const latestYear = uniqueYears[0];
           setSelectedCashFlowYear(latestYear);
-
+  
           const filtered = sortedAnnualReports.filter((report) =>
             report.fiscalDateEnding.startsWith(latestYear)
           );
@@ -81,7 +82,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         } else {
           throw new Error('No cash flow data available.');
         }
-
+  
         setLoadingCashFlow(false);
       } catch (err) {
         console.error('Error fetching cash flow data:', err.message);
@@ -89,7 +90,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         setLoadingCashFlow(false);
       }
     };
-
+  
     fetchCashFlowData();
   }, [symbol, API_KEY]);
 
@@ -114,24 +115,25 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           `https://www.alphavantage.co/query?function=EARNINGS&symbol=${symbol}&apikey=${API_KEY}`
         );
         const data = response.data;
-
+  
         console.log('API Response:', data);
-
+  
         if (data.Note) {
           throw new Error('API rate limit exceeded. Please try again later.');
         }
-
+  
         if (data && data.quarterlyEarnings) {
           setQuarterlyEarnings(data.quarterlyEarnings);
-
+  
+          // Fixed code here
           const uniqueYears = Array.from(
             new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
           );
           setYears(uniqueYears);
-
+  
           const latestYear = uniqueYears[0];
           setSelectedYear("2024");
-
+  
           const filtered = data.quarterlyEarnings.filter((e) =>
             e.fiscalDateEnding.startsWith(latestYear)
           );
@@ -139,7 +141,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         } else {
           throw new Error('No quarterly earnings data available.');
         }
-
+  
         setLoadingEarnings(false);
       } catch (err) {
         console.error('Error fetching quarterly earnings:', err.message);
@@ -147,9 +149,10 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         setLoadingEarnings(false);
       }
     };
-
+  
     fetchEarningsData();
   }, [symbol, API_KEY]);
+
 
   useEffect(() => {
     if (selectedYear && quarterlyEarnings.length > 0) {
@@ -289,11 +292,22 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
     fetchCompanyOverview();
   }, [symbol, API_KEY]);
 
-  if (loadingFinancials || loadingPriceMetrics) return <p>Loading data...</p>;
-  if (errorFinancials || errorPriceMetrics) return <p>{errorFinancials || errorPriceMetrics}</p>;
-  if (!financialData.length && !priceMetrics.length) return <p>No data available for this company.</p>;
-  if (loadingFinancials || loadingOverview) return <p>Loading data...</p>;
-  if (errorFinancials || errorOverview) return <p>{errorFinancials || errorOverview}</p>;
+  if (loadingFinancials || loadingPriceMetrics || loadingOverview || loadingEarnings || loadingCashFlow || loadingNews) {
+    return (
+      <div className="loading-container-financials">
+        <div className="loading-spinner-financials"></div>
+        <p className="loading-text-financials">Loading...</p>
+      </div>
+    );
+  }
+
+  if (errorFinancials || errorPriceMetrics || errorOverview || errorEarnings || errorCashFlow || errorNews) {
+    return <p>{errorFinancials || errorPriceMetrics || errorOverview || errorEarnings || errorCashFlow || errorNews}</p>;
+  }
+
+  if (!financialData.length && !priceMetrics.length) {
+    return <p>No data available for this company.</p>;
+  }
 
   const speedometerData = [
     {
@@ -622,7 +636,10 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           <div className="quarterly-earnings-section">
             <h4>Quarterly Earnings</h4>
             {loadingEarnings ? (
-              <p>Loading earnings data...</p>
+              <div className="loading-container-financials">
+                <div className="loading-spinner-financials"></div>
+                <p className="loading-text-financials">Loading earnings data...</p>
+              </div>
             ) : errorEarnings ? (
               <p>Error: {errorEarnings}</p>
             ) : (
@@ -668,111 +685,111 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-   
 
+      {activeSection === 'annualCashFlow' && (
+        <div ref={refs.annualCashFlowRef}>
+          {/* Cash Flow Section */}
+          <div className="quarterly-earnings-section">
+            <h4>Annual Cash Flow</h4>
+            {loadingCashFlow ? (
+              <div className="loading-container-financials">
+                <div className="loading-spinner-financials"></div>
+                <p className="loading-text-financials">Loading Annual Cash Flow...</p>
+              </div>
+            ) : errorCashFlow ? (
+              <p>{errorCashFlow}</p>
+            ) : (
+              <div>
+                {/* Year Selector */}
+                <div className="year-selector">
+                  <label htmlFor="cashflow-year-select">Select Year:</label>
+                  <select
+                    id="cashflow-year-select"
+                    value={selectedCashFlowYear}
+                    onChange={(e) => setSelectedCashFlowYear(e.target.value)}
+                    className="year-dropdown"
+                  >
+                    {cashFlowYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
+                {/* Cash Flow Table */}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Fiscal Date Ending</th>
+                      <th>Operating Cash Flow</th>
+                      <th>Payments for Operating Activities</th>
+                      <th>Capital Expenditures</th>
+                      <th>Change in Operating Assets</th>
+                      <th>Change in Operating Liabilities</th>
+                      <th>Cashflow from Investment</th>
+                      <th>Cashflow from Financing</th>
+                      <th>Net Income</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCashFlow
+                      .slice(0, showAllYears ? filteredCashFlow.length : 3) // Show 3 years by default, or all if "Show More" is clicked
+                      .map((report, index) => (
+                        <tr key={index}>
+                          <td>{report.fiscalDateEnding}</td>
+                          <td>{formatValue(report.operatingCashflow)}</td>
+                          <td>{formatValue(report.paymentsForOperatingActivities)}</td>
+                          <td>{formatValue(report.capitalExpenditures)}</td>
+                          <td>{formatValue(report.changeInOperatingAssets)}</td>
+                          <td>{formatValue(report.changeInOperatingLiabilities)}</td>
+                          <td>{formatValue(report.cashflowFromInvestment)}</td>
+                          <td>{formatValue(report.cashflowFromFinancing)}</td>
+                          <td>{formatValue(report.netIncome)}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
 
- 
-   {activeSection === 'annualCashFlow' && (
-  <div ref={refs.annualCashFlowRef}>
-    {/* Cash Flow Section */}
-    <div className="quarterly-earnings-section">
-      <h4>Annual Cash Flow</h4>
-      {loadingCashFlow ? (
-        <p>Loading Annual Cash Flow...</p>
-      ) : errorCashFlow ? (
-        <p>{errorCashFlow}</p>
-      ) : (
-        <div>
-          {/* Year Selector */}
-          <div className="year-selector">
-            <label htmlFor="cashflow-year-select">Select Year:</label>
-            <select
-              id="cashflow-year-select"
-              value={selectedCashFlowYear}
-              onChange={(e) => setSelectedCashFlowYear(e.target.value)}
-              className="year-dropdown"
-            >
-              {cashFlowYears.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+                {/* Show More/Show Less Button */}
+                {filteredCashFlow.length > 3 && (
+                  <button
+                    onClick={() => setShowAllYears(!showAllYears)}
+                    style={{
+                      marginTop: "20px",
+                      padding: "10px 20px",
+                      backgroundColor: "#007bff", /* Blue button */
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      transition: "background-color 0.3s ease",
+                    }}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")} /* Darker blue on hover */
+                    onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+                  >
+                    {showAllYears ? "Show Less" : "Show More Years"}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
-
-          {/* Cash Flow Table */}
-          <table>
-            <thead>
-              <tr>
-                <th>Fiscal Date Ending</th>
-                <th>Operating Cash Flow</th>
-                <th>Payments for Operating Activities</th>
-                <th>Capital Expenditures</th>
-                <th>Change in Operating Assets</th>
-                <th>Change in Operating Liabilities</th>
-                <th>Cashflow from Investment</th>
-                <th>Cashflow from Financing</th>
-                <th>Net Income</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCashFlow
-                .slice(0, showAllYears ? filteredCashFlow.length : 3) // Show 3 years by default, or all if "Show More" is clicked
-                .map((report, index) => (
-                  <tr key={index}>
-                    <td>{report.fiscalDateEnding}</td>
-                    <td>{formatValue(report.operatingCashflow)}</td>
-                    <td>{formatValue(report.paymentsForOperatingActivities)}</td>
-                    <td>{formatValue(report.capitalExpenditures)}</td>
-                    <td>{formatValue(report.changeInOperatingAssets)}</td>
-                    <td>{formatValue(report.changeInOperatingLiabilities)}</td>
-                    <td>{formatValue(report.cashflowFromInvestment)}</td>
-                    <td>{formatValue(report.cashflowFromFinancing)}</td>
-                    <td>{formatValue(report.netIncome)}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-
-          {/* Show More/Show Less Button */}
-          {filteredCashFlow.length > 3 && (
-            <button
-              onClick={() => setShowAllYears(!showAllYears)}
-              style={{
-                marginTop: "20px",
-                padding: "10px 20px",
-                backgroundColor: "#007bff", /* Blue button */
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                transition: "background-color 0.3s ease",
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")} /* Darker blue on hover */
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
-            >
-              {showAllYears ? "Show Less" : "Show More Years"}
-            </button>
-          )}
         </div>
       )}
-    </div>
-  </div>
-)}
-
-
-
-
-
-
 
       {activeSection === 'about' && (
         <div ref={refs.aboutRef}>
           {/* About Section */}
           <div id='about-section' className="about-company-block">
             <h4>About The Company</h4>
-            <div>{companyOverview.Description}</div>
+            {loadingOverview ? (
+              <div className="loading-container-financials">
+                <div className="loading-spinner-financials"></div>
+                <p className="loading-text-financials">Loading company overview...</p>
+              </div>
+            ) : (
+              <div>{companyOverview.Description}</div>
+            )}
           </div>
         </div>
       )}
@@ -783,7 +800,10 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           <div id="news-section" className="news-block">
             <h4>Recent News</h4>
             {loadingNews ? (
-              <p>Loading news...</p>
+              <div className="loading-container-financials">
+                <div className="loading-spinner-financials"></div>
+                <p className="loading-text-financials">Loading news...</p>
+              </div>
             ) : news.length > 0 ? (
               <div className="news-list">
                 {news.map((article, index) => (
@@ -803,10 +823,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         </div>
       )}
 
-
-
-
-{activeSection === 'report' && (
+      {activeSection === 'report' && (
         <div ref={refs.reportRef}>
           {/* Balance Sheet Section */}
           <div id="report-section" className="balance-sheet-block">
@@ -814,9 +831,6 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-
-
-
 
       {activeSection === 'balanceSheet' && (
         <div ref={refs.balanceSheetRef}>
@@ -827,8 +841,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
         </div>
       )}
 
-
-{activeSection === 'annualBalanceSheet' && (
+      {activeSection === 'annualBalanceSheet' && (
         <div ref={refs.annualBalanceSheetRef}>
           {/* Balance Sheet Section */}
           <div id="annual-balance-sheet-section" className="annual-balance-sheet-block">
@@ -836,8 +849,6 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           </div>
         </div>
       )}
-
-      
     </div>
   );
 });

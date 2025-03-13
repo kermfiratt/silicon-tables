@@ -70,7 +70,12 @@ const Report = ({ symbol }) => {
     <div className="report-container">
       <h1 className="report-title">Financial Report</h1>
 
-      {loading && <div className="loading">Loading...</div>}
+      {loading && (
+        <div className="loading-container-report">
+          <div className="loading-spinner-report"></div>
+          <div className="loading-text-report">Loading Report Data...</div>
+        </div>
+      )}
 
       {error && <p className="error-message">{error}</p>}
 
