@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './AnnualBalanceSheet.css';
 
-const AnnualBalanceSheet = ({ symbol }) => {
+const AnnualBalanceSheet = ({ symbol, refs, activeSection }) => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -19,31 +19,33 @@ const AnnualBalanceSheet = ({ symbol }) => {
   };
 
   useEffect(() => {
-    const fetchBalanceSheet = async () => {
-      try {
-        const response = await fetch(
-          `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = await response.json();
+    if (activeSection === 'annualBalanceSheet') {
+      const fetchBalanceSheet = async () => {
+        try {
+          const response = await fetch(
+            `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+          );
+          const data = await response.json();
 
-        if (data['annualReports']) {
-          setBalanceSheet(data['annualReports']);
+          if (data['annualReports']) {
+            setBalanceSheet(data['annualReports']);
 
-          // Set the default selected year to the latest year
-          const latestYear = new Date(data['annualReports'][0].fiscalDateEnding).getFullYear();
-          setSelectedYear(latestYear);
-        } else {
-          setError('No annual balance sheet data available');
+            // Set the default selected year to the latest year
+            const latestYear = new Date(data['annualReports'][0].fiscalDateEnding).getFullYear();
+            setSelectedYear(latestYear);
+          } else {
+            setError('No annual balance sheet data available');
+          }
+        } catch (error) {
+          setError('Failed to fetch annual balance sheet data.');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        setError('Failed to fetch annual balance sheet data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchBalanceSheet();
-  }, [symbol, API_KEY]);
+      fetchBalanceSheet();
+    }
+  }, [symbol, API_KEY, activeSection]);
 
   // Get unique years from the annual reports
   const getAvailableYears = () => {
@@ -103,63 +105,87 @@ const AnnualBalanceSheet = ({ symbol }) => {
     },
   ];
 
+  // Only render the wrapper if the active section is 'annualBalanceSheet'
+  if (activeSection !== 'annualBalanceSheet') {
+    return null; // Return null to prevent rendering
+  }
+
+  if (loading) {
+    return (
+      <div className="annual-balance-sheet-wrapper">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Loading annual balance sheet data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="annual-balance-sheet-wrapper">
+        <p className="error">{error}</p>
+      </div>
+    );
+  }
+
+  if (!balanceSheet) {
+    return (
+      <div className="annual-balance-sheet-wrapper">
+        <p>No annual balance sheet data available for this company.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="annual-balance-sheet-wrapper">
+    <div className="annual-balance-sheet-wrapper" ref={refs.annualBalanceSheetRef}>
       <h1 className="annual-balance-sheet-header">Annual Balance Sheet</h1>
       <div className="annual-balance-sheet-container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : (
-          <>
-            <div className="year-selector">
-              <label htmlFor="year-select">Select Year:</label>
-              <select
-                id="year-select"
-                value={selectedYear || ''}
-                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              >
-                {getAvailableYears().map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="year-selector">
+          <label htmlFor="year-select">Select Year:</label>
+          <select
+            id="year-select"
+            value={selectedYear || ''}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+          >
+            {getAvailableYears().map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            {filteredReports.length > 0 ? (
-              tableCategories.map((category, index) => (
-                <div key={index} className="table-category">
-                  <h3>{category.title}</h3>
-                  <table className="annual-balance-sheet-table">
-                    <thead>
-                      <tr>
-                        <th>Year</th>
-                        {category.fields.map((field, idx) => (
-                          <th key={idx}>{field.label}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredReports.map((report, idx) => (
-                        <tr key={idx}>
-                          <td>{new Date(report.fiscalDateEnding).getFullYear()}</td>
-                          {category.fields.map((field, idx) => (
-                            <td key={idx}>
-                              {field.format(parseInt(report[field.key] || 0))}
-                            </td>
-                          ))}
-                        </tr>
+        {filteredReports.length > 0 ? (
+          tableCategories.map((category, index) => (
+            <div key={index} className="table-category">
+              <h3>{category.title}</h3>
+              <table className="annual-balance-sheet-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    {category.fields.map((field, idx) => (
+                      <th key={idx}>{field.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReports.map((report, idx) => (
+                    <tr key={idx}>
+                      <td>{new Date(report.fiscalDateEnding).getFullYear()}</td>
+                      {category.fields.map((field, idx) => (
+                        <td key={idx}>
+                          {field.format(parseInt(report[field.key] || 0, 10))}
+                        </td>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-              ))
-            ) : (
-              <p>No data available for the selected year.</p>
-            )}
-          </>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))
+        ) : (
+          <p>No data available for the selected year.</p>
         )}
       </div>
     </div>

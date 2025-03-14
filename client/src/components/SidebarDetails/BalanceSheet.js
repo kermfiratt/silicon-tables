@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './BalanceSheet.css';
 
-const BalanceSheet = ({ symbol }) => {
+const BalanceSheet = ({ symbol, refs, activeSection }) => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,28 +18,30 @@ const BalanceSheet = ({ symbol }) => {
   };
 
   useEffect(() => {
-    const fetchBalanceSheet = async () => {
-      try {
-        const response = await fetch(
-          `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = await response.json();
+    if (activeSection === 'balanceSheet') {
+      const fetchBalanceSheet = async () => {
+        try {
+          const response = await fetch(
+            `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+          );
+          const data = await response.json();
 
-        if (data['quarterlyReports']) {
-          const reports = data['quarterlyReports'].slice(0, 5); // Last 5 quarters
-          setBalanceSheet(reports);
-        } else {
-          setError('No balance sheet data available');
+          if (data['quarterlyReports']) {
+            const reports = data['quarterlyReports'].slice(0, 5); // Last 5 quarters
+            setBalanceSheet(reports);
+          } else {
+            setError('No balance sheet data available');
+          }
+        } catch (error) {
+          setError('Failed to fetch balance sheet data.');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        setError('Failed to fetch balance sheet data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchBalanceSheet();
-  }, [symbol, API_KEY]);
+      fetchBalanceSheet();
+    }
+  }, [symbol, API_KEY, activeSection]);
 
   // Define categorized fields for each table
   const tableCategories = [
@@ -93,47 +95,71 @@ const BalanceSheet = ({ symbol }) => {
     return 'Q4';
   };
 
+  // Only render the wrapper if the active section is 'balanceSheet'
+  if (activeSection !== 'balanceSheet') {
+    return null; // Return null to prevent rendering
+  }
+
+  if (loading) {
+    return (
+      <div className="balance-sheet-wrapper">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Loading balance sheet data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="balance-sheet-wrapper">
+        <p className="error">{error}</p>
+      </div>
+    );
+  }
+
+  if (!balanceSheet) {
+    return (
+      <div className="balance-sheet-wrapper">
+        <p>No balance sheet data available for this company.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="balance-sheet-wrapper">
+    <div className="balance-sheet-wrapper" ref={refs.balanceSheetRef}>
       <h1 className="balance-sheet-header">Balance Sheet</h1>
       <div className="balance-sheet-container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : (
-          <>
-            {tableCategories.map((category, index) => (
-              <div key={index} className="table-category">
-                <h3>{category.title}</h3>
-                <table className="balance-sheet-table">
-                  <thead>
-                    <tr>
-                      <th>Quarter</th>
-                      <th>Period</th>
-                      {category.fields.map((field, idx) => (
-                        <th key={idx}>{field.label}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {balanceSheet.map((report, idx) => (
-                      <tr key={idx}>
-                        <td>{getQuarterLabel(report.fiscalDateEnding)}</td>
-                        <td>{report.fiscalDateEnding}</td>
-                        {category.fields.map((field, idx) => (
-                          <td key={idx}>
-                            {field.format(parseInt(report[field.key] || 0))}
-                          </td>
-                        ))}
-                      </tr>
+        {tableCategories.map((category, index) => (
+          <div key={index} className="table-category">
+            <h3>{category.title}</h3>
+            <table className="balance-sheet-table">
+              <thead>
+                <tr>
+                  <th>Quarter</th>
+                  <th>Period</th>
+                  {category.fields.map((field, idx) => (
+                    <th key={idx}>{field.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {balanceSheet.map((report, idx) => (
+                  <tr key={idx}>
+                    <td>{getQuarterLabel(report.fiscalDateEnding)}</td>
+                    <td>{report.fiscalDateEnding}</td>
+                    {category.fields.map((field, idx) => (
+                      <td key={idx}>
+                        {field.format(parseInt(report[field.key] || 0, 10))}
+                      </td>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </>
-        )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
     </div>
   );

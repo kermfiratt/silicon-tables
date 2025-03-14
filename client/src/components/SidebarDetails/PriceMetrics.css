@@ -1,0 +1,75 @@
+
+
+/* Switch Buttons */
+.price-switch-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .switch-option {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #ccc;
+    margin: 0 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .switch-option:hover {
+    background-color: #555;
+    color: white;
+  }
+  
+  .switch-option.active {
+    background-color: #4a90e2;
+    color: white;
+  }
+  
+  /* Metrics Blocks */
+  .metrics-blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  
+  .metric-block {
+    background-color: #252525;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .metric-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .metric-block h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .metric-block p {
+    font-size: 16px;
+    color: #eee;
+    margin: 0;
+  }
+  
+  /* Category Headers */
+  .metrics-category h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  

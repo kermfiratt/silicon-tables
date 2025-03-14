@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './StockDetailsSidebar.css';
 import Financials from './SidebarDetails/Financials';
-
+import PriceMetrics from './SidebarDetails/PriceMetrics'; // Import the PriceMetrics component
+import QuarterlyEarnings from './SidebarDetails/QuarterlyEarnings';
+import AnnualCashFlow from './SidebarDetails/AnnualCashFlow';
+import About from './SidebarDetails/About';
+import News from './SidebarDetails/News';
+import Report from './SidebarDetails/Report';
+import BalanceSheet from './SidebarDetails/BalanceSheet';
+import AnnualBalanceSheet from './SidebarDetails/AnnualBalanceSheet';
 
 const StockDetailsSidebar = ({ symbol }) => {
   const [activeSection, setActiveSection] = useState('financials'); // Default to 'financials'
@@ -42,8 +49,8 @@ const StockDetailsSidebar = ({ symbol }) => {
           const priceData = await priceResponse.json();
           const globalQuote = priceData['Global Quote'];
           if (globalQuote) {
-            setCurrentPrice(parseFloat(globalQuote['05. price']).toFixed(2)); // Fixed: Added closing parenthesis
-            setPriceChangePercent(parseFloat(globalQuote['10. change percent']).toFixed(2)); // Fixed: Added closing parenthesis
+            setCurrentPrice(parseFloat(globalQuote['05. price']).toFixed(2));
+            setPriceChangePercent(parseFloat(globalQuote['10. change percent']).toFixed(2));
           }
         } catch (error) {
           console.error('Error fetching company details:', error);
@@ -150,21 +157,92 @@ const StockDetailsSidebar = ({ symbol }) => {
 
       {/* Main Content Area */}
       <div className="stock-details-content">
+
+
         <Financials
           symbol={symbol}
           refs={{
-            financialsRef,
-            priceMetricsRef,
-            quarterlyEarningsRef,
-            annualCashFlowRef,
-            aboutRef,
-            newsRef,
-            reportRef,
-            balanceSheetRef,
-            annualBalanceSheetRef
+            financialsRef
           }}
           activeSection={activeSection}
         />
+
+
+        <PriceMetrics
+          symbol={symbol}
+          refs={{
+            priceMetricsRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+
+        <QuarterlyEarnings
+          symbol={symbol}
+          refs={{          
+            quarterlyEarningsRef,
+          }}
+          activeSection={activeSection}
+        />
+
+        
+         <AnnualCashFlow
+          symbol={symbol}
+          refs={{
+            annualCashFlowRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+         <About
+          symbol={symbol}
+          refs={{
+            aboutRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+         <News
+          symbol={symbol}
+          refs={{
+            newsRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+        <Report
+          symbol={symbol}
+          refs={{
+            reportRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+
+        <BalanceSheet
+          symbol={symbol}
+          refs={{
+            balanceSheetRef,
+          }}
+          activeSection={activeSection}
+        />
+
+
+
+        <AnnualBalanceSheet
+          symbol={symbol}
+          refs={{
+            annualBalanceSheetRef,
+          }}
+          activeSection={activeSection}
+        />
+
+        
       </div>
     </div>
   );
