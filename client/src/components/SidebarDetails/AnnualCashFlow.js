@@ -7,8 +7,9 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [filteredData, setFilteredData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -17,50 +18,55 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
     return value.toLocaleString();
   };
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchCashFlowData = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol}&apikey=${API_KEY}`
+    if (activeSection === 'annualCashFlow' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchCashFlowData();
+    }
+  }, [activeSection, dataFetched]);
+
+  const fetchCashFlowData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = response.data;
+
+      if (data && data.annualReports) {
+        const sortedAnnualReports = data.annualReports.sort((a, b) =>
+          b.fiscalDateEnding.localeCompare(a.fiscalDateEnding)
         );
-        const data = response.data;
 
-        if (data && data.annualReports) {
-          const sortedAnnualReports = data.annualReports.sort((a, b) =>
-            b.fiscalDateEnding.localeCompare(a.fiscalDateEnding)
-          );
+        setCashFlowData(sortedAnnualReports);
 
-          setCashFlowData(sortedAnnualReports);
+        // Extract unique years from cash flow data
+        const uniqueYears = Array.from(
+          new Set(sortedAnnualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
+        );
+        setYears(uniqueYears);
 
-          // Extract unique years from cash flow data
-          const uniqueYears = Array.from(
-            new Set(sortedAnnualReports.map((report) => report.fiscalDateEnding.slice(0, 4)))
-          );
-          setYears(uniqueYears);
+        // Set the latest year as default
+        const latestYear = uniqueYears[0];
+        setSelectedYear(latestYear);
 
-          // Set the latest year as default
-          const latestYear = uniqueYears[0];
-          setSelectedYear(latestYear);
-
-          // Filter cash flow data for the latest year
-          const filtered = sortedAnnualReports.filter((report) =>
-            report.fiscalDateEnding.startsWith(latestYear)
-          );
-          setFilteredData(filtered);
-        } else {
-          throw new Error('No cash flow data available.');
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching cash flow data:', err.message);
-        setError('Failed to load cash flow data.');
-        setLoading(false);
+        // Filter cash flow data for the latest year
+        const filtered = sortedAnnualReports.filter((report) =>
+          report.fiscalDateEnding.startsWith(latestYear)
+        );
+        setFilteredData(filtered);
+      } else {
+        throw new Error('No cash flow data available.');
       }
-    };
 
-    fetchCashFlowData();
-  }, [symbol, API_KEY]);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching cash flow data:', err.message);
+      setError('Failed to load cash flow data.');
+      setLoading(false);
+    }
+  };
 
   // Filter cash flow data when selectedYear changes
   useEffect(() => {
@@ -72,17 +78,10 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
     }
   }, [selectedYear, cashFlowData]);
 
-
-
-
-
- // Only render the wrapper if the active section is 'annual cash flow'
- if (activeSection !== 'annualCashFlow') {
-  return null; // Return null to prevent rendering
-}
-
-
-
+  // Only render the wrapper if the active section is 'annual cash flow'
+  if (activeSection !== 'annualCashFlow') {
+    return null; // Return null to prevent rendering
+  }
 
   if (loading) {
     return (

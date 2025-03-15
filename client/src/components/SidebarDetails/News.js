@@ -4,35 +4,41 @@ import './News.css'; // Import the CSS file
 
 const News = ({ symbol, refs, activeSection }) => {
   const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${API_KEY}`
-        );
-        const data = response.data;
+    if (activeSection === 'news' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchNews();
+    }
+  }, [activeSection, dataFetched]);
 
-        if (data && data.feed) {
-          setNews(data.feed.slice(0, 10)); // Limit to 10 articles
-        } else {
-          throw new Error('No news data available.');
-        }
+  const fetchNews = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${API_KEY}`
+      );
+      const data = response.data;
 
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching news:', err.message);
-        setError('Failed to load news.');
-        setLoading(false);
+      if (data && data.feed) {
+        setNews(data.feed.slice(0, 10)); // Limit to 10 articles
+      } else {
+        throw new Error('No news data available.');
       }
-    };
 
-    fetchNews();
-  }, [symbol, API_KEY]);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching news:', err.message);
+      setError('Failed to load news.');
+      setLoading(false);
+    }
+  };
 
   // Only render the wrapper if the active section is 'news'
   if (activeSection !== 'news') {

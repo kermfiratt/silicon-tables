@@ -7,13 +7,16 @@ const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 const Report = ({ symbol, refs, activeSection }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); // Changed to false initially
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    if (activeSection === 'report') {
+    if (activeSection === 'report' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
       fetchStockData(symbol);
     }
-  }, [symbol, activeSection]);
+  }, [activeSection, dataFetched]);
 
   const fetchStockData = async (symbol) => {
     if (!symbol.trim()) {

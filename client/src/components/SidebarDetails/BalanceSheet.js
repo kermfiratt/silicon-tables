@@ -3,8 +3,9 @@ import './BalanceSheet.css';
 
 const BalanceSheet = ({ symbol, refs, activeSection }) => {
   const [balanceSheet, setBalanceSheet] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState('');
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   // Function to format large numbers, including negative values
@@ -17,31 +18,34 @@ const BalanceSheet = ({ symbol, refs, activeSection }) => {
     return num.toLocaleString(); // Standard format
   };
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    if (activeSection === 'balanceSheet') {
-      const fetchBalanceSheet = async () => {
-        try {
-          const response = await fetch(
-            `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
-          );
-          const data = await response.json();
-
-          if (data['quarterlyReports']) {
-            const reports = data['quarterlyReports'].slice(0, 5); // Last 5 quarters
-            setBalanceSheet(reports);
-          } else {
-            setError('No balance sheet data available');
-          }
-        } catch (error) {
-          setError('Failed to fetch balance sheet data.');
-        } finally {
-          setLoading(false);
-        }
-      };
-
+    if (activeSection === 'balanceSheet' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
       fetchBalanceSheet();
     }
-  }, [symbol, API_KEY, activeSection]);
+  }, [activeSection, dataFetched]);
+
+  const fetchBalanceSheet = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data['quarterlyReports']) {
+        const reports = data['quarterlyReports'].slice(0, 5); // Last 5 quarters
+        setBalanceSheet(reports);
+      } else {
+        setError('No balance sheet data available');
+      }
+    } catch (error) {
+      setError('Failed to fetch balance sheet data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Define categorized fields for each table
   const tableCategories = [

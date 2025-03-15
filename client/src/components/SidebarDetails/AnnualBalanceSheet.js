@@ -3,9 +3,10 @@ import './AnnualBalanceSheet.css';
 
 const AnnualBalanceSheet = ({ symbol, refs, activeSection }) => {
   const [balanceSheet, setBalanceSheet] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState('');
   const [selectedYear, setSelectedYear] = useState(null); // Default to null initially
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   // Function to format large numbers, including negative values
@@ -18,34 +19,37 @@ const AnnualBalanceSheet = ({ symbol, refs, activeSection }) => {
     return num.toLocaleString(); // Standard format
   };
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    if (activeSection === 'annualBalanceSheet') {
-      const fetchBalanceSheet = async () => {
-        try {
-          const response = await fetch(
-            `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
-          );
-          const data = await response.json();
-
-          if (data['annualReports']) {
-            setBalanceSheet(data['annualReports']);
-
-            // Set the default selected year to the latest year
-            const latestYear = new Date(data['annualReports'][0].fiscalDateEnding).getFullYear();
-            setSelectedYear(latestYear);
-          } else {
-            setError('No annual balance sheet data available');
-          }
-        } catch (error) {
-          setError('Failed to fetch annual balance sheet data.');
-        } finally {
-          setLoading(false);
-        }
-      };
-
+    if (activeSection === 'annualBalanceSheet' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
       fetchBalanceSheet();
     }
-  }, [symbol, API_KEY, activeSection]);
+  }, [activeSection, dataFetched]);
+
+  const fetchBalanceSheet = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data['annualReports']) {
+        setBalanceSheet(data['annualReports']);
+
+        // Set the default selected year to the latest year
+        const latestYear = new Date(data['annualReports'][0].fiscalDateEnding).getFullYear();
+        setSelectedYear(latestYear);
+      } else {
+        setError('No annual balance sheet data available');
+      }
+    } catch (error) {
+      setError('Failed to fetch annual balance sheet data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Get unique years from the annual reports
   const getAvailableYears = () => {

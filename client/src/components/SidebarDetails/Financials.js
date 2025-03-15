@@ -7,12 +7,13 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [financialData, setFinancialData] = useState([]);
   const [priceMetrics, setPriceMetrics] = useState([]);
   const [companyOverview, setCompanyOverview] = useState({});
-  const [loadingFinancials, setLoadingFinancials] = useState(true);
-  const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(true);
-  const [loadingOverview, setLoadingOverview] = useState(true);
+  const [loadingFinancials, setLoadingFinancials] = useState(false);
+  const [loadingPriceMetrics, setLoadingPriceMetrics] = useState(false);
+  const [loadingOverview, setLoadingOverview] = useState(false);
   const [errorFinancials, setErrorFinancials] = useState(null);
   const [errorPriceMetrics, setErrorPriceMetrics] = useState(null);
   const [errorOverview, setErrorOverview] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -32,114 +33,121 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
     return `${change.toFixed(2)}%`;
   };
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchFinancialData = async () => {
-      try {
-        const incomeResponse = await axios.get(
-          `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${symbol}&apikey=${API_KEY}`
-        );
+    if (activeSection === 'financials' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchFinancialData();
+      fetchPriceMetrics();
+      fetchCompanyOverview();
+    }
+  }, [activeSection, dataFetched]);
 
-        const balanceResponse = await axios.get(
-          `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
-        );
+  const fetchFinancialData = async () => {
+    setLoadingFinancials(true);
+    try {
+      const incomeResponse = await axios.get(
+        `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${symbol}&apikey=${API_KEY}`
+      );
 
-        const incomeData = incomeResponse.data.quarterlyReports;
-        const balanceData = balanceResponse.data.quarterlyReports;
+      const balanceResponse = await axios.get(
+        `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${symbol}&apikey=${API_KEY}`
+      );
 
-        const filteredIncomeData = incomeData
-          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
-          .slice(0, 5);
+      const incomeData = incomeResponse.data.quarterlyReports;
+      const balanceData = balanceResponse.data.quarterlyReports;
 
-        const filteredBalanceData = balanceData
-          .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
-          .slice(0, 5);
+      const filteredIncomeData = incomeData
+        .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
+        .slice(0, 5);
 
-        const quarters = filteredIncomeData.map((report, index) => ({
-          date: report.fiscalDateEnding,
-          revenue: parseFloat(report.totalRevenue) || 0,
-          grossProfit: parseFloat(report.grossProfit) || 0,
-          netIncome: parseFloat(report.netIncome) || 0,
-          assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
-          liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
-          equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
-          costOfRevenue: parseFloat(report.costOfRevenue) || 0,
-          operatingIncome: parseFloat(report.operatingIncome) || 0,
-          sellingGeneralAndAdministrative: parseFloat(report.sellingGeneralAndAdministrative) || 0,
-          researchAndDevelopment: parseFloat(report.researchAndDevelopment) || 0,
-          operatingExpenses: parseFloat(report.operatingExpenses) || 0,
-          netInterestIncome: parseFloat(report.netInterestIncome) || 0,
-          interestIncome: parseFloat(report.interestIncome) || 0,
-          interestExpense: parseFloat(report.interestExpense) || 0,
-          nonInterestIncome: parseFloat(report.nonInterestIncome) || 0,
-          otherNonOperatingIncome: parseFloat(report.otherNonOperatingIncome) || 0,
-          depreciation: parseFloat(report.depreciation) || 0,
-          depreciationAndAmortization: parseFloat(report.depreciationAndAmortization) || 0,
-          incomeBeforeTax: parseFloat(report.incomeBeforeTax) || 0,
-          incomeTaxExpense: parseFloat(report.incomeTaxExpense) || 0,
-          netIncomeFromContinuingOperations: parseFloat(report.netIncomeFromContinuingOperations) || 0,
-          comprehensiveIncomeNetOfTax: parseFloat(report.comprehensiveIncomeNetOfTax) || 0,
-          ebit: parseFloat(report.ebit) || 0,
-          ebitda: parseFloat(report.ebitda) || 0,
-        }));
+      const filteredBalanceData = balanceData
+        .sort((a, b) => new Date(b.fiscalDateEnding) - new Date(a.fiscalDateEnding))
+        .slice(0, 5);
 
-        setFinancialData(quarters);
-        setLoadingFinancials(false);
-      } catch (error) {
-        console.error('Error fetching financial data:', error.message);
-        setErrorFinancials('Failed to load financial data.');
-        setLoadingFinancials(false);
+      const quarters = filteredIncomeData.map((report, index) => ({
+        date: report.fiscalDateEnding,
+        revenue: parseFloat(report.totalRevenue) || 0,
+        grossProfit: parseFloat(report.grossProfit) || 0,
+        netIncome: parseFloat(report.netIncome) || 0,
+        assets: parseFloat(filteredBalanceData[index]?.totalAssets) || 0,
+        liabilities: parseFloat(filteredBalanceData[index]?.totalLiabilities) || 0,
+        equity: parseFloat(filteredBalanceData[index]?.totalShareholderEquity) || 0,
+        costOfRevenue: parseFloat(report.costOfRevenue) || 0,
+        operatingIncome: parseFloat(report.operatingIncome) || 0,
+        sellingGeneralAndAdministrative: parseFloat(report.sellingGeneralAndAdministrative) || 0,
+        researchAndDevelopment: parseFloat(report.researchAndDevelopment) || 0,
+        operatingExpenses: parseFloat(report.operatingExpenses) || 0,
+        netInterestIncome: parseFloat(report.netInterestIncome) || 0,
+        interestIncome: parseFloat(report.interestIncome) || 0,
+        interestExpense: parseFloat(report.interestExpense) || 0,
+        nonInterestIncome: parseFloat(report.nonInterestIncome) || 0,
+        otherNonOperatingIncome: parseFloat(report.otherNonOperatingIncome) || 0,
+        depreciation: parseFloat(report.depreciation) || 0,
+        depreciationAndAmortization: parseFloat(report.depreciationAndAmortization) || 0,
+        incomeBeforeTax: parseFloat(report.incomeBeforeTax) || 0,
+        incomeTaxExpense: parseFloat(report.incomeTaxExpense) || 0,
+        netIncomeFromContinuingOperations: parseFloat(report.netIncomeFromContinuingOperations) || 0,
+        comprehensiveIncomeNetOfTax: parseFloat(report.comprehensiveIncomeNetOfTax) || 0,
+        ebit: parseFloat(report.ebit) || 0,
+        ebitda: parseFloat(report.ebitda) || 0,
+      }));
+
+      setFinancialData(quarters);
+      setLoadingFinancials(false);
+    } catch (error) {
+      console.error('Error fetching financial data:', error.message);
+      setErrorFinancials('Failed to load financial data.');
+      setLoadingFinancials(false);
+    }
+  };
+
+  const fetchPriceMetrics = async () => {
+    setLoadingPriceMetrics(true);
+    try {
+      const response = await fetch(
+        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data && data.Symbol) {
+        setPriceMetrics([
+          { label: 'PE Ratio', value: parseFloat(data.PERatio).toFixed(2) || 'N/A', color: '#4caf50' },
+          { label: 'EPS', value: parseFloat(data.EPS).toFixed(2) || 'N/A', color: '#ff9800' },
+          { label: 'Price to Book', value: parseFloat(data.PriceToBookRatio).toFixed(2) || 'N/A', color: '#03a9f4' },
+          { label: 'Price to Sales', value: parseFloat(data.PriceToSalesRatioTTM).toFixed(2) || 'N/A', color: '#9c27b0' },
+          { label: 'Dividend Yield', value: `${(parseFloat(data.DividendYield) * 100).toFixed(2)}%` || 'N/A', color: '#f44336' },
+          { label: 'Beta', value: parseFloat(data.Beta).toFixed(2) || 'N/A', color: '#ffeb3b' },
+          { label: 'Operating Margin', value: `${(parseFloat(data.OperatingMarginTTM) * 100).toFixed(2)}%` || 'N/A', color: '#8bc34a' },
+          { label: 'Return on Equity (ROE)', value: `${(parseFloat(data.ReturnOnEquityTTM) * 100).toFixed(2)}%` || 'N/A', color: '#e91e63' },
+          { label: 'Dividend Payout Ratio (DPR)', value: `${(parseFloat(data.DividendPayoutRatioTTM) * 100).toFixed(2)}%` || 'N/A', color: '#9e9e9e' },
+          { label: 'EV/EBITDA', value: parseFloat(data.EVToEBITDA).toFixed(2) || 'N/A', color: '#673ab7' },
+        ]);
+      } else {
+        throw new Error('No data available');
       }
-    };
+      setLoadingPriceMetrics(false);
+    } catch (error) {
+      console.error('Error fetching price metrics:', error);
+      setErrorPriceMetrics('Failed to load price metrics.');
+      setLoadingPriceMetrics(false);
+    }
+  };
 
-    const fetchPriceMetrics = async () => {
-      try {
-        const response = await fetch(
-          `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = await response.json();
-
-        if (data && data.Symbol) {
-          setPriceMetrics([
-            { label: 'PE Ratio', value: parseFloat(data.PERatio).toFixed(2) || 'N/A', color: '#4caf50' },
-            { label: 'EPS', value: parseFloat(data.EPS).toFixed(2) || 'N/A', color: '#ff9800' },
-            { label: 'Price to Book', value: parseFloat(data.PriceToBookRatio).toFixed(2) || 'N/A', color: '#03a9f4' },
-            { label: 'Price to Sales', value: parseFloat(data.PriceToSalesRatioTTM).toFixed(2) || 'N/A', color: '#9c27b0' },
-            { label: 'Dividend Yield', value: `${(parseFloat(data.DividendYield) * 100).toFixed(2)}%` || 'N/A', color: '#f44336' },
-            { label: 'Beta', value: parseFloat(data.Beta).toFixed(2) || 'N/A', color: '#ffeb3b' },
-            { label: 'Operating Margin', value: `${(parseFloat(data.OperatingMarginTTM) * 100).toFixed(2)}%` || 'N/A', color: '#8bc34a' },
-            { label: 'Return on Equity (ROE)', value: `${(parseFloat(data.ReturnOnEquityTTM) * 100).toFixed(2)}%` || 'N/A', color: '#e91e63' },
-            { label: 'Dividend Payout Ratio (DPR)', value: `${(parseFloat(data.DividendPayoutRatioTTM) * 100).toFixed(2)}%` || 'N/A', color: '#9e9e9e' },
-            { label: 'EV/EBITDA', value: parseFloat(data.EVToEBITDA).toFixed(2) || 'N/A', color: '#673ab7' },
-          ]);
-        } else {
-          throw new Error('No data available');
-        }
-        setLoadingPriceMetrics(false);
-      } catch (error) {
-        console.error('Error fetching price metrics:', error);
-        setErrorPriceMetrics('Failed to load price metrics.');
-        setLoadingPriceMetrics(false);
-      }
-    };
-
-    const fetchCompanyOverview = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        setCompanyOverview(response.data);
-        setLoadingOverview(false);
-      } catch (error) {
-        console.error('Error fetching company overview:', error.message);
-        setErrorOverview('Failed to load company overview.');
-        setLoadingOverview(false);
-      }
-    };
-
-    fetchFinancialData();
-    fetchPriceMetrics();
-    fetchCompanyOverview();
-  }, [symbol, API_KEY]);
+  const fetchCompanyOverview = async () => {
+    setLoadingOverview(true);
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      setCompanyOverview(response.data);
+      setLoadingOverview(false);
+    } catch (error) {
+      console.error('Error fetching company overview:', error.message);
+      setErrorOverview('Failed to load company overview.');
+      setLoadingOverview(false);
+    }
+  };
 
   if (loadingFinancials || loadingPriceMetrics || loadingOverview) {
     return (
@@ -175,7 +183,6 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
 
   return (
     <div className='financials-container' ref={ref}>
-      {/* Conditional Rendering Based on Active Section */}
       {activeSection === 'financials' && (
         <div ref={refs.financialsRef}>
           {/* Summary Income Statement */}

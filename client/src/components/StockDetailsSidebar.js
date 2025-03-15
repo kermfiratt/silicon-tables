@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './StockDetailsSidebar.css';
 import Financials from './SidebarDetails/Financials';
-import PriceMetrics from './SidebarDetails/PriceMetrics'; // Import the PriceMetrics component
+import PriceMetrics from './SidebarDetails/PriceMetrics';
 import QuarterlyEarnings from './SidebarDetails/QuarterlyEarnings';
 import AnnualCashFlow from './SidebarDetails/AnnualCashFlow';
 import About from './SidebarDetails/About';
@@ -157,92 +157,51 @@ const StockDetailsSidebar = ({ symbol }) => {
 
       {/* Main Content Area */}
       <div className="stock-details-content">
-
-
         <Financials
           symbol={symbol}
-          refs={{
-            financialsRef
-          }}
+          refs={{ financialsRef }}
           activeSection={activeSection}
         />
-
-
         <PriceMetrics
           symbol={symbol}
-          refs={{
-            priceMetricsRef,
-          }}
+          refs={{ priceMetricsRef }}
           activeSection={activeSection}
         />
-
-
-
         <QuarterlyEarnings
           symbol={symbol}
-          refs={{          
-            quarterlyEarningsRef,
-          }}
+          refs={{ quarterlyEarningsRef }}
           activeSection={activeSection}
         />
-
-        
-         <AnnualCashFlow
+        <AnnualCashFlow
           symbol={symbol}
-          refs={{
-            annualCashFlowRef,
-          }}
+          refs={{ annualCashFlowRef }}
           activeSection={activeSection}
         />
-
-
-         <About
+        <About
           symbol={symbol}
-          refs={{
-            aboutRef,
-          }}
+          refs={{ aboutRef }}
           activeSection={activeSection}
         />
-
-
-         <News
+        <News
           symbol={symbol}
-          refs={{
-            newsRef,
-          }}
+          refs={{ newsRef }}
           activeSection={activeSection}
         />
-
-
         <Report
           symbol={symbol}
-          refs={{
-            reportRef,
-          }}
+          refs={{ reportRef }}
           activeSection={activeSection}
         />
-
-
-
         <BalanceSheet
           symbol={symbol}
-          refs={{
-            balanceSheetRef,
-          }}
+          refs={{ balanceSheetRef }}
           activeSection={activeSection}
         />
-
-
-
         <AnnualBalanceSheet
           symbol={symbol}
-          refs={{
-            annualBalanceSheetRef,
-          }}
+          refs={{ annualBalanceSheetRef }}
           activeSection={activeSection}
         />
-
-        
       </div>
     </div>
   );

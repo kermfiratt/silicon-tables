@@ -4,35 +4,41 @@ import './About.css'; // Import the CSS file
 
 const About = ({ symbol, refs, activeSection }) => {
   const [companyOverview, setCompanyOverview] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchCompanyOverview = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = response.data;
+    if (activeSection === 'about' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchCompanyOverview();
+    }
+  }, [activeSection, dataFetched]);
 
-        if (data && data.Description) {
-          setCompanyOverview(data);
-        } else {
-          throw new Error('No company overview data available.');
-        }
+  const fetchCompanyOverview = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = response.data;
 
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching company overview:', err.message);
-        setError('Failed to load company overview.');
-        setLoading(false);
+      if (data && data.Description) {
+        setCompanyOverview(data);
+      } else {
+        throw new Error('No company overview data available.');
       }
-    };
 
-    fetchCompanyOverview();
-  }, [symbol, API_KEY]);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching company overview:', err.message);
+      setError('Failed to load company overview.');
+      setLoading(false);
+    }
+  };
 
   // Only render the wrapper if the active section is 'about'
   if (activeSection !== 'about') {

@@ -7,8 +7,9 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [filteredEarnings, setFilteredEarnings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -17,54 +18,57 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
     return value.toLocaleString();
   };
 
-  
-
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchEarningsData = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=EARNINGS&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = response.data;
+    if (activeSection === 'quarterlyEarnings' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchEarningsData();
+    }
+  }, [activeSection, dataFetched]);
 
-        console.log('API Response:', data);
+  const fetchEarningsData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=EARNINGS&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = response.data;
 
-        if (data.Note) {
-          throw new Error('API rate limit exceeded. Please try again later.');
-        }
+      console.log('API Response:', data);
 
-        if (data && data.quarterlyEarnings) {
-          setQuarterlyEarnings(data.quarterlyEarnings);
-
-          // Extract unique years from earnings data
-          const uniqueYears = Array.from(
-            new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
-          );
-          setYears(uniqueYears);
-
-          // Set the latest year as default
-          const latestYear = uniqueYears[0];
-          setSelectedYear(latestYear);
-
-          // Filter earnings for the latest year
-          const filtered = data.quarterlyEarnings.filter((e) =>
-            e.fiscalDateEnding.startsWith(latestYear)
-          );
-          setFilteredEarnings(filtered);
-        } else {
-          throw new Error('No quarterly earnings data available.');
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching quarterly earnings:', err.message);
-        setError(err.message);
-        setLoading(false);
+      if (data.Note) {
+        throw new Error('API rate limit exceeded. Please try again later.');
       }
-    };
 
-    fetchEarningsData();
-  }, [symbol, API_KEY]);
+      if (data && data.quarterlyEarnings) {
+        setQuarterlyEarnings(data.quarterlyEarnings);
+
+        // Extract unique years from earnings data
+        const uniqueYears = Array.from(
+          new Set(data.quarterlyEarnings.map((e) => e.fiscalDateEnding.slice(0, 4)))
+        );
+        setYears(uniqueYears);
+
+        // Set the latest year as default
+        const latestYear = uniqueYears[0];
+        setSelectedYear(latestYear);
+
+        // Filter earnings for the latest year
+        const filtered = data.quarterlyEarnings.filter((e) =>
+          e.fiscalDateEnding.startsWith(latestYear)
+        );
+        setFilteredEarnings(filtered);
+      } else {
+        throw new Error('No quarterly earnings data available.');
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching quarterly earnings:', err.message);
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   // Filter earnings when selectedYear changes
   useEffect(() => {
@@ -76,14 +80,10 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
     }
   }, [selectedYear, quarterlyEarnings]);
 
-
-
- // Only render the wrapper if the active section is 'quarterlyEarnings'
- if (activeSection !== 'quarterlyEarnings') {
-  return null; // Return null to prevent rendering
-}
-
-
+  // Only render the wrapper if the active section is 'quarterlyEarnings'
+  if (activeSection !== 'quarterlyEarnings') {
+    return null; // Return null to prevent rendering
+  }
 
   if (loading) {
     return (
@@ -111,8 +111,6 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
       </div>
     );
   }
-
-  
 
   return (
     <div className="quarterly-earnings-section" ref={refs.quarterlyEarningsRef}>

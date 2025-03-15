@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import './PriceMetrics.css';
 
-const PriceMetrics = ({ symbol, refs, activeSection }) => {
+const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [companyOverview, setCompanyOverview] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -18,29 +19,34 @@ const PriceMetrics = ({ symbol, refs, activeSection }) => {
     return `${sign}${absValue.toLocaleString()}`;
   };
 
+  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
-    const fetchCompanyOverview = async () => {
-      try {
-        const response = await fetch(
-          `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
-        );
-        const data = await response.json();
+    if (activeSection === 'priceMetrics' && !dataFetched) {
+      setDataFetched(true); // Mark data as fetched
+      fetchCompanyOverview();
+    }
+  }, [activeSection, dataFetched]);
 
-        if (data && data.Symbol) {
-          setCompanyOverview(data);
-        } else {
-          throw new Error('No data available');
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching company overview:', error);
-        setError('Failed to load price metrics.');
-        setLoading(false);
+  const fetchCompanyOverview = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data && data.Symbol) {
+        setCompanyOverview(data);
+      } else {
+        throw new Error('No data available');
       }
-    };
-
-    fetchCompanyOverview();
-  }, [symbol, API_KEY]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching company overview:', error);
+      setError('Failed to load price metrics.');
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -55,9 +61,7 @@ const PriceMetrics = ({ symbol, refs, activeSection }) => {
     return <p>{error}</p>;
   }
 
-  if (!companyOverview.Symbol) {
-    return <p>No data available for this company.</p>;
-  }
+  
 
   return (
     <div className="price-metrics-container" ref={refs.priceMetricsRef}>
@@ -195,6 +199,6 @@ const PriceMetrics = ({ symbol, refs, activeSection }) => {
       )}
     </div>
   );
-};
+});
 
 export default PriceMetrics;
