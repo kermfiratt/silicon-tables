@@ -12,12 +12,11 @@ import AnnualBalanceSheet from './SidebarDetails/AnnualBalanceSheet';
 
 const StockDetailsSidebar = ({ symbol }) => {
   const [activeSection, setActiveSection] = useState('financials'); // Default to 'financials'
-  const [companyLogo, setCompanyLogo] = useState(null);
   const [currentPrice, setCurrentPrice] = useState(null);
   const [priceChangePercent, setPriceChangePercent] = useState(null);
+  const [latestDate, setLatestDate] = useState(null);
 
-  const API_KEY = process.env.REACT_APP_API_KEY;
-  const FINNHUB_API_KEY = process.env.REACT_APP_FINNHUB_API_KEY;
+  const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
   // Refs for scrolling to sections
   const financialsRef = useRef(null);
@@ -30,36 +29,43 @@ const StockDetailsSidebar = ({ symbol }) => {
   const annualBalanceSheetRef = useRef(null);
   const reportRef = useRef(null);
 
-  // Fetch company logo and price data
+  // Helper function to format date as "14 MARCH"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+    return `${day} ${month}`;
+  };
+
+  // Fetch end-of-day data and calculate percentage change
   useEffect(() => {
-    const fetchCompanyDetails = async () => {
+    const fetchStockData = async () => {
       if (symbol) {
         try {
-          // Fetch company logo using Finnhub
-          const logoResponse = await fetch(
-            `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`
+          const response = await fetch(
+            `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`
           );
-          const logoData = await logoResponse.json();
-          setCompanyLogo(logoData.logo);
+          const data = await response.json();
+          const timeSeries = data['Time Series (Daily)'];
+          if (timeSeries) {
+            const latestDate = Object.keys(timeSeries)[0];
+            const latestData = timeSeries[latestDate];
+            const openPrice = parseFloat(latestData['1. open']);
+            const closePrice = parseFloat(latestData['4. close']);
+            const changePercent = ((closePrice - openPrice) / openPrice) * 100;
 
-          // Fetch current price and price change using Alpha Vantage
-          const priceResponse = await fetch(
-            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`
-          );
-          const priceData = await priceResponse.json();
-          const globalQuote = priceData['Global Quote'];
-          if (globalQuote) {
-            setCurrentPrice(parseFloat(globalQuote['05. price']).toFixed(2));
-            setPriceChangePercent(parseFloat(globalQuote['10. change percent']).toFixed(2));
+            setCurrentPrice(closePrice.toFixed(2));
+            setPriceChangePercent(changePercent.toFixed(2));
+            setLatestDate(latestDate);
           }
         } catch (error) {
-          console.error('Error fetching company details:', error);
+          console.error('Error fetching stock data:', error);
         }
       }
     };
 
-    fetchCompanyDetails();
-  }, [symbol, API_KEY, FINNHUB_API_KEY]);
+    fetchStockData();
+  }, [symbol, API_KEY]);
 
   // Scroll to the selected section
   const scrollToSection = (ref) => {
@@ -79,21 +85,30 @@ const StockDetailsSidebar = ({ symbol }) => {
       {/* Sidebar */}
       <div className="stock-details-sidebar">
         <div className="header-container">
-          {companyLogo && <img src={companyLogo} alt={`${symbol} logo`} className="company-logo" />}
-          <h2 className="company-name">{symbol || 'Company Name'}</h2>
-          <div>
-            <span className="price-value">{currentPrice}</span>
-            {priceChangePercent && (
-              <span
-                className={`price-change ${
-                  priceChangePercent > 0 ? 'positive' : 'negative'
-                }`}
-              >
-                {priceChangePercent > 0 ? '+' : ''}
-                {priceChangePercent}%
-              </span>
-            )}
+          {/* Company name and price container */}
+          <div className="company-name-price">
+            <h2 className="company-name name-wrapper">{symbol || 'Company Name'}</h2>
+            <div className="price-info price-wrapper">
+              <span className="price-value">${currentPrice}</span>
+              {priceChangePercent && (
+                <span
+                  className={`price-change ${
+                    priceChangePercent > 0 ? 'positive' : 'negative'
+                  }`}
+                >
+                  {priceChangePercent > 0 ? '+' : ''}
+                  {priceChangePercent}%
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Date wrapper */}
+          {latestDate && (
+            <div className="date-wrapper">
+              {formatDate(latestDate)} END OF DAY PRICE
+            </div>
+          )}
         </div>
 
         {/* Sidebar Navigation */}
@@ -111,6 +126,24 @@ const StockDetailsSidebar = ({ symbol }) => {
             Price Metrics
           </li>
           <li
+            onClick={() => handleSectionClick('about', aboutRef)}
+            className={activeSection === 'about' ? 'active' : ''}
+          >
+            About
+          </li>
+          <li
+            onClick={() => handleSectionClick('report', reportRef)}
+            className={activeSection === 'report' ? 'active' : ''}
+          >
+            Report
+          </li>
+          <li
+            onClick={() => handleSectionClick('news', newsRef)}
+            className={activeSection === 'news' ? 'active' : ''}
+          >
+            News
+          </li>
+          <li
             onClick={() => handleSectionClick('quarterlyEarnings', quarterlyEarningsRef)}
             className={activeSection === 'quarterlyEarnings' ? 'active' : ''}
           >
@@ -121,24 +154,6 @@ const StockDetailsSidebar = ({ symbol }) => {
             className={activeSection === 'annualCashFlow' ? 'active' : ''}
           >
             Annual Cash Flow
-          </li>
-          <li
-            onClick={() => handleSectionClick('about', aboutRef)}
-            className={activeSection === 'about' ? 'active' : ''}
-          >
-            About
-          </li>
-          <li
-            onClick={() => handleSectionClick('news', newsRef)}
-            className={activeSection === 'news' ? 'active' : ''}
-          >
-            News
-          </li>
-          <li
-            onClick={() => handleSectionClick('report', reportRef)}
-            className={activeSection === 'report' ? 'active' : ''}
-          >
-            Report
           </li>
           <li
             onClick={() => handleSectionClick('balanceSheet', balanceSheetRef)}

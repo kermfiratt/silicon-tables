@@ -22,6 +22,19 @@ const StockCard = ({ stock, onRemove }) => {
     }
   };
 
+  // Function to format date (e.g., 2023-10-15 → 10 MARCH END OF DAY DATA)
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthIndex = date.getMonth(); // Get month index (0-11)
+    const months = [
+      'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+      'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+    ];
+    const month = months[monthIndex]; // Get full month name in English
+    return `${day} ${month} END OF DAY DATAS`;
+  };
+
   useEffect(() => {
     const fetchStockData = async () => {
       try {
@@ -48,7 +61,7 @@ const StockCard = ({ stock, onRemove }) => {
 
         setStockData({
           symbol: metaData['2. Symbol'],
-          date: latestDate,
+          date: formatDate(latestDate), // Format the date
           open: open.toFixed(2), // Two decimal places
           high: parseFloat(latestData['2. high']).toFixed(2), // Two decimal places
           low: parseFloat(latestData['3. low']).toFixed(2), // Two decimal places
@@ -125,6 +138,11 @@ const StockCard = ({ stock, onRemove }) => {
           <span>Volume</span>
           <span>{stockData.volume}</span>
         </div>
+      </div>
+
+      {/* Date Wrapper */}
+      <div className="date-wrapper-card">
+        <span>{stockData.date}</span>
       </div>
     </div>
   );
