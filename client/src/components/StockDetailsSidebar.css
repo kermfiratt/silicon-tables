@@ -1,6 +1,44 @@
-/* StockDetailsSidebar.css */
+/* Blurred Loading Overlay */
+.loading-overlay {
+  position: absolute; /* Relative to the parent container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px); /* Smooth blur effect */
+  background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent overlay */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's on top */
+}
 
-/* Container for the entire sidebar and content */
+/* Apple-style Spinner */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.2); /* Light border */
+  border-top-color: #007AFF; /* Apple's blue color */
+  animation: spin 1s linear infinite; /* Smooth spin animation */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loading-text {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #007AFF; /* Apple's blue color */
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif; /* Apple's system font */
+}
+
+/* Rest of your existing CSS */
 .stock-details-container {
   display: flex;
   height: 100vh; /* Full height */
@@ -8,7 +46,6 @@
   margin-left: 80px;
 }
 
-/* Sidebar styling */
 .stock-details-sidebar {
   width: 220px; /* Fixed width for the sidebar */
   background-color: #0d0f15; /* Dark background */
@@ -19,7 +56,6 @@
   overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
-/* Header container for logo and company name */
 .header-container {
   display: flex;
   flex-direction: column; /* Stack items vertically */
@@ -27,9 +63,6 @@
   margin-bottom: 20px;
 }
 
-
-
-/* Price and percentage change container */
 .price-info {
   display: flex;
   align-items: center;
@@ -37,14 +70,12 @@
   margin-bottom: 8px; /* Space between price and date */
 }
 
-/* Price value styling */
 .price-value {
   font-size: 16px;
   font-weight: bold;
   color: #fff;
 }
 
-/* Price change styling */
 .price-change {
   font-size: 16px;
   font-weight: bold;
@@ -58,7 +89,6 @@
   color: #f44336; /* Red for negative change */
 }
 
-/* Date wrapper styling with dark gray background */
 .date-wrapper {
   font-size: 12px;
   color: #ccc;
@@ -88,10 +118,9 @@
   color: #fff;
   margin-bottom: 8px;
   margin-top: 0px;
-  display:inline-block;
+  display: inline-block;
 }
 
-/* Sidebar navigation list */
 .stock-details-sidebar ul {
   list-style: none;
   padding: 0;
@@ -114,10 +143,10 @@
   background-color: #333;
 }
 
-/* Main content area */
 .stock-details-content {
   flex: 1; /* Take up remaining space */
   padding: 20px;
   overflow-y: auto; /* Allow scrolling if content overflows */
   background-color: #0d0f15; /* Dark background for main content */
+  position: relative; /* Needed for the loading overlay */
 }

@@ -5,7 +5,7 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
   const [companyOverview, setCompanyOverview] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
+  const [dataFetched, setDataFetched] = useState(false);
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -19,10 +19,9 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
     return `${sign}${absValue.toLocaleString()}`;
   };
 
-  // Fetch data only when the section is active and data hasn't been fetched before
   useEffect(() => {
     if (activeSection === 'priceMetrics' && !dataFetched) {
-      setDataFetched(true); // Mark data as fetched
+      setDataFetched(true);
       fetchCompanyOverview();
     }
   }, [activeSection, dataFetched]);
@@ -50,153 +49,154 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p className="loading-text">Loading price metrics...</p>
+      <div className="pm-loading-container">
+        <div className="pm-loading-spinner"></div>
+        <p className="pm-loading-text">Loading price metrics...</p>
       </div>
     );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="pm-error-message">{error}</p>;
   }
 
-  
+  // Only render the component if the active section is 'priceMetrics'
+  if (activeSection !== 'priceMetrics') {
+    return null;
+  }
 
   return (
-    <div className="price-metrics-container" ref={refs.priceMetricsRef}>
-      {activeSection === 'priceMetrics' && (
-        <section id="price-metrics-section">
-          <h3>Price Metrics</h3>
+    <div className="pm-container" ref={refs.priceMetricsRef}>
+      <section id="price-metrics-section">
+        <h3 className="pm-title">Price Metrics</h3>
 
-          {/* Valuation Metrics */}
-          <div className="metrics-category">
-            <h4>Valuation</h4>
-            <div className="metrics-blocks">
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>Market Cap</h4>
-                <p>{formatValue(companyOverview.MarketCapitalization)}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>Trailing P/E</h4>
-                <p>{companyOverview.TrailingPE}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>Forward P/E</h4>
-                <p>{companyOverview.ForwardPE}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>Price to Sales (TTM)</h4>
-                <p>{companyOverview.PriceToSalesRatioTTM}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>Price to Book</h4>
-                <p>{companyOverview.PriceToBookRatio}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>EV/Revenue</h4>
-                <p>{companyOverview.EVToRevenue}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #4CAF50' }}>
-                <h4 style={{ color: '#4CAF50' }}>EV/EBITDA</h4>
-                <p>{companyOverview.EVToEBITDA}</p>
-              </div>
+        {/* Valuation Metrics */}
+        <div className="pm-category">
+          <h4 className="pm-category-title">Valuation</h4>
+          <div className="pm-blocks">
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>Market Cap</h4>
+              <p>{formatValue(companyOverview.MarketCapitalization)}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>Trailing P/E</h4>
+              <p>{companyOverview.TrailingPE || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>Forward P/E</h4>
+              <p>{companyOverview.ForwardPE || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>Price to Sales (TTM)</h4>
+              <p>{companyOverview.PriceToSalesRatioTTM || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>Price to Book</h4>
+              <p>{companyOverview.PriceToBookRatio || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>EV/Revenue</h4>
+              <p>{companyOverview.EVToRevenue || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #4CAF50' }}>
+              <h4>EV/EBITDA</h4>
+              <p>{companyOverview.EVToEBITDA || 'N/A'}</p>
             </div>
           </div>
+        </div>
 
-          {/* Dividend Metrics */}
-          <div className="metrics-category">
-            <h4>Dividends</h4>
-            <div className="metrics-blocks">
-              <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-                <h4 style={{ color: '#2196F3' }}>Dividend Per Share</h4>
-                <p>{companyOverview.DividendPerShare}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-                <h4 style={{ color: '#2196F3' }}>Dividend Yield</h4>
-                <p>{companyOverview.DividendYield}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-                <h4 style={{ color: '#2196F3' }}>Dividend Date</h4>
-                <p>{companyOverview.DividendDate}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #2196F3' }}>
-                <h4 style={{ color: '#2196F3' }}>Ex-Dividend Date</h4>
-                <p>{companyOverview.ExDividendDate}</p>
-              </div>
+        {/* Dividend Metrics */}
+        <div className="pm-category">
+          <h4 className="pm-category-title">Dividends</h4>
+          <div className="pm-blocks">
+            <div className="pm-block" style={{ borderLeft: '6px solid #2196F3' }}>
+              <h4>Dividend Per Share</h4>
+              <p>{companyOverview.DividendPerShare || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #2196F3' }}>
+              <h4>Dividend Yield</h4>
+              <p>{companyOverview.DividendYield || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #2196F3' }}>
+              <h4>Dividend Date</h4>
+              <p>{companyOverview.DividendDate || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #2196F3' }}>
+              <h4>Ex-Dividend Date</h4>
+              <p>{companyOverview.ExDividendDate || 'N/A'}</p>
             </div>
           </div>
+        </div>
 
-          {/* Profitability Metrics */}
-          <div className="metrics-category">
-            <h4>Profitability</h4>
-            <div className="metrics-blocks">
-              <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-                <h4 style={{ color: '#FF9800' }}>Profit Margin</h4>
-                <p>{companyOverview.ProfitMargin}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-                <h4 style={{ color: '#FF9800' }}>Operating Margin (TTM)</h4>
-                <p>{companyOverview.OperatingMarginTTM}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-                <h4 style={{ color: '#FF9800' }}>Return on Assets (TTM)</h4>
-                <p>{companyOverview.ReturnOnAssetsTTM}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #FF9800' }}>
-                <h4 style={{ color: '#FF9800' }}>Return on Equity (TTM)</h4>
-                <p>{companyOverview.ReturnOnEquityTTM}</p>
-              </div>
+        {/* Profitability Metrics */}
+        <div className="pm-category">
+          <h4 className="pm-category-title">Profitability</h4>
+          <div className="pm-blocks">
+            <div className="pm-block" style={{ borderLeft: '6px solid #FF9800' }}>
+              <h4>Profit Margin</h4>
+              <p>{companyOverview.ProfitMargin || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #FF9800' }}>
+              <h4>Operating Margin (TTM)</h4>
+              <p>{companyOverview.OperatingMarginTTM || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #FF9800' }}>
+              <h4>Return on Assets (TTM)</h4>
+              <p>{companyOverview.ReturnOnAssetsTTM || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #FF9800' }}>
+              <h4>Return on Equity (TTM)</h4>
+              <p>{companyOverview.ReturnOnEquityTTM || 'N/A'}</p>
             </div>
           </div>
+        </div>
 
-          {/* Growth Metrics */}
-          <div className="metrics-category">
-            <h4>Growth</h4>
-            <div className="metrics-blocks">
-              <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
-                <h4 style={{ color: '#9C27B0' }}>Quarterly Earnings Growth (YoY)</h4>
-                <p>{companyOverview.QuarterlyEarningsGrowthYOY}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #9C27B0' }}>
-                <h4 style={{ color: '#9C27B0' }}>Quarterly Revenue Growth (YoY)</h4>
-                <p>{companyOverview.QuarterlyRevenueGrowthYOY}</p>
-              </div>
+        {/* Growth Metrics */}
+        <div className="pm-category">
+          <h4 className="pm-category-title">Growth</h4>
+          <div className="pm-blocks">
+            <div className="pm-block" style={{ borderLeft: '6px solid #9C27B0' }}>
+              <h4>Quarterly Earnings Growth (YoY)</h4>
+              <p>{companyOverview.QuarterlyEarningsGrowthYOY || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #9C27B0' }}>
+              <h4>Quarterly Revenue Growth (YoY)</h4>
+              <p>{companyOverview.QuarterlyRevenueGrowthYOY || 'N/A'}</p>
             </div>
           </div>
+        </div>
 
-          {/* Analyst Ratings */}
-          <div className="metrics-category">
-            <h4>Analyst Ratings</h4>
-            <div className="metrics-blocks">
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Analyst Target Price</h4>
-                <p>{companyOverview.AnalystTargetPrice}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Strong Buy</h4>
-                <p>{companyOverview.AnalystRatingStrongBuy}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Buy</h4>
-                <p>{companyOverview.AnalystRatingBuy}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Hold</h4>
-                <p>{companyOverview.AnalystRatingHold}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Sell</h4>
-                <p>{companyOverview.AnalystRatingSell}</p>
-              </div>
-              <div className="metric-block" style={{ borderLeft: '5px solid #E91E63' }}>
-                <h4 style={{ color: '#E91E63' }}>Strong Sell</h4>
-                <p>{companyOverview.AnalystRatingStrongSell}</p>
-              </div>
+        {/* Analyst Ratings */}
+        <div className="pm-category">
+          <h4 className="pm-category-title">Analyst Ratings</h4>
+          <div className="pm-blocks">
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Analyst Target Price</h4>
+              <p>{companyOverview.AnalystTargetPrice || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Strong Buy</h4>
+              <p>{companyOverview.AnalystRatingStrongBuy || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Buy</h4>
+              <p>{companyOverview.AnalystRatingBuy || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Hold</h4>
+              <p>{companyOverview.AnalystRatingHold || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Sell</h4>
+              <p>{companyOverview.AnalystRatingSell || 'N/A'}</p>
+            </div>
+            <div className="pm-block" style={{ borderLeft: '6px solid #E91E63' }}>
+              <h4>Strong Sell</h4>
+              <p>{companyOverview.AnalystRatingStrongSell || 'N/A'}</p>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   );
 });

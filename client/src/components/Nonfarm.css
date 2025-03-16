@@ -10,7 +10,6 @@
   padding-right: 33px;
   margin-bottom: 5px;
   padding-left: 33px;
-
 }
 
 .nonfarm-header {
@@ -19,6 +18,9 @@
   padding-bottom: 10px; /* Add padding for the line */
   position: relative;
   line-height: 1.5; /* Add line height for better spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the text */
 }
 
 .nonfarm-header::after {
@@ -31,11 +33,31 @@
   background-color: #444; /* Line color */
 }
 
+.nonfarm-header-line1,
+.nonfarm-header-line2,
+.nonfarm-header-line3 {
+  display: block; /* Ensure each line is on its own line */
+  text-align: center; /* Center the text */
+}
+
+.nonfarm-header-line1 {
+  font-size: 20px; /* Adjust font size for "US" */
+  margin-bottom: 5px; /* Add spacing between lines */
+}
+
+.nonfarm-header-line2 {
+  font-size: 24px; /* Adjust font size for "NONFARM" */
+  margin-bottom: 5px; /* Add spacing between lines */
+}
+
+.nonfarm-header-line3 {
+  font-size: 20px; /* Adjust font size for "PAYROLL DATA" */
+}
+
 .nonfarm-data {
   list-style: none;
   padding: 5px;
   margin: 0;
-  
 }
 
 .nonfarm-item {

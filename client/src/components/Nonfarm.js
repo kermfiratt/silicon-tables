@@ -49,8 +49,8 @@ const Nonfarm = () => {
   return (
     <div className="nonfarm-container">
       <h3 className="nonfarm-header">
-        US Nonfarm<br />
-        Payroll Data
+        <span className="nonfarm-header-line2">NONFARM</span>
+        <span className="nonfarm-header-line3">PAYROLL DATA</span>
       </h3>
       {isLoading ? (
         <p>Loading data...</p>

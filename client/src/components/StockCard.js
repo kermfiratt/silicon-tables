@@ -24,15 +24,11 @@ const StockCard = ({ stock, onRemove }) => {
 
   // Function to format date (e.g., 2023-10-15 → 10 MARCH END OF DAY DATA)
   const formatDate = (dateString) => {
+    if (!dateString) return 'LOADING...';
     const date = new Date(dateString);
     const day = date.getDate();
-    const monthIndex = date.getMonth(); // Get month index (0-11)
-    const months = [
-      'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-      'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
-    ];
-    const month = months[monthIndex]; // Get full month name in English
-    return `${day} ${month} END OF DAY DATAS`;
+    const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase(); // Ensure English and uppercase
+    return `${day} ${month} END OF DAY DATA`;
   };
 
   useEffect(() => {

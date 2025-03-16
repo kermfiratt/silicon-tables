@@ -151,9 +151,9 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
 
   if (loadingFinancials || loadingPriceMetrics || loadingOverview) {
     return (
-      <div className="loading-container-financials">
-        <div className="loading-spinner-financials"></div>
-        <p className="loading-text-financials">Loading...</p>
+      <div className="loading-overlay">
+        <div className="loading-spinner"></div>
+        <p className="loading-text">Loading...</p>
       </div>
     );
   }
