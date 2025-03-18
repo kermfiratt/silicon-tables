@@ -85,11 +85,9 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="annual-cash-flow-section">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading cash flow data...</p>
-        </div>
+      <div className="annual-cash-flow-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading cash flow data...</p>
       </div>
     );
   }
@@ -129,7 +127,7 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
               ))}
             </select>
           </div>
-          <table className="annual-cash-flow-section">
+          <table className="annual-cash-flow-table">
             <thead>
               <tr>
                 <th>Fiscal Date Ending</th>

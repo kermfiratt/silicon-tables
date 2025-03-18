@@ -49,8 +49,8 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
 
   if (loading) {
     return (
-      <div className="pm-loading-container">
-        <div className="pm-loading-spinner"></div>
+      <div className="pm-loading-overlay">
+        <div className="loader"></div>
         <p className="pm-loading-text">Loading price metrics...</p>
       </div>
     );

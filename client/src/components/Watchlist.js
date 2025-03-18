@@ -18,104 +18,96 @@ const Watchlist = ({ isSearchOpen }) => {
   const [latestDate, setLatestDate] = useState(null); // State to store the latest date
   const [showOptions, setShowOptions] = useState(false);
   const [newSymbol, setNewSymbol] = useState('');
-  const [loading, setLoading] = useState(true); // Start with loading state
+  const [initialLoading, setInitialLoading] = useState(true); // Only for initial loading
+  const [addingStock, setAddingStock] = useState(null); // Track the stock being added
 
-  // Fetch stock data for all symbols in the watchlist
-  const fetchStockData = async () => {
-    setLoading(true);
-    const newStockData = {};
-    let latestDate = null; // Variable to track the latest date across all stocks
+  // Fetch stock data for a single symbol
+  const fetchSingleStockData = async (symbol) => {
+    try {
+      const response = await axios.get(
+        `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
+      );
 
-    for (let item of watchlist) {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${item.symbol}&apikey=${ALPHA_VANTAGE_KEY}`
-        );
+      console.log(`API Response for ${symbol}:`, response.data);
 
-        console.log(`API Response for ${item.symbol}:`, response.data);
+      if (response.data['Error Message']) {
+        console.error(`Error for ${symbol}:`, response.data['Error Message']);
+        return { c: 'N/A', d: 'N/A' };
+      }
 
-        if (response.data['Error Message']) {
-          console.error(`Error for ${item.symbol}:`, response.data['Error Message']);
-          newStockData[item.symbol] = { c: 'N/A', d: 'N/A' };
-          continue;
-        }
+      const timeSeries = response.data['Time Series (Daily)'];
+      if (!timeSeries || Object.keys(timeSeries).length === 0) {
+        console.error(`No data found for ${symbol}:`, response.data);
+        return { c: 'N/A', d: 'N/A' };
+      }
 
-        const timeSeries = response.data['Time Series (Daily)'];
-        if (!timeSeries || Object.keys(timeSeries).length === 0) {
-          console.error(`No data found for ${item.symbol}:`, response.data);
-          newStockData[item.symbol] = { c: 'N/A', d: 'N/A' };
-          continue;
-        }
+      // Get the latest date (most recent data)
+      const latestStockDate = Object.keys(timeSeries)[0];
+      const latestData = timeSeries[latestStockDate];
 
-        // Get the latest date (most recent data)
-        const latestStockDate = Object.keys(timeSeries)[0];
-        const latestData = timeSeries[latestStockDate];
+      console.log(`Latest date for ${symbol}:`, latestStockDate);
+      console.log(`Latest data for ${symbol}:`, latestData);
 
-        console.log(`Latest date for ${item.symbol}:`, latestStockDate);
-        console.log(`Latest data for ${item.symbol}:`, latestData);
+      // Extract open and close prices
+      const openPrice = parseFloat(latestData['1. open']);
+      const closePrice = parseFloat(latestData['4. close']);
 
-        // Extract open and close prices
-        const openPrice = parseFloat(latestData['1. open']);
-        const closePrice = parseFloat(latestData['4. close']);
+      // Calculate percentage change
+      const changePercent = ((closePrice - openPrice) / openPrice) * 100;
 
-        // Calculate percentage change
-        const changePercent = ((closePrice - openPrice) / openPrice) * 100;
+      // Return the data
+      return {
+        c: closePrice, // Closing price
+        d: changePercent, // Percentage change
+        date: latestStockDate, // Latest date for this stock
+      };
+    } catch (error) {
+      console.error(`Error fetching data for ${symbol}:`, error);
+      return { c: 'N/A', d: 'N/A', date: null };
+    }
+  };
 
-        // Store the data
-        newStockData[item.symbol] = {
-          c: closePrice, // Closing price
-          d: changePercent, // Percentage change
-        };
+  // Fetch stock data for all symbols in the watchlist (only on mount)
+  useEffect(() => {
+    const fetchInitialStockData = async () => {
+      const newStockData = {};
+      let latestDate = null;
+
+      for (let item of watchlist) {
+        const data = await fetchSingleStockData(item.symbol);
+        newStockData[item.symbol] = data;
 
         // Update the latest date if this stock's date is newer
-        if (!latestDate || new Date(latestStockDate) > new Date(latestDate)) {
-          latestDate = latestStockDate;
+        if (data.date && (!latestDate || new Date(data.date) > new Date(latestDate))) {
+          latestDate = data.date;
         }
-      } catch (error) {
-        console.error(`Error fetching data for ${item.symbol}:`, error);
-        newStockData[item.symbol] = { c: 'N/A', d: 'N/A' };
       }
-    }
 
-    console.log('Final Stock Data:', newStockData);
-    setStockData(newStockData);
-    setLatestDate(latestDate); // Set the latest date
-    setLoading(false);
-  };
-
-  // Fetch data when the component mounts or when the watchlist changes
-  useEffect(() => {
-    fetchStockData();
-  }, [watchlist]);
-
-  // Fetch data at market close (4:00 PM ET)
-  useEffect(() => {
-    const fetchAtMarketClose = () => {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-
-      // Check if it's 4:00 PM ET (market close)
-      if (hours === 16 && minutes === 0) {
-        fetchStockData();
-      }
+      setStockData(newStockData);
+      setLatestDate(latestDate);
+      setInitialLoading(false); // Hide initial loading spinner
     };
 
-    // Check every minute if it's market close
-    const interval = setInterval(fetchAtMarketClose, 60 * 1000); // 1 minute
+    fetchInitialStockData();
+  }, []); // Fetch only on mount
 
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, [watchlist]);
+  // Handle adding a new stock
+  const handleAdd = async () => {
+    if (newSymbol) {
+      const symbol = newSymbol.toUpperCase();
+      setAddingStock(symbol); // Track the stock being added
 
-  const handleRemove = (symbol) => {
-    setWatchlist(watchlist.filter((item) => item.symbol !== symbol));
+      const data = await fetchSingleStockData(symbol);
+      setStockData((prev) => ({ ...prev, [symbol]: data }));
+      setWatchlist((prev) => [...prev, { symbol }]);
+      setNewSymbol('');
+      setAddingStock(null); // Reset the adding stock
+    }
   };
 
-  const handleAdd = () => {
-    if (newSymbol) {
-      setWatchlist([...watchlist, { symbol: newSymbol.toUpperCase() }]);
-      setNewSymbol('');
-    }
+  // Handle removing a stock
+  const handleRemove = (symbol) => {
+    setWatchlist(watchlist.filter((item) => item.symbol !== symbol));
   };
 
   // Format the latest date as "DD MMMM" (e.g., "30 JANUARY") in uppercase
@@ -151,10 +143,10 @@ const Watchlist = ({ isSearchOpen }) => {
           </div>
         )}
 
-        {loading ? (
-          <div className="loading-spinner">
-            <div className="spinner"></div> {/* Spinner circle */}
-            <span>LOADING...</span> {/* Loading text */}
+        {initialLoading ? (
+          <div className="watchlist-loading-overlay">
+            <div className="loader"></div>
+            <span className="loading-text">LOADING...</span>
           </div>
         ) : (
           <div className="watchlist-grid">
@@ -167,25 +159,31 @@ const Watchlist = ({ isSearchOpen }) => {
 
             {watchlist.map((item, index) => (
               <div key={index} className="watchlist-item">
-                <div className="symbol">{item.symbol}</div>
-                <div className="price">
-                  {stockData[item.symbol]?.c === 'N/A'
-                    ? 'N/A'
-                    : `$${stockData[item.symbol]?.c?.toFixed(2) || 'N/A'}`}
-                </div>
-                <div
-                  className={`change ${
-                    stockData[item.symbol]?.d >= 0 ? 'positive' : 'negative'
-                  }`}
-                >
-                  {stockData[item.symbol]?.d === 'N/A'
-                    ? 'N/A'
-                    : `${stockData[item.symbol]?.d >= 0 ? '+' : ''}${stockData[
-                        item.symbol
-                      ]?.d?.toFixed(2) || 'N/A'}%`}
-                </div>
-                {showOptions && (
-                  <FaTimes onClick={() => handleRemove(item.symbol)} className="remove-icon" />
+                {addingStock === item.symbol ? (
+                  <div className="adding-stock-loading">LOADING...</div>
+                ) : (
+                  <>
+                    <div className="symbol">{item.symbol}</div>
+                    <div className="price">
+                      {stockData[item.symbol]?.c === 'N/A'
+                        ? 'N/A'
+                        : `$${stockData[item.symbol]?.c?.toFixed(2) || 'N/A'}`}
+                    </div>
+                    <div
+                      className={`change ${
+                        stockData[item.symbol]?.d >= 0 ? 'positive' : 'negative'
+                      }`}
+                    >
+                      {stockData[item.symbol]?.d === 'N/A'
+                        ? 'N/A'
+                        : `${stockData[item.symbol]?.d >= 0 ? '+' : ''}${stockData[
+                            item.symbol
+                          ]?.d?.toFixed(2) || 'N/A'}%`}
+                    </div>
+                    {showOptions && (
+                      <FaTimes onClick={() => handleRemove(item.symbol)} className="remove-icon" />
+                    )}
+                  </>
                 )}
               </div>
             ))}

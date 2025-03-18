@@ -106,11 +106,9 @@ const BalanceSheet = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="balance-sheet-wrapper">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading balance sheet data...</p>
-        </div>
+      <div className="balance-sheet-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading balance sheet data...</p>
       </div>
     );
   }

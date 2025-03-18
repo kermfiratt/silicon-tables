@@ -152,7 +152,7 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
   if (loadingFinancials || loadingPriceMetrics || loadingOverview) {
     return (
       <div className="loading-overlay">
-        <div className="loading-spinner"></div>
+        <div className="loader"></div> {/* Updated spinner class */}
         <p className="loading-text">Loading...</p>
       </div>
     );

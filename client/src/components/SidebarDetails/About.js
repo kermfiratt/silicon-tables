@@ -47,11 +47,9 @@ const About = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="about-company-block">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading company overview...</p>
-        </div>
+      <div className="about-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading company overview...</p>
       </div>
     );
   }

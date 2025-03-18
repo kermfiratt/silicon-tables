@@ -1,3 +1,4 @@
+/* Watchlist Wrapper */
 .watchlist-wrapper {
   position: fixed;
   top: 20px;
@@ -6,6 +7,7 @@
   z-index: 1;
 }
 
+/* Watchlist Container */
 .watchlist-container {
   width: 250px;
   background-color: #1f1f1f;
@@ -19,11 +21,13 @@
   height: 92vh;
 }
 
+/* Blur Background */
 .blur-background {
   filter: blur(5px);
   transition: filter 0.3s ease;
 }
 
+/* Watchlist Header */
 .watchlist-header {
   display: flex;
   justify-content: space-between;
@@ -32,10 +36,12 @@
   margin-bottom: 10px;
 }
 
+/* Menu Icon */
 .menu-icon {
   cursor: pointer;
 }
 
+/* Add Stock Container */
 .add-stock-container {
   display: flex;
   align-items: center;
@@ -45,6 +51,7 @@
   border-radius: 6px;
 }
 
+/* Add Stock Input */
 .add-stock-input {
   background: none;
   border: none;
@@ -55,6 +62,7 @@
   padding: 5px;
 }
 
+/* Add Button */
 .add-button {
   background-color: #4caf50;
   border: none;
@@ -71,12 +79,14 @@
   background-color: #45a049;
 }
 
+/* Watchlist Grid */
 .watchlist-grid {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* Watchlist Item */
 .watchlist-item {
   display: flex;
   align-items: center;
@@ -86,85 +96,125 @@
   border-radius: 6px;
 }
 
+/* Date Block */
 .date-block {
   justify-content: center; /* Center the text */
   background-color: #444; /* Slightly different background */
 }
 
+/* Date Text */
 .date-text {
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   text-align: center;
+  text-transform: uppercase; /* Ensure text is uppercase */
 }
 
+/* Symbol */
 .symbol {
   font-weight: bold;
 }
 
+/* Price */
 .price {
   color: #ddd;
 }
 
+/* Change (Positive) */
 .change.positive {
   color: #4caf50;
 }
 
+/* Change (Negative) */
 .change.negative {
   color: #f44336;
 }
 
+/* Remove Icon */
 .remove-icon {
   color: #ff6b6b;
   cursor: pointer;
 }
 
-.watchlist-item {
-  transition: background-color 0.5s ease;
-}
-
-.flash-green {
-  background-color: rgba(0, 255, 0, 0.2); /* Green flash */
-}
-
-.flash-red {
-  background-color: rgba(255, 0, 0, 0.2); /* Red flash */
-}
-
-.loading-spinner {
+/* Loading Overlay (Initial Loading) */
+.watchlist-loading-overlay {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  height: 100%;
 }
 
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #000;
+/* Loading Spinner (Initial Loading) */
+.loader {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite; /* Main rotation */
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #007bff #007bff; /* Blue borders */
   width: 40px;
   height: 40px;
-  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  transform-origin: center center;
 }
 
-@keyframes spin {
-  to {
+.loader::before {
+  width: 32px;
+  height: 32px;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  animation: rotation 1.5s linear infinite; /* Faster rotation */
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
     transform: rotate(360deg);
   }
 }
 
-.loading-spinner span {
-  font-size: 16px;
-  color: #000;
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }
 
+/* Loading Text (Initial Loading) */
+.loading-text {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #007bff; /* Blue text */
+  font-weight: 500;
+}
 
-.date-block .date-text {
-  text-transform: uppercase; /* Ensure text is uppercase */
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
+/* Adding Stock Loading */
+.adding-stock-loading {
+  font-size: 14px;
+  color: #007bff; /* Blue text */
   text-align: center;
+  width: 100%;
 }

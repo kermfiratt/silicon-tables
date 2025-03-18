@@ -1,6 +1,83 @@
-/* src/components/SidebarDetails/Financials.css */
+/* Loading Overlay */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute; /* Covers only the parent container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0d0f15; /* Semi-transparent black background */
+  z-index: 1000; /* Ensure it's on top of other content */
+  border-radius: 8px; /* Match the border radius of the parent container */
+}
 
+/* Loading Spinner */
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite; /* Main rotation */
+}
 
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #007bff #007bff; /* Blue borders */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  transform-origin: center center;
+}
+
+.loader::before {
+  width: 32px;
+  height: 32px;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  animation: rotation 1.5s linear infinite; /* Faster rotation */
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Loading Text */
+.loading-text {
+  margin-top: 16px; /* Adjusted margin */
+  font-size: 18px; /* Reduced font size */
+  color: #007bff; /* Blue text */
+  font-weight: 500; /* Medium weight for a professional look */
+}
 /* Title Styling */
 .financials-container h2,
 .financials-container h3,
@@ -9,7 +86,6 @@
   color: white;
   margin-bottom: 15px;
   text-align: center;
-
 }
 
 /* Financials Block */
@@ -19,9 +95,6 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   margin-bottom: 20px;
-  
-  
-  
 }
 
 /* Table Styling */
@@ -31,7 +104,6 @@
   border-collapse: collapse;
   background-color: #1e1e1e;
   border-radius: 8px;
-  
 }
 
 .financials-table th,
@@ -75,7 +147,6 @@
   font-size: 0.9em;
 }
 
-
 /* Metrics Comparison Blocks */
 .metrics-comparison {
   display: flex;
@@ -110,8 +181,6 @@
   height: 180px; /* Increased height for longer blocks */
   position: static; /* For negative bar alignment */
   z-index: auto;
-
-  
 }
 
 .metric-bar {
@@ -126,24 +195,16 @@
   color: white;
   font-size: 12px;
   padding: 5px 0;
-  
-  
 }
 
 .metric-bar.negative-bar {
   background-color: #f44336; /* Red for negative values */
-  
-  
 }
-
 
 .metric-bar.positive-bar {
   background-color: #4a90e2; /* Blue for positive values */
   transform: translateY(0); /* Align positive bars with the baseline */
-  
 }
-
-
 
 .metric-bar span {
   margin-bottom: 5px;
@@ -170,7 +231,6 @@
   font-size: 10px; /* Smaller font for graph dates */
 }
 
-
 .graph-title {
   margin-top: 40px; /* Ensure proper spacing between title and graph */
   color: white;
@@ -185,39 +245,4 @@
   margin-top: 30px;
   position: static;
   z-index: auto;
-  
-  
 }
-
-
-
-.loading-container-financials {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
-
-.loading-spinner-financials {
-  border: 4px solid #000; /* Black border */
-  border-top: 4px solid #007bff; /* Blue border for animation */
-  border-radius: 50%;
-  width: 48px; /* Smaller size */
-  height: 48px; /* Smaller size */
-  animation: spin 0.8s linear infinite; /* Faster spin */
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-text-financials {
-  margin-top: 10px; /* Smaller margin */
-  font-size: 22px; /* Smaller font size */
-  color: #007bff; /* Blue text */
-  font-weight: 500; /* Medium weight for a professional look */
-}
-

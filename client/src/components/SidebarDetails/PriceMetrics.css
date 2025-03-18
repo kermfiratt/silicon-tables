@@ -1,5 +1,3 @@
-/* PriceMetrics.css - Dark Theme Only */
-
 /* Dark Theme Variables */
 :root {
   --pm-background: #1e1e1e; /* Dark background */
@@ -118,34 +116,85 @@
   border-left-color: #E91E63; /* Pink */
 }
 
-/* Loading Spinner */
-.pm-loading-container {
+/* Loading Overlay */
+.pm-loading-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  position: absolute; /* Covers only the parent container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  z-index: 1000; /* Ensure it's on top of other content */
+  border-radius: 16px; /* Match the border radius of the parent container */
 }
 
-.pm-loading-spinner {
-  border: 4px solid rgba(76, 175, 80, 0.1);
-  border-top: 4px solid var(--pm-accent);
+/* Loading Spinner */
+.loader {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite; /* Main rotation */
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #007bff #007bff; /* Blue borders */
   width: 40px;
   height: 40px;
-  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  transform-origin: center center;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.loader::before {
+  width: 32px;
+  height: 32px;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  animation: rotation 1.5s linear infinite; /* Faster rotation */
 }
 
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Loading Text */
 .pm-loading-text {
-  margin-top: 15px;
-  font-size: 16px;
-  color: var(--pm-text);
-  font-weight: 500;
+  margin-top: 16px; /* Adjusted margin */
+  font-size: 18px; /* Reduced font size */
+  color: #007bff; /* Blue text */
+  font-weight: 500; /* Medium weight for a professional look */
 }
 
 /* Error Message */

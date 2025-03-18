@@ -78,11 +78,9 @@ const Report = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="report-container">
-        <div className="loading-container-report">
-          <div className="loading-spinner-report"></div>
-          <div className="loading-text-report">Loading Report Data...</div>
-        </div>
+      <div className="report-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading Report Data...</p>
       </div>
     );
   }

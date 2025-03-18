@@ -87,11 +87,9 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="quarterly-earnings-section">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading earnings data...</p>
-        </div>
+      <div className="quarterly-earnings-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading earnings data...</p>
       </div>
     );
   }
@@ -131,7 +129,7 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
               ))}
             </select>
           </div>
-          <table className="quarterly-earnings-section">
+          <table className="quarterly-earnings-table">
             <thead>
               <tr>
                 <th>Fiscal Date Ending</th>

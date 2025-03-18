@@ -15,7 +15,6 @@ const StockDetailsSidebar = ({ symbol }) => {
   const [currentPrice, setCurrentPrice] = useState(null);
   const [priceChangePercent, setPriceChangePercent] = useState(null);
   const [latestDate, setLatestDate] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Global loading state
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -43,7 +42,6 @@ const StockDetailsSidebar = ({ symbol }) => {
     const fetchStockData = async () => {
       if (symbol) {
         try {
-          setIsLoading(true); // Start loading
           const response = await fetch(
             `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`
           );
@@ -62,8 +60,6 @@ const StockDetailsSidebar = ({ symbol }) => {
           }
         } catch (error) {
           console.error('Error fetching stock data:', error);
-        } finally {
-          setIsLoading(false); // Stop loading
         }
       }
     };
@@ -81,12 +77,6 @@ const StockDetailsSidebar = ({ symbol }) => {
   // Handle sidebar button clicks
   const handleSectionClick = (section, ref) => {
     setActiveSection(section);
-    setIsLoading(true); // Start loading when section changes
-
-    // Simulate loading delay (replace with actual data fetching logic)
-    setTimeout(() => {
-      setIsLoading(false); // Stop loading after data is fetched
-    }, 1000);
 
     // Only scroll for sections that need it (e.g., not PriceMetrics)
     if (section !== 'priceMetrics') {
@@ -186,14 +176,6 @@ const StockDetailsSidebar = ({ symbol }) => {
 
       {/* Main Content Area */}
       <div className="stock-details-content">
-        {/* Blurred Loading Overlay */}
-        {isLoading && (
-          <div className="loading-overlay">
-            <div className="loading-spinner"></div>
-            <p className="loading-text">Loading...</p>
-          </div>
-        )}
-
         {/* Content Components */}
         <Financials
           symbol={symbol}

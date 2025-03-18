@@ -116,11 +116,9 @@ const AnnualBalanceSheet = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div className="annual-balance-sheet-wrapper">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading annual balance sheet data...</p>
-        </div>
+      <div className="annual-balance-sheet-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading annual balance sheet data...</p>
       </div>
     );
   }

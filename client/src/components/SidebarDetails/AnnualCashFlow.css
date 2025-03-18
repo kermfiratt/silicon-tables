@@ -1,90 +1,170 @@
+/* Loading Overlay */
+.annual-cash-flow-loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute; /* Covers the entire parent container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+/* Loading Spinner */
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite; /* Main rotation */
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #007bff #007bff; /* Blue borders */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  transform-origin: center center;
+}
+
+.loader::before {
+  width: 32px;
+  height: 32px;
+  border-color: #FFF #FFF transparent transparent; /* White borders */
+  animation: rotation 1.5s linear infinite; /* Faster rotation */
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Loading Text */
+.loading-text {
+  margin-top: 16px; /* Adjusted margin */
+  font-size: 18px; /* Reduced font size */
+  color: #007bff; /* Blue text */
+  font-weight: 500; /* Medium weight for a professional look */
+}
+
 /* Container for the annual cash flow section */
 .annual-cash-flow-section {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #2c3e50; /* Dark background */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    color: #ecf0f1; /* Light text color */
-  }
-  
-  /* Heading for the section */
-  .annual-cash-flow-section h4 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #ecf0f1; /* Light text color */
-    margin-bottom: 20px;
-  }
-  
-  /* Loading and error messages */
-  .annual-cash-flow-section p {
-    font-size: 16px;
-    color: #bdc3c7; /* Light gray for messages */
-    text-align: center;
-    margin: 20px 0;
-  }
-  
-  /* Year selection dropdown */
-  .annual-cash-flow-section select {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid #34495e; /* Darker border */
-    border-radius: 4px;
-    background-color: #34495e; /* Dark background for dropdown */
-    color: #ecf0f1; /* Light text color */
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-  }
-  
-  .annual-cash-flow-section select:hover {
-    border-color: #007bff; /* Highlight border on hover */
-  }
-  
-  /* Table styling */
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #2c3e50; /* Dark background */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #ecf0f1; /* Light text color */
+}
+
+/* Heading for the section */
+.annual-cash-flow-section h4 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ecf0f1; /* Light text color */
+  margin-bottom: 20px;
+}
+
+/* Loading and error messages */
+.annual-cash-flow-section p {
+  font-size: 16px;
+  color: #bdc3c7; /* Light gray for messages */
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Year selection dropdown */
+.annual-cash-flow-section select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #34495e; /* Darker border */
+  border-radius: 4px;
+  background-color: #34495e; /* Dark background for dropdown */
+  color: #ecf0f1; /* Light text color */
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.annual-cash-flow-section select:hover {
+  border-color: #007bff; /* Highlight border on hover */
+}
+
+/* Table styling */
+.annual-cash-flow-section table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #34495e; /* Dark background for table */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.annual-cash-flow-section table thead {
+  background-color: #007bff; /* Blue header */
+  color: #fff;
+}
+
+.annual-cash-flow-section table th,
+.annual-cash-flow-section table td {
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 14px;
+  color: #ecf0f1; /* Light text color */
+}
+
+.annual-cash-flow-section table th {
+  font-weight: 600;
+}
+
+.annual-cash-flow-section table tbody tr {
+  border-bottom: 1px solid #2c3e50; /* Darker border for rows */
+  transition: background-color 0.3s ease;
+}
+
+.annual-cash-flow-section table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.annual-cash-flow-section table tbody tr:hover {
+  background-color: #3b4a5f; /* Slightly lighter background on hover */
+}
+
+/* Responsive table for smaller screens */
+@media (max-width: 768px) {
   .annual-cash-flow-section table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #34495e; /* Dark background for table */
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: block;
+    overflow-x: auto;
   }
-  
-  .annual-cash-flow-section table thead {
-    background-color: #007bff; /* Blue header */
-    color: #fff;
-  }
-  
-  .annual-cash-flow-section table th,
-  .annual-cash-flow-section table td {
-    padding: 12px 15px;
-    text-align: left;
-    font-size: 14px;
-    color: #ecf0f1; /* Light text color */
-  }
-  
-  .annual-cash-flow-section table th {
-    font-weight: 600;
-  }
-  
-  .annual-cash-flow-section table tbody tr {
-    border-bottom: 1px solid #2c3e50; /* Darker border for rows */
-    transition: background-color 0.3s ease;
-  }
-  
-  .annual-cash-flow-section table tbody tr:last-child {
-    border-bottom: none;
-  }
-  
-  .annual-cash-flow-section table tbody tr:hover {
-    background-color: #3b4a5f; /* Slightly lighter background on hover */
-  }
-  
-  /* Responsive table for smaller screens */
-  @media (max-width: 768px) {
-    .annual-cash-flow-section table {
-      display: block;
-      overflow-x: auto;
-    }
-  }
+}

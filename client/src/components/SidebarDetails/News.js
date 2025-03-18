@@ -47,11 +47,9 @@ const News = ({ symbol, refs, activeSection }) => {
 
   if (loading) {
     return (
-      <div id="news-section">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading news...</p>
-        </div>
+      <div className="news-loading-overlay">
+        <div className="loader"></div>
+        <p className="loading-text">Loading news...</p>
       </div>
     );
   }
