@@ -56,7 +56,7 @@ const About = ({ symbol, refs, activeSection }) => {
 
   if (error) {
     return (
-      <div className="about-company-block">
+      <div className="about-block">
         <p>Error: {error}</p>
       </div>
     );
@@ -64,16 +64,66 @@ const About = ({ symbol, refs, activeSection }) => {
 
   if (!companyOverview.Description) {
     return (
-      <div className="about-company-block">
+      <div className="about-block">
         <p>No company overview data available for this company.</p>
       </div>
     );
   }
 
   return (
-    <div className="about-company-block" ref={refs.aboutRef}>
-      <h4>About The Company</h4>
-      <div>{companyOverview.Description}</div>
+    <div ref={refs.aboutRef}>
+      {/* About The Company Block */}
+      <div className="about-block">
+        <h4>About The Company</h4>
+        <div>{companyOverview.Description}</div>
+      </div>
+
+      {/* Grid Layout for Data Blocks */}
+      <div className="about-grid">
+        <div className="about-block">
+          <h4>CIK</h4>
+          <div>{companyOverview.CIK || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Exchange</h4>
+          <div>{companyOverview.Exchange || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Currency</h4>
+          <div>{companyOverview.Currency || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Country</h4>
+          <div>{companyOverview.Country || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Sector</h4>
+          <div>{companyOverview.Sector || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Industry</h4>
+          <div>{companyOverview.Industry || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Address</h4>
+          <div>{companyOverview.Address || 'N/A'}</div>
+        </div>
+
+        <div className="about-block">
+          <h4>Official Site</h4>
+          <div>
+            <a href={companyOverview.OfficialSite} target="_blank" rel="noopener noreferrer">
+              {companyOverview.OfficialSite || 'N/A'}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

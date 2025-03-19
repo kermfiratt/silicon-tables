@@ -78,6 +78,7 @@
   color: #007bff; /* Blue text */
   font-weight: 500; /* Medium weight for a professional look */
 }
+
 /* Title Styling */
 .financials-container h2,
 .financials-container h3,
@@ -225,10 +226,17 @@
 }
 
 /* Graph Dates Styling */
+.graph-dates {
+  display: flex;
+  justify-content: space-around; /* Align dates evenly below the graph */
+  margin-top: 10px; /* Add some space between the graph and dates */
+}
+
 .graph-dates span {
-  margin: 0 5px;
   color: #999;
   font-size: 10px; /* Smaller font for graph dates */
+  text-align: center; /* Center-align each date */
+  flex: 1; /* Ensure dates are evenly spaced */
 }
 
 .graph-title {

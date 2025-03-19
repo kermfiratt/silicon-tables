@@ -7,7 +7,7 @@ import { Line } from 'react-chartjs-2';
 const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
 const Compare = () => {
-  const [stock1, setStock1] = useState('NVDA');
+  const [stock1, setStock1] = useState('MSFT');
   const [stock2, setStock2] = useState('AAPL');
   const [suggestions1, setSuggestions1] = useState([]);
   const [suggestions2, setSuggestions2] = useState([]);

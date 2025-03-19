@@ -79,6 +79,12 @@ const StockCard = ({ stock, onRemove }) => {
     navigate(`/company/${symbol}`);
   };
 
+  // Handle removing the stock card
+  const handleRemove = (e) => {
+    e.stopPropagation();
+    onRemove(symbol); // Notify parent component to remove this stock
+  };
+
   if (!stockData) {
     return <div className="stock-card">Loading...</div>;
   }
@@ -88,10 +94,7 @@ const StockCard = ({ stock, onRemove }) => {
       {/* Close Button */}
       <button
         className="close-button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove(symbol);
-        }}
+        onClick={handleRemove}
       >
         ✖
       </button>

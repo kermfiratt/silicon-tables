@@ -1,38 +1,49 @@
-/* Container for the about section */
-.about-company-block {
-  background-color: #242424; /* Slightly lighter dark for better contrast */
-  color: #f5f5f5; /* Softer white for improved readability */
-  border-radius: 12px; /* Smoother rounded corners */
-  padding: 30px; /* Increased padding for more breathing space */
-  margin: 30px 0; /* Larger margin for distinct separation */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow for depth */
-  border: 1px solid #333; /* Subtle border for structure */
-  transition: all 0.3s ease; /* Smooth hover transition */
+/* About The Company Block */
+.about-block {
+  background-color: #1e293b; /* Dark card background */
+  color: #f5f5f5; /* Light text */
+  border-radius: 8px; /* Smoother rounded corners */
+  padding: 1rem; /* Reduced padding for a compact look */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: all 0.3s ease;
+  margin-bottom: 1rem; /* Reduced margin between blocks */
 }
 
-.about-company-block:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Slightly more shadow on hover */
-  transform: translateY(-2px); /* Lift the block on hover for interactivity */
+.about-block:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
-/* Heading for the section */
-.about-company-block h4 {
-  text-align: center; /* Center the heading */
-  font-size: 22px; /* Slightly larger font size for heading */
-  font-weight: bold; /* Bold text for heading */
-  color: #4aa3ff; /* Slightly muted highlight color for heading */
-  margin-bottom: 20px; /* Increased space below the heading */
-  text-transform: uppercase; /* Uppercase for a professional appearance */
-  letter-spacing: 1px; /* Letter spacing for cleaner text */
+.about-block h4 {
+  font-size: 1rem; /* Smaller font size for a professional look */
+  font-weight: 600;
+  color: #4aa3ff; /* Accent color */
+  margin-bottom: 0.75rem; /* Reduced margin */
+  text-transform: uppercase;
+  letter-spacing: 0.5px; /* Tighter letter spacing */
 }
 
-/* Company description */
-.about-company-block div {
-  font-size: 18px; /* Larger text size for description */
-  line-height: 1.8; /* More line height for comfortable reading */
-  text-align: justify; /* Justify the description text */
-  color: #e0e0e0; /* Softer white for text to reduce glare */
-  word-spacing: 2px; /* Add space between words for better readability */
+.about-block div {
+  font-size: 0.95rem; /* Smaller font size for compactness */
+  line-height: 1.5; /* Tighter line height */
+  color: #e0e0e0; /* Softer white */
+}
+
+.about-block a {
+  color: #4aa3ff; /* Accent color */
+  text-decoration: none;
+}
+
+.about-block a:hover {
+  text-decoration: underline;
+}
+
+/* Grid Layout for Data Blocks */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 blocks per row */
+  gap: 1rem; /* Reduced gap between grid items */
+  margin-bottom: 1rem; /* Reduced margin below the grid */
 }
 
 /* Loading Overlay */
@@ -41,27 +52,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute; /* Covers the entire parent container */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
-  z-index: 1000; /* Ensure it's on top of other content */
-  border-radius: 12px; /* Match the border radius of the parent container */
+  background-color: rgba(15, 23, 42, 0.9);
+  z-index: 1000;
+  border-radius: 8px; /* Smoother rounded corners */
 }
 
 /* Loading Spinner */
 .loader {
-  width: 48px;
-  height: 48px;
+  width: 40px; /* Smaller spinner */
+  height: 40px;
   border-radius: 50%;
   display: inline-block;
   position: relative;
   border: 3px solid;
-  border-color: #FFF #FFF transparent transparent; /* White borders */
+  border-color: #FFF #FFF transparent transparent;
   box-sizing: border-box;
-  animation: rotation 1s linear infinite; /* Main rotation */
+  animation: rotation 1s linear infinite;
 }
 
 .loader::after,
@@ -75,19 +86,19 @@
   bottom: 0;
   margin: auto;
   border: 3px solid;
-  border-color: transparent transparent #007bff #007bff; /* Blue borders */
-  width: 40px;
-  height: 40px;
+  border-color: transparent transparent #007bff #007bff;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  animation: rotationBack 0.5s linear infinite;
   transform-origin: center center;
 }
 
 .loader::before {
-  width: 32px;
-  height: 32px;
-  border-color: #FFF #FFF transparent transparent; /* White borders */
-  animation: rotation 1.5s linear infinite; /* Faster rotation */
+  width: 24px;
+  height: 24px;
+  border-color: #FFF #FFF transparent transparent;
+  animation: rotation 1.5s linear infinite;
 }
 
 @keyframes rotation {
@@ -110,14 +121,8 @@
 
 /* Loading Text */
 .loading-text {
-  margin-top: 16px; /* Adjusted margin */
-  font-size: 18px; /* Reduced font size */
-  color: #007bff; /* Blue text */
-  font-weight: 500; /* Medium weight for a professional look */
-}
-
-/* Error Message */
-.about-company-block p.error {
-  color: #e74c3c; /* Red for error messages */
-  text-align: center;
+  margin-top: 12px; /* Reduced margin */
+  font-size: 0.95rem; /* Smaller font size */
+  color: #007bff;
+  font-weight: 500;
 }

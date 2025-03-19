@@ -5,7 +5,7 @@ import './QuarterlyEarnings.css'; // Import the CSS file
 const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
   const [quarterlyEarnings, setQuarterlyEarnings] = useState([]);
   const [years, setYears] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const [selectedYear, setSelectedYear] = useState('2024'); // Default to 2024
   const [filteredEarnings, setFilteredEarnings] = useState([]);
   const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
@@ -49,11 +49,12 @@ const QuarterlyEarnings = ({ symbol, refs, activeSection }) => {
         );
         setYears(uniqueYears);
 
-        // Set the latest year as default
-        const latestYear = uniqueYears[0];
+        // Check if 2024 data exists, otherwise fallback to the latest year
+        const has2024Data = uniqueYears.includes('2024');
+        const latestYear = has2024Data ? '2024' : uniqueYears[0];
         setSelectedYear(latestYear);
 
-        // Filter earnings for the latest year
+        // Filter earnings for the selected year
         const filtered = data.quarterlyEarnings.filter((e) =>
           e.fiscalDateEnding.startsWith(latestYear)
         );

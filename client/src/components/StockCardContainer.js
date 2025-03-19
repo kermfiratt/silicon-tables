@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import StockCard from './StockCard';
 import './StockCardContainer.css';
 
-const StockCardContainer = () => {
+const StockCardContainer = ({ stocks, addStock, removeStock }) => {
   const ALPHA_VANTAGE_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
-  const [stocks, setStocks] = useState([]);
   const [stockData, setStockData] = useState({});
   const [searchInput, setSearchInput] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -86,29 +85,6 @@ const StockCardContainer = () => {
     }
   };
 
-  // Add a stock to the list
-  const addStock = (symbol) => {
-    if (stocks.some((stock) => stock.symbol === symbol)) {
-      alert('This stock is already in your list!');
-      return;
-    }
-
-    setStocks([...stocks, { symbol }]);
-    setSearchInput('');
-    setShowSearch(false);
-    setSuggestions([]);
-  };
-
-  // Remove a stock from the list
-  const removeStock = (symbol) => {
-    setStocks(stocks.filter((stock) => stock.symbol !== symbol));
-    setStockData((prevData) => {
-      const newData = { ...prevData };
-      delete newData[symbol];
-      return newData;
-    });
-  };
-
   // Handle search input changes
   const handleSearchInputChange = (e) => {
     setSearchInput(e.target.value);
@@ -123,6 +99,16 @@ const StockCardContainer = () => {
     }
   };
 
+  // Handle adding a stock
+  const handleAddStock = (symbol) => {
+    addStock(symbol); // Use the addStock function passed as a prop
+    setSearchInput(''); // Clear the search input
+    setShowSearch(false); // Close the search box
+    setSuggestions([]); // Clear suggestions
+    console.log(`Stock added: ${symbol}`); // Debugging
+  };
+
+  // Fetch stock data periodically
   useEffect(() => {
     if (stocks.length > 0) {
       fetchStockData();
@@ -155,7 +141,7 @@ const StockCardContainer = () => {
                     {suggestions.map((suggestion, index) => (
                       <li
                         key={index}
-                        onClick={() => addStock(suggestion.symbol)}
+                        onClick={() => handleAddStock(suggestion.symbol)}
                       >
                         <strong>{suggestion.symbol}</strong> - {suggestion.name}
                       </li>

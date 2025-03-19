@@ -60,7 +60,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
     return <p className="pm-error-message">{error}</p>;
   }
 
-  // Only render the component if the active section is 'priceMetrics'
   if (activeSection !== 'priceMetrics') {
     return null;
   }

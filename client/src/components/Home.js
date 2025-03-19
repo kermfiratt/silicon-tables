@@ -14,7 +14,7 @@ import './Home.css';
 import Explanation from './Explanation';
 import RetailSales from './RetailSales';
 
-const Home = ({ isSearchOpen }) => {
+const Home = ({ isSearchOpen, stocks, addStock, removeStock }) => {
   return (
     <div className={`home-container ${isSearchOpen ? 'blur-background' : ''}`}>
       {/* Top Bar with Live Date/Time and Market Data */}
@@ -27,7 +27,11 @@ const Home = ({ isSearchOpen }) => {
       <Explanation />
 
       {/* Stock Card Container */}
-      <StockCardContainer />
+      <StockCardContainer
+        stocks={stocks}
+        addStock={addStock}
+        removeStock={removeStock}
+      />
 
       {/* Main Content Area */}
       <div className="content-area">
@@ -60,9 +64,8 @@ const Home = ({ isSearchOpen }) => {
 
       {/* Watchlist Section */}
       <div>
-      <Watchlist isSearchOpen={isSearchOpen} />
+        <Watchlist isSearchOpen={isSearchOpen} />
       </div>
-      
     </div>
   );
 };

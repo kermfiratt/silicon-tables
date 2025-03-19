@@ -29,11 +29,20 @@ const StockDetailsSidebar = ({ symbol }) => {
   const annualBalanceSheetRef = useRef(null);
   const reportRef = useRef(null);
 
+  // Helper function to map month numbers to month names
+  const getMonthName = (monthNumber) => {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return monthNames[monthNumber - 1] || '';
+  };
+
   // Helper function to format date as "14 MARCH"
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+    const month = getMonthName(date.getMonth() + 1).toUpperCase();
     return `${day} ${month}`;
   };
 

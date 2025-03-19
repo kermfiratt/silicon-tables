@@ -13,9 +13,24 @@ const AnnualCashFlow = ({ symbol, refs, activeSection }) => {
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
+  // Helper function to format numbers in shortened format (e.g., 35M, 54B)
   const formatValue = (value) => {
     if (value === null || value === undefined || isNaN(value)) return 'N/A';
-    return value.toLocaleString();
+
+    const num = parseFloat(value);
+    const absNum = Math.abs(num);
+
+    if (absNum >= 1e12) {
+      return `${(num / 1e12).toFixed(1)}T`; // Trillions
+    } else if (absNum >= 1e9) {
+      return `${(num / 1e9).toFixed(1)}B`; // Billions
+    } else if (absNum >= 1e6) {
+      return `${(num / 1e6).toFixed(1)}M`; // Millions
+    } else if (absNum >= 1e3) {
+      return `${(num / 1e3).toFixed(1)}K`; // Thousands
+    } else {
+      return num.toLocaleString(); // Small numbers
+    }
   };
 
   // Fetch data only when the section is active and data hasn't been fetched before
