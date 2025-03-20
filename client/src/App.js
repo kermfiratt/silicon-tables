@@ -8,6 +8,7 @@ import Portfolio from './components/Portfolio';
 import BalanceSheet from './components/SidebarDetails/BalanceSheet';
 import Compare from './components/Compare';
 import Report from './components/SidebarDetails/Report';
+import Contact from './components/Contact'
 import './App.css';
 import StockDetailsSidebar from './components/StockDetailsSidebar';
 
@@ -79,6 +80,7 @@ function App() {
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/balance-sheet" element={<BalanceSheet />} />
             <Route path="/compare" element={<Compare />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/report" element={<Report />} />
           </Routes>
         </div>

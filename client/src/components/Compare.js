@@ -14,6 +14,7 @@ const Compare = () => {
   const [data1, setData1] = useState(null);
   const [data2, setData2] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
   const timeoutRef1 = useRef(null);
   const timeoutRef2 = useRef(null);
 
@@ -61,6 +62,9 @@ const Compare = () => {
       return;
     }
 
+    setLoading(true); // Start loading
+    setError(null);
+
     try {
       const [overview1, overview2, earnings1, earnings2, balance1, balance2] = await Promise.all([
         axios.get(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock1}&apikey=${API_KEY}`),
@@ -73,9 +77,10 @@ const Compare = () => {
 
       setData1({ overview: overview1.data, earnings: earnings1.data, balance: balance1.data });
       setData2({ overview: overview2.data, earnings: earnings2.data, balance: balance2.data });
-      setError(null);
     } catch (err) {
       setError("Failed to fetch stock data. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -220,6 +225,16 @@ const Compare = () => {
       </div>
 
       <button className="compare-button" onClick={fetchStockData}>Compare</button>
+
+      {/* Loading Spinner and Text */}
+      {loading && (
+        <div className="compare-loading-overlay">
+          <div className="compare-loading-container">
+            <div className="compare-loader"></div>
+            <p className="compare-loading-text">Loading...</p>
+          </div>
+        </div>
+      )}
 
       {data1 && data2 ? (
         <>

@@ -1,0 +1,70 @@
+/* Contact.css */
+body {
+    background-color: #0d0f15; /* Updated background color */
+    color: #e0e0e0; /* Light text for contrast */
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1a1c23; /* Slightly lighter dark background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 20px;
+    
+}
+
+h1, h2, h3 {
+    color: #ffffff; /* White for headings */
+}
+
+a {
+    color: #1e90ff; /* Bright blue for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.terms-content {
+    margin-top: 20px;
+}
+
+.terms-content h2 {
+    margin-top: 30px;
+    font-size: 1.5em;
+}
+
+.terms-content p {
+    margin: 10px 0;
+}
+
+.terms-content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.terms-content ul li {
+    margin-bottom: 10px;
+}
+
+.contact-email {
+    font-size: 1.5em; /* Larger font size for email */
+    font-weight: bold;
+    color: #1e90ff; /* Bright blue for email */
+    margin: 20px 0;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #b0b0b0; /* Light gray for footer text */
+}
