@@ -16,24 +16,35 @@
   border-radius: 8px;
   background-color: #333;
   color: #fff;
+  margin: 0 8px; /* Add small gaps between items */
+  flex: 1; /* Ensure items take equal space */
+  min-width: 0; /* Prevent flex items from overflowing */
 }
 
 .market-data-item .label {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly reduced font size */
   color: #fff;
+  margin-bottom: 8px; /* Space between label and price/change */
 }
 
-.market-data-item .value {
-  display: block;
-  font-size: 1.2rem; /* Consistent font size for values */
+.market-data-item .price {
+  font-size: 1.1rem; /* Slightly reduced font size */
   font-weight: bold;
+  display: block; /* Ensure price is on its own line */
+}
+
+.market-data-item .price-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Space between price and percentage change */
+  margin-top: 4px; /* Space between price and change */
 }
 
 .ticker-change {
-  margin-left: 8px;
   font-weight: bold;
-  font-size: 1rem; /* Ensures consistent size for change percentage */
+  font-size: 0.9rem; /* Slightly reduced font size */
 }
 
 .ticker-change.positive {
@@ -45,7 +56,7 @@
 }
 
 .strong {
-  font-size: 1.2rem;
+  font-size: 1.1rem; /* Slightly reduced font size */
   font-weight: bold; /* Ensures bold style */
   color: #fff;
 }

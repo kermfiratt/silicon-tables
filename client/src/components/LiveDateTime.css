@@ -80,3 +80,15 @@
 .market-hours {
   color: #bbb;
 }
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 2px; /* Adds spacing between time and location */
+}
+
+.location {
+  font-size: 16px;
+  color: white;
+  margin-left: 15px;
+}

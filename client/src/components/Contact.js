@@ -3,8 +3,8 @@ import './Contact.css';
 
 const Contact = () => {
     return (
-        <div className="container">
-            <div className="terms-content">
+        <div className="contact-container">
+            <div className="contact-terms-content">
                 <h1>Minimum Viable Product (MVP) Disclaimer</h1>
                 <p><strong>Last Updated:</strong> [Insert Date]</p>
 
@@ -43,7 +43,7 @@ const Contact = () => {
                 <p>If you have any questions or concerns regarding this MVP, please contact us at:</p>
                 <p className="contact-email">support@companymail.com</p>
             </div>
-            <footer>
+            <footer className="contact-footer">
                 &copy; 2025 companymail.com. All rights reserved.
             </footer>
         </div>

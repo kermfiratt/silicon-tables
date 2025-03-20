@@ -1,14 +1,4 @@
-/* Contact.css */
-body {
-    background-color: #0d0f15; /* Updated background color */
-    color: #e0e0e0; /* Light text for contrast */
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
+.contact-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -20,39 +10,44 @@ body {
     
 }
 
-h1, h2, h3 {
-    color: #ffffff; /* White for headings */
+.contact-container h1, 
+.contact-container h2, 
+.contact-container h3 {
+    color: #1e90ff; /* White for headings */
 }
 
-a {
+.contact-container a {
     color: #1e90ff; /* Bright blue for links */
     text-decoration: none;
 }
 
-a:hover {
+.contact-container a:hover {
     text-decoration: underline;
 }
 
-.terms-content {
+.contact-terms-content {
     margin-top: 20px;
 }
 
-.terms-content h2 {
+.contact-terms-content h2 {
     margin-top: 30px;
     font-size: 1.5em;
 }
 
-.terms-content p {
+.contact-terms-content p {
     margin: 10px 0;
+    color: white;
 }
 
-.terms-content ul {
+.contact-terms-content ul {
     margin: 10px 0;
     padding-left: 20px;
+    list-style: none;
 }
 
-.terms-content ul li {
+.contact-terms-content ul li {
     margin-bottom: 10px;
+    color: white;
 }
 
 .contact-email {
@@ -62,7 +57,7 @@ a:hover {
     margin: 20px 0;
 }
 
-footer {
+.contact-footer {
     text-align: center;
     margin-top: 20px;
     font-size: 0.9em;

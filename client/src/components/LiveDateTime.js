@@ -43,11 +43,12 @@ const LiveDateTime = () => {
     year: 'numeric',
   });
 
-  // Format time to show hours, minutes, and seconds
+  // Format time to show hours, minutes, and seconds in San Jose time
   const formattedTime = dateTime.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
+    timeZone: 'America/Los_Angeles', // Set timezone to San Jose (Pacific Time)
   });
 
   return (
@@ -57,6 +58,7 @@ const LiveDateTime = () => {
         <div className="time">
           <span className="live-indicator"></span> {/* Green dot */}
           <span className="time-text">{formattedTime}</span>
+          <span className="location">San Jose, CA</span> {/* Display location next to time */}
         </div>
       </div>
       <div className="market-statuses">
