@@ -2,13 +2,13 @@
 .market-data {
   font-family: Arial, sans-serif;
   color: #fff;
-  margin-top: 30px; /* Adjust margin to suit your layout */
+  margin-top: 5px; /* Adjust margin to suit your layout */
   display: flex;
   justify-content: space-around;
   background-color: #1f1f1f;
   padding: 15px;
   border-radius: 8px;
-}
+  }
 
 .market-data-item {
   text-align: center;

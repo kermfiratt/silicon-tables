@@ -1,0 +1,15 @@
+.market-explain-container {
+  padding: 10px; /* Reduced padding to make the height smaller */
+  background-color: #1f1f1f;
+  border: 2px dashed #333;
+  border-radius: 10px;
+  margin: 5px 0px 0px 0px; /* Adjusted margin for better spacing */
+  text-align: center;
+  color: white;
+  font-size: 14px; /* Slightly smaller font size */
+}
+
+.market-explain-text {
+  margin: 0;
+  padding: 3px 0; /* Reduced padding between lines */
+}

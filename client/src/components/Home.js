@@ -12,6 +12,7 @@ import StockCardContainer from './StockCardContainer';
 import Cpi from './Cpi';
 import './Home.css';
 import Explanation from './Explanation';
+import MarketExplain from './MarketExplain';
 import RetailSales from './RetailSales';
 
 const Home = ({ isSearchOpen, stocks, addStock, removeStock }) => {
@@ -20,7 +21,9 @@ const Home = ({ isSearchOpen, stocks, addStock, removeStock }) => {
       {/* Top Bar with Live Date/Time and Market Data */}
       <div className="top-bar">
         <LiveDateTime />
+        
         <MarketData />
+        <MarketExplain />
       </div>
 
       {/* Explanation Section */}
