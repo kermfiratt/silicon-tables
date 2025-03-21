@@ -1,3 +1,4 @@
+/* Existing Desktop Styles (Unchanged) */
 html, body {
   margin: 0;
   padding: 0;
@@ -119,4 +120,53 @@ html, body {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .home-container {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px;
+  }
+
+  /* Hide unnecessary components for phone size */
+  .top-bar,
+  .vc-startup-container,
+  .ticker-wrapper,
+  .product-hunt-top5,
+  .developer-conferences,
+  .recent-vc-funds,
+  .hit-startup {
+    display: none;
+  }
+
+  /* Show and rearrange components for phone size */
+  .sidebar-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .explanation-mobile,
+  .stock-card-container-mobile,
+  .top-trade-mobile,
+  .employment-mobile,
+  .cpi-mobile,
+  .news-mobile,
+  .watchlist-mobile {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  /* Ensure components are stacked vertically */
+  .content-area {
+    flex-direction: column;
+  }
+
+  /* Adjust spacing for phone size */
+  .news-area {
+    flex-direction: column;
+  }
 }

@@ -1,6 +1,4 @@
-/* Removed loading-related styles */
-
-/* Rest of your existing CSS */
+/* Desktop Styles (Unchanged) */
 .stock-details-container {
   display: flex;
   height: 100vh; /* Full height */
@@ -111,4 +109,47 @@
   overflow-y: auto; /* Allow scrolling if content overflows */
   background-color: #0d0f15; /* Dark background for main content */
   position: relative; /* Needed for the loading overlay */
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .stock-details-container {
+    flex-direction: column; /* Stack sidebar and content vertically */
+    margin-left: 0; /* Remove left margin */
+  }
+
+  .stock-details-sidebar {
+    width: 100%; /* Full width for phone size */
+    height: auto; /* Auto height for phone size */
+    padding: 10px; /* Reduced padding for phone size */
+    box-shadow: none; /* Remove shadow for phone size */
+  }
+
+  .stock-details-content {
+    padding: 10px; /* Reduced padding for phone size */
+  }
+
+  .header-container {
+    align-items: center; /* Center items for phone size */
+  }
+
+  .price-value {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .price-change {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .date-wrapper {
+    font-size: 10px; /* Smaller font size for phone size */
+  }
+
+  .name-wrapper {
+    font-size: 16px; /* Smaller font size for phone size */
+  }
+
+  .stock-details-sidebar ul li {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
 }

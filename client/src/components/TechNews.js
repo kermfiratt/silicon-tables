@@ -1,4 +1,3 @@
-// src/components/TechNews.js
 import React, { useState, useEffect } from 'react';
 import './TechNews.css';
 
@@ -58,6 +57,11 @@ const TechNews = () => {
     setError(null);
   };
 
+  // Function to shorten text for phone sizes
+  const shortenText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
   return (
     <div className="tech-news-container">
       <h2 className="news-header-newyork">Daily News</h2>
@@ -84,9 +88,18 @@ const TechNews = () => {
             {news.slice(0, visibleNews).map((item, index) => (
               <li key={index} className="tech-news-item">
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  <strong>{item.source}</strong>: {item.title}
+                  <strong>{item.source}</strong>:{' '}
+                  <span className="news-title">
+                    {window.innerWidth <= 768
+                      ? shortenText(item.title, 50) // Shorten title for phone size
+                      : item.title}
+                  </span>
                 </a>
-                <p>{item.summary.slice(0, 100)}...</p>
+                <p className="news-summary">
+                  {window.innerWidth <= 768
+                    ? shortenText(item.summary, 70) // Shorten summary for phone size
+                    : item.summary.slice(0, 100) + '...'}
+                </p>
               </li>
             ))}
           </ul>

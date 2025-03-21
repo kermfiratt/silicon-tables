@@ -1,4 +1,4 @@
-/* src/components/TechNews.css */
+/* Desktop Styles (Unchanged) */
 .tech-news-container {
   background-color: #1e1e1e;
   padding: 20px;
@@ -9,21 +9,19 @@
   margin-bottom: 80px;
   width: calc(100% - 10px); /* Adjusted width */
   max-width: 1200px;
+  margin-left: auto; /* Center the block horizontally */
+  margin-right: auto; /* Center the block horizontally */
 }
-
-
 
 .news-header-newyork {
   font-family: 'Chomsky', serif; /* Chomsky fontunu kullan */
   font-size: 40px; /* Büyük başlık için boyut */
-  font-weight: normal; /* Normal font kalınlığı */ 
+  font-weight: normal; /* Normal font kalınlığı */
   text-align: center; /* Başlığı ortala */
   margin-bottom: 25px; /* Alt boşluk ekle */
   text-transform: uppercase; /* Büyük harf kullanımı */
   color: white;
-
 }
-
 
 .category-selector {
   display: flex;
@@ -57,7 +55,7 @@
 }
 
 .tech-news-item a {
-  color: #E6E1A5 ; /* Golden yellow for titles */
+  color: #e6e1a5; /* Golden yellow for titles */
   font-size: 18px;
   font-weight: bold;
   font-family: 'Roboto', sans-serif; /* Modern font for links */
@@ -96,4 +94,51 @@
 .load-more-button:hover,
 .load-less-button:hover {
   background-color: #357ab8;
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .tech-news-container {
+    width: 85%; /* Further reduced width for phone size */
+    padding: 10px; /* Reduced padding for phone size */
+    margin-bottom: 30px; /* Reduced margin for phone size */
+    margin-left: auto; /* Center the block horizontally */
+    margin-right: auto; /* Center the block horizontally */
+  }
+
+  .news-header-newyork {
+    font-size: 24px; /* Smaller font size for phone size */
+  }
+
+  .news-category-dropdown {
+    font-size: 14px; /* Smaller font size for phone size */
+    padding: 6px; /* Reduced padding for phone size */
+  }
+
+  .tech-news-item {
+    margin: 10px 0; /* Reduced margin for phone size */
+    padding-bottom: 8px; /* Reduced padding for phone size */
+  }
+
+  .tech-news-item a {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .tech-news-item p {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
+
+  .news-title {
+    display: block; /* Ensure title is on a new line for phone size */
+  }
+
+  .news-summary {
+    display: block; /* Ensure summary is on a new line for phone size */
+  }
+
+  .load-more-button,
+  .load-less-button {
+    font-size: 14px; /* Smaller font size for phone size */
+    padding: 8px 16px; /* Smaller padding for phone size */
+  }
 }

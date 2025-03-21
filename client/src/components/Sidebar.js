@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBuilding, FaHome, FaUser, FaPhone, FaBook } from 'react-icons/fa';
 import './Sidebar.css';
 import logo from '../logo.webp';
-import { FaCodeCompare, FaNoteSticky, FaPaperclip, } from 'react-icons/fa6';
+import { FaCodeCompare, FaNoteSticky, FaPaperclip } from 'react-icons/fa6';
 
 const Sidebar = ({ toggleSearch }) => {
   const [latestCompany, setLatestCompany] = useState(null);
@@ -78,7 +78,6 @@ const Sidebar = ({ toggleSearch }) => {
             <FaNoteSticky className="icon" /> Help
           </div>
         </li>
-        
       </ul>
     </div>
   );

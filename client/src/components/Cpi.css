@@ -1,3 +1,4 @@
+/* Desktop Styles (Unchanged) */
 .cpi-container {
   background-color: #1e1e1e;
   padding: 20px;
@@ -56,4 +57,23 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .cpi-container {
+    width: 90%; /* Reduced width for phone size */
+    max-width: none; /* Remove max-width for phone size */
+    height: 225px; /* Same height as Employement component */
+    padding: 15px; /* Reduced padding for phone size */
+    margin: 10px auto; /* Centered with reduced margin for phone size */
+  }
+
+  .cpi-header h2 {
+    font-size: 16px; /* Smaller font size for phone size */
+  }
+
+  .chart-block {
+    height: 200px; /* Fixed height for the chart block on phone size */
+  }
 }

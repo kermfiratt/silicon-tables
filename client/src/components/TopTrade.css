@@ -1,4 +1,4 @@
-/* src/components/TopTrade.css */
+/* Desktop Styles (Unchanged) */
 .top-trade-container {
   display: flex;
   flex-direction: column;
@@ -85,4 +85,39 @@
 .error {
   color: red;
   text-align: center;
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .top-trade-container {
+    width: 90%; /* Reduced width for phone size */
+    height: auto; /* Auto height for phone size */
+    padding: 15px; /* Reduced padding for phone size */
+    margin: 10px auto; /* Centered with reduced margin for phone size */
+  }
+
+  .top-trade-left span {
+    font-size: 18px; /* Smaller font size for phone size */
+  }
+
+  .top-trade-header {
+    font-size: 18px; /* Smaller font size for phone size */
+  }
+
+  .top-trade-item {
+    font-size: 14px; /* Smaller font size for phone size */
+    padding: 8px 0; /* Reduced padding for phone size */
+  }
+
+  .trade-rank {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .trade-name {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .trade-volume {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
 }

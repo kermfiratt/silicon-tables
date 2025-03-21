@@ -1,4 +1,3 @@
-// src/components/TopTrade.js
 import React, { useEffect, useState } from 'react';
 import './TopTrade.css';
 import axios from 'axios';

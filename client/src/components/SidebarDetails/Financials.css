@@ -254,3 +254,32 @@
   position: static;
   z-index: auto;
 }
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 graphs in a row for phone size */
+    gap: 10px; /* Reduced gap for phone size */
+  }
+
+  .metric-block h4 {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .metric-bar span {
+    font-size: 8px; /* Smaller font size for phone size */
+  }
+
+  .graph-dates span {
+    font-size: 8px; /* Smaller font size for phone size */
+  }
+
+  .financials-block h4 {
+    font-size: 18px; /* Smaller font size for phone size */
+  }
+
+  .financials-table th,
+  .financials-table td {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
+}

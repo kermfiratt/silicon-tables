@@ -1,3 +1,4 @@
+/* Desktop Styles (Unchanged) */
 .sidebar {
   width: 80px; /* Sidebar'ı daha dar tut */
   background-color: #0d0f15;
@@ -58,7 +59,6 @@
   color: white;
   font-size: 12px;
   cursor: pointer;
-  
 }
 
 .search-bar .search-button .icon {
@@ -81,15 +81,45 @@
   height: 100%;
   object-fit: cover; /* Ensures the image fits within the square without distortion */
   border-radius: 8px; /* Optional: adds rounded corners to the logo */
-  
-  
 }
 
-
-
-.account{
+.account {
   font-size: 18px;
   margin-bottom: 1px;
 }
 
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Full width for phone size */
+    height: auto; /* Auto height for horizontal layout */
+    position: static; /* Remove fixed positioning */
+    flex-direction: row; /* Horizontal layout */
+    justify-content: space-around; /* Space items evenly */
+    align-items: center; /* Center items vertically */
+    padding: 10px 0; /* Add padding */
+    margin-left: 0; /* Remove margin */
+    background-color: #0d0f15; /* Keep background color */
+  }
 
+  .sidebar-logo {
+    width: 50px; /* Smaller logo for phone size */
+    height: 50px; /* Smaller logo for phone size */
+  }
+
+  .sidebar-item, .inactive-item, .search-bar {
+    width: 50px; /* Smaller items for phone size */
+    height: 50px; /* Smaller items for phone size */
+    font-size: 10px; /* Smaller font size for phone size */
+  }
+
+  .sidebar-item .icon, .inactive-item .icon {
+    font-size: 14px; /* Smaller icons for phone size */
+  }
+
+  .menu {
+    display: flex; /* Horizontal layout for menu */
+    flex-direction: row; /* Align items horizontally */
+    gap: 10px; /* Add gap between items */
+  }
+}

@@ -1,4 +1,4 @@
-/* Watchlist Wrapper */
+/* Desktop Styles (Unchanged) */
 .watchlist-wrapper {
   position: fixed;
   top: 20px;
@@ -217,4 +217,57 @@
   color: #007bff; /* Blue text */
   text-align: center;
   width: 100%;
+}
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .watchlist-wrapper {
+    position: static; /* Remove fixed positioning */
+    width: 90%; /* Adjusted width for phone size */
+    margin: 20px auto; /* Center the block horizontally */
+    height: auto; /* Auto height for phone size */
+    display: flex;
+    justify-content: center; /* Center the block horizontally */
+  }
+
+  .watchlist-container {
+    width: 100%; /* Full width of the wrapper */
+    height: auto; /* Auto height for phone size */
+    max-height: none; /* Remove max-height */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Shadow */
+  }
+
+  .watchlist-header {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .add-stock-input {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
+
+  .add-button {
+    font-size: 12px; /* Smaller font size for phone size */
+    padding: 4px 8px; /* Smaller padding for phone size */
+  }
+
+  .watchlist-item {
+    padding: 8px; /* Smaller padding for phone size */
+  }
+
+  .date-text {
+    font-size: 10px; /* Smaller font size for phone size */
+  }
+
+  .symbol {
+    font-size: 14px; /* Smaller font size for phone size */
+  }
+
+  .price {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
+
+  .change {
+    font-size: 12px; /* Smaller font size for phone size */
+  }
 }
