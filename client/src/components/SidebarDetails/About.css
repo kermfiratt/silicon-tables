@@ -126,3 +126,27 @@
   color: #007bff;
   font-weight: 500;
 }
+
+/* Phone-Specific Styles (Only for screens <= 768px) */
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: repeat(1, 1fr); /* 1 block per row for phone size */
+    gap: 0.75rem; /* Reduced gap for phone size */
+  }
+
+  .about-block {
+    padding: 0.75rem; /* Reduced padding for phone size */
+  }
+
+  .about-block h4 {
+    font-size: 0.9rem; /* Smaller font size for phone size */
+  }
+
+  .about-block div {
+    font-size: 0.85rem; /* Smaller font size for phone size */
+  }
+
+  .about-block a {
+    font-size: 0.85rem; /* Smaller font size for phone size */
+  }
+}

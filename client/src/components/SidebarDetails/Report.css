@@ -78,7 +78,7 @@
   font-weight: 500; /* Medium weight for a professional look */
 }
 
-/* Rest of your existing CSS remains unchanged */
+/* Report Container */
 .report-container {
   display: flex;
   flex-direction: column;
@@ -88,6 +88,7 @@
   min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .report-title {
@@ -192,20 +193,6 @@
 
 .report-block ul li .value.red {
   background-color: #ff4d4d;
-}
-
-/* Loading Indicator */
-.loading {
-  font-size: 20px;
-  font-weight: bold;
-  color: #4caf50;
-  margin-top: 20px;
-}
-
-.error-message {
-  color: #ff4d4d;
-  font-size: 16px;
-  margin-top: 20px;
 }
 
 /* Responsive Design for Smaller Screens */

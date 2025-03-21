@@ -188,95 +188,97 @@ const Financials = forwardRef(({ symbol, refs, activeSection }, ref) => {
           {/* Summary Income Statement */}
           <div className="financials-block">
             <h4>Summary Income Statement</h4>
-            <table className="financials-table">
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  {financialData.map((item) => (
-                    <th key={item.date}>
-                      {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Sales</td>
-                  {financialData.map((item, index) => {
-                    const previousYearIndex = index + 4;
-                    const percentageChange =
-                      previousYearIndex < financialData.length
-                        ? calculatePercentageChange(item.revenue, financialData[previousYearIndex]?.revenue)
-                        : null;
-                    return (
-                      <td key={item.date}>
-                        {formatValue(item.revenue)}{' '}
-                        {percentageChange && (
-                          <span
-                            style={{
-                              color: percentageChange.includes('-') ? 'red' : 'green',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            ({percentageChange})
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-                <tr>
-                  <td>Gross Profit</td>
-                  {financialData.map((item, index) => {
-                    const previousYearIndex = index + 4;
-                    const percentageChange =
-                      previousYearIndex < financialData.length
-                        ? calculatePercentageChange(item.grossProfit, financialData[previousYearIndex]?.grossProfit)
-                        : null;
-                    return (
-                      <td key={item.date}>
-                        {formatValue(item.grossProfit)}{' '}
-                        {percentageChange && (
-                          <span
-                            style={{
-                              color: percentageChange.includes('-') ? 'red' : 'green',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            ({percentageChange})
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-                <tr>
-                  <td>Net Income</td>
-                  {financialData.map((item, index) => {
-                    const previousYearIndex = index + 4;
-                    const percentageChange =
-                      previousYearIndex < financialData.length
-                        ? calculatePercentageChange(item.netIncome, financialData[previousYearIndex]?.netIncome)
-                        : null;
-                    return (
-                      <td key={item.date}>
-                        {formatValue(item.netIncome)}{' '}
-                        {percentageChange && (
-                          <span
-                            style={{
-                              color: percentageChange.includes('-') ? 'red' : 'green',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            ({percentageChange})
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </tbody>
-            </table>
+            <div className="table-container">
+              <table className="financials-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    {financialData.map((item) => (
+                      <th key={item.date}>
+                        {new Date(item.date).toISOString().slice(0, 7).replace('-', '/')}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Sales</td>
+                    {financialData.map((item, index) => {
+                      const previousYearIndex = index + 4;
+                      const percentageChange =
+                        previousYearIndex < financialData.length
+                          ? calculatePercentageChange(item.revenue, financialData[previousYearIndex]?.revenue)
+                          : null;
+                      return (
+                        <td key={item.date}>
+                          {formatValue(item.revenue)}{' '}
+                          {percentageChange && (
+                            <span
+                              style={{
+                                color: percentageChange.includes('-') ? 'red' : 'green',
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              ({percentageChange})
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  <tr>
+                    <td>Gross Profit</td>
+                    {financialData.map((item, index) => {
+                      const previousYearIndex = index + 4;
+                      const percentageChange =
+                        previousYearIndex < financialData.length
+                          ? calculatePercentageChange(item.grossProfit, financialData[previousYearIndex]?.grossProfit)
+                          : null;
+                      return (
+                        <td key={item.date}>
+                          {formatValue(item.grossProfit)}{' '}
+                          {percentageChange && (
+                            <span
+                              style={{
+                                color: percentageChange.includes('-') ? 'red' : 'green',
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              ({percentageChange})
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  <tr>
+                    <td>Net Income</td>
+                    {financialData.map((item, index) => {
+                      const previousYearIndex = index + 4;
+                      const percentageChange =
+                        previousYearIndex < financialData.length
+                          ? calculatePercentageChange(item.netIncome, financialData[previousYearIndex]?.netIncome)
+                          : null;
+                      return (
+                        <td key={item.date}>
+                          {formatValue(item.netIncome)}{' '}
+                          {percentageChange && (
+                            <span
+                              style={{
+                                color: percentageChange.includes('-') ? 'red' : 'green',
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              ({percentageChange})
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Financial Metrics */}

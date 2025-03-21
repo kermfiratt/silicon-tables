@@ -99,6 +99,10 @@
 }
 
 /* Table Styling */
+.table-container {
+  overflow-x: auto; /* Enable horizontal scrolling for small screens */
+}
+
 .financials-table {
   width: 100%;
   margin-top: 20px;
@@ -258,28 +262,25 @@
 /* Phone-Specific Styles (Only for screens <= 768px) */
 @media (max-width: 768px) {
   .metrics-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 graphs in a row for phone size */
+    grid-template-columns: repeat(1, 1fr); /* 1 graph in a row for phone size */
     gap: 10px; /* Reduced gap for phone size */
-  }
-
-  .metric-block h4 {
-    font-size: 14px; /* Smaller font size for phone size */
-  }
-
-  .metric-bar span {
-    font-size: 8px; /* Smaller font size for phone size */
-  }
-
-  .graph-dates span {
-    font-size: 8px; /* Smaller font size for phone size */
-  }
-
-  .financials-block h4 {
-    font-size: 18px; /* Smaller font size for phone size */
   }
 
   .financials-table th,
   .financials-table td {
     font-size: 12px; /* Smaller font size for phone size */
+    padding: 8px; /* Reduced padding for phone size */
+  }
+
+  .metric-block h4 {
+    font-size: 16px; /* Smaller font size for phone size */
+  }
+
+  .metric-bar span {
+    font-size: 10px; /* Smaller font size for phone size */
+  }
+
+  .graph-dates span {
+    font-size: 10px; /* Smaller font size for phone size */
   }
 }
