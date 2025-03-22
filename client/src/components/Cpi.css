@@ -5,8 +5,9 @@
   border-radius: 8px;
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
-  max-width: 600px;
+  margin: 20px auto; /* Centered with consistent margins */
+  max-width: 300px; /* Default max-width for smaller screens */
+  width: 90%; /* Responsive width */
   text-align: center;
   margin-top: 10px;
   padding-top: 5px;
@@ -64,7 +65,7 @@
   .cpi-container {
     width: 90%; /* Reduced width for phone size */
     max-width: none; /* Remove max-width for phone size */
-    height: 225px; /* Same height as Employement component */
+    height: 225px; /* Same height as Employment component */
     padding: 15px; /* Reduced padding for phone size */
     margin: 10px auto; /* Centered with reduced margin for phone size */
   }
@@ -75,5 +76,15 @@
 
   .chart-block {
     height: 200px; /* Fixed height for the chart block on phone size */
+  }
+}
+
+/* Large Screen Styles (For screens > 1200px) */
+@media (min-width: 1200px) {
+  .cpi-container {
+     /* Increase max-width for larger screens */
+    width: 90%; /* Responsive width for larger screens */
+    margin-left: auto; /* Keep margins consistent */
+    margin-right: auto;
   }
 }

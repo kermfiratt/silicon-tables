@@ -5,7 +5,7 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
-  max-width: 400px; /* Same width as Nonfarm container */
+  max-width: 400px; /* Current max-width */
   text-align: center;
   padding-right: 5px;
   margin-bottom: 5px;
@@ -17,7 +17,7 @@
 
 .retail-sales-header {
   font-size: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   padding-bottom: 15px; /* Add padding for the line */
   position: relative;
   line-height: 1.2; /* Reduced line height to bring lines closer */
@@ -39,7 +39,7 @@
   padding-top: 0px;
   padding-left: 10px;
   padding-right: 10px;
-  
+  margin-bottom: 0px;
 }
 
 .retail-sales-item {
@@ -55,6 +55,8 @@
   font-weight: bold;
   text-align: left; /* Align date to the left */
   flex: 1; /* Allow the date to take up available space */
+  margin-bottom: 0px;
+  white-space: nowrap; /* Prevent line breaks */
 }
 
 .retail-sales-value {
@@ -67,4 +69,15 @@
 
 .error-message {
   color: red;
+}
+
+/* Add this for larger screens */
+@media (min-width: 1200px) {
+  .retail-sales-container {
+    max-width: 600px; /* Increase max-width for larger screens */
+    margin-left: 0px; /* Keep margins consistent */
+    width: 70%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
 }

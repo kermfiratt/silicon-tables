@@ -5,9 +5,9 @@
   border-radius: 8px;
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
-  max-width: 300px;
-  width: 600px;
+  margin: 20px auto; /* Centered with consistent margins */
+  max-width: 300px; /* Default max-width for smaller screens */
+  width: 90%; /* Responsive width */
   text-align: center;
   margin-top: 20px;
   padding-top: 5px;
@@ -15,6 +15,7 @@
   position: relative; /* Ensure relative positioning for child elements */
   margin-bottom: 5px;
 }
+
 
 .recent-vc-funds-header h2 {
   font-size: 18px; /* Smaller font size for header */
@@ -72,5 +73,15 @@
 
   .chart-block {
     height: 200px; /* Fixed height for the chart block on phone size */
+  }
+}
+
+/* Large Screen Styles (For screens > 1200px) */
+@media (min-width: 1200px) {
+  .recent-vc-funds-container {
+     /* Increase max-width for larger screens */
+    width: 99%; /* Responsive width for larger screens */
+    margin-left: auto; /* Keep margins consistent */
+    margin-right: auto;
   }
 }

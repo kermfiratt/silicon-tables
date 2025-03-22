@@ -10,7 +10,7 @@
   margin: 20px auto;
   margin-bottom: 1px;
   width: 40%;
-  max-width: 600px;
+  max-width: 900px;
   height: 475px; /* Fixed height for the block */
 }
 
@@ -119,5 +119,15 @@
 
   .trade-volume {
     font-size: 14px; /* Smaller font size for phone size */
+  }
+}
+
+/* Large Screen Styles (For screens > 1200px) */
+@media (min-width: 1200px) {
+  .top-trade-container {
+    width: 40%; /* Increase width for larger screens */
+    max-width: 800px; /* Increase max-width for larger screens */
+    margin-left: 0px;
+    margin-right: 0px;
   }
 }

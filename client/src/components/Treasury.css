@@ -5,7 +5,7 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 600px; /* Current max-width */
   text-align: center;
   margin-top: 0px;
   margin-bottom: 0px;
@@ -41,4 +41,16 @@
 
 .error-message {
   color: red;
+}
+
+/* Add this for larger screens */
+@media (min-width: 1200px) {
+  .treasury-container {
+    max-width: 800px; /* Increase max-width for larger screens */
+    margin-left: 0px; /* Keep margins consistent */
+    width: 70%;
+    padding-left: 32px;
+    padding-right: 32px;
+    
+  }
 }

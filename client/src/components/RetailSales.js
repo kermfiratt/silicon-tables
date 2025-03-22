@@ -53,7 +53,7 @@ const RetailSales = () => {
     <div className="retail-sales-container">
       <h3 className="retail-sales-header">
         Advance Retail Sales<br />
-        Retail Trade
+        
       </h3>
       {isLoading ? (
         <p>Loading data...</p>
