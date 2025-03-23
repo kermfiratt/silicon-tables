@@ -5,7 +5,7 @@ const Explanation = () => {
   return (
     <div className="explanation-container">
       <p className="explanation-text">
-        All stock data on this platform is end-of-day data. Real-time data is coming very soon.
+        All stock data on this platform is end-of-day data. Real-time datas is coming very soon.
       </p>
     </div>
   );
