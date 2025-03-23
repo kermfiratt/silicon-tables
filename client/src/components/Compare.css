@@ -244,11 +244,9 @@
   text-align: center;
 }
 
-
-
 /* Loading Spinner */
 .compare-loader {
-  width: 40px; /* Smaller spinner */
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   display: inline-block;
@@ -305,8 +303,8 @@
 
 /* Loading Text */
 .compare-loading-text {
-  margin-top: 12px; /* Reduced margin */
-  font-size: 0.95rem; /* Smaller font size */
+  margin-top: 12px;
+  font-size: 0.95rem;
   color: #007bff;
   font-weight: 500;
 }
@@ -317,4 +315,75 @@
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+}
+
+/* Media Query for Phone Screens (600px or less) */
+@media only screen and (max-width: 600px) {
+  .compare-container {
+    margin-left: 0; /* Remove left margin for phone screens */
+  }
+
+  .compare-title {
+    font-size: 24px; /* Smaller font size for phone screens */
+  }
+
+  .compare-search-wrapper {
+    flex-direction: column; /* Stack search boxes and button vertically */
+    gap: 10px; /* Reduced gap */
+    width: 100%; /* Full width */
+    max-width: 300px; /* Limit width for better readability */
+  }
+
+  .compare-search-input-wrapper {
+    width: 100%; /* Full width */
+  }
+
+  .compare-input {
+    font-size: 16px; /* Smaller font size for phone screens */
+  }
+
+  .compare-button {
+    width: 100%; /* Full width */
+    margin: 10px 0; /* Add margin */
+    font-size: 18px; /* Smaller font size */
+    padding: 12px 24px; /* Smaller padding */
+  }
+
+  .compare-header {
+    flex-direction: column; /* Stack company names vertically */
+    gap: 10px; /* Reduced gap */
+  }
+
+  .compare-company-score {
+    font-size: 20px; /* Smaller font size */
+    width: 100%; /* Full width */
+  }
+
+  .compare-category-title {
+    font-size: 18px; /* Smaller font size */
+  }
+
+  .compare-metric-row {
+    font-size: 16px; /* Smaller font size */
+  }
+
+  .compare-chart-section h2 {
+    font-size: 22px; /* Smaller font size */
+  }
+
+  .compare-chart-grid {
+    flex-direction: column; /* Stack charts vertically */
+  }
+
+  .compare-chart-container {
+    width: 100%; /* Full width */
+  }
+
+  .compare-chart-container h3 {
+    font-size: 18px; /* Smaller font size */
+  }
+
+  .compare-error {
+    font-size: 16px; /* Smaller font size */
+  }
 }

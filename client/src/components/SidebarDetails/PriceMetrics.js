@@ -67,6 +67,11 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
   return (
     <div className="pm-container" ref={refs.priceMetricsRef}>
       <section id="price-metrics-section">
+        {/* Company Name for Phone Size */}
+        <div className="pm-company-name-mobile">
+          {companyOverview.Name || 'N/A'}
+        </div>
+
         <h3 className="pm-title">Price Metrics</h3>
 
         {/* Valuation Metrics */}

@@ -15,6 +15,7 @@ const StockDetailsSidebar = ({ symbol }) => {
   const [currentPrice, setCurrentPrice] = useState(null);
   const [priceChangePercent, setPriceChangePercent] = useState(null);
   const [latestDate, setLatestDate] = useState(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // State to manage sidebar visibility on phone size
 
   const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
 
@@ -93,95 +94,127 @@ const StockDetailsSidebar = ({ symbol }) => {
     }
   };
 
+  // Toggle sidebar visibility on phone size
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
+  // Set default section to 'priceMetrics' on phone size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setActiveSection('priceMetrics');
+      } else {
+        setActiveSection('financials');
+      }
+    };
+
+    handleResize(); // Set initial state based on screen size
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="stock-details-container">
+      {/* Sidebar Toggle Button for Phone Size */}
+      {window.innerWidth <= 768 && (
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          {isSidebarVisible ? 'Hide Sidebar' : ''}
+        </button>
+      )}
+
       {/* Sidebar */}
-      <div className="stock-details-sidebar">
-        <div className="header-container">
-          {/* Company name and price container */}
-          <div className="company-name-price">
-            <h2 className="company-name name-wrapper">{symbol || 'Company Name'}</h2>
-            <div className="price-info price-wrapper">
-              <span className="price-value">${currentPrice}</span>
-              {priceChangePercent && (
-                <span
-                  className={`price-change ${
-                    priceChangePercent > 0 ? 'positive' : 'negative'
-                  }`}
-                >
-                  {priceChangePercent > 0 ? '+' : ''}
-                  {priceChangePercent}%
-                </span>
-              )}
+      {(window.innerWidth > 768 || isSidebarVisible) && (
+        <div className="stock-details-sidebar">
+          <div className="header-container">
+            {/* Company name and price container */}
+            <div className="company-name-price">
+              <h2 className="company-name name-wrapper">{symbol || 'Company Name'}</h2>
+              <div className="price-info price-wrapper">
+                <span className="price-value">${currentPrice}</span>
+                {priceChangePercent && (
+                  <span
+                    className={`price-change ${
+                      priceChangePercent > 0 ? 'positive' : 'negative'
+                    }`}
+                  >
+                    {priceChangePercent > 0 ? '+' : ''}
+                    {priceChangePercent}%
+                  </span>
+                )}
+              </div>
             </div>
+
+            {/* Date wrapper */}
+            {latestDate && (
+              <div className="date-wrapper">
+                {formatDate(latestDate)} END OF DAY PRICE
+              </div>
+            )}
           </div>
 
-          {/* Date wrapper */}
-          {latestDate && (
-            <div className="date-wrapper">
-              {formatDate(latestDate)} END OF DAY PRICE
-            </div>
-          )}
+          {/* Sidebar Navigation */}
+          <ul>
+            <li
+              onClick={() => handleSectionClick('financials', financialsRef)}
+              className={activeSection === 'financials' ? 'active' : ''}
+            >
+              Financials
+            </li>
+            <li
+              onClick={() => handleSectionClick('priceMetrics', priceMetricsRef)}
+              className={activeSection === 'priceMetrics' ? 'active' : ''}
+            >
+              Price Metrics
+            </li>
+            <li
+              onClick={() => handleSectionClick('about', aboutRef)}
+              className={activeSection === 'about' ? 'active' : ''}
+            >
+              About
+            </li>
+            <li
+              onClick={() => handleSectionClick('report', reportRef)}
+              className={activeSection === 'report' ? 'active' : ''}
+            >
+              Report
+            </li>
+            <li
+              onClick={() => handleSectionClick('news', newsRef)}
+              className={activeSection === 'news' ? 'active' : ''}
+            >
+              News
+            </li>
+            <li
+              onClick={() => handleSectionClick('quarterlyEarnings', quarterlyEarningsRef)}
+              className={activeSection === 'quarterlyEarnings' ? 'active' : ''}
+            >
+              Quarterly Earnings
+            </li>
+            <li
+              onClick={() => handleSectionClick('annualCashFlow', annualCashFlowRef)}
+              className={activeSection === 'annualCashFlow' ? 'active' : ''}
+            >
+              Annual Cash Flow
+            </li>
+            <li
+              onClick={() => handleSectionClick('balanceSheet', balanceSheetRef)}
+              className={activeSection === 'balanceSheet' ? 'active' : ''}
+            >
+              Balance Sheet
+            </li>
+            <li
+              onClick={() => handleSectionClick('annualBalanceSheet', annualBalanceSheetRef)}
+              className={activeSection === 'annualBalanceSheet' ? 'active' : ''}
+            >
+              Annual Balance Sheet
+            </li>
+          </ul>
         </div>
-
-        {/* Sidebar Navigation */}
-        <ul>
-          <li
-            onClick={() => handleSectionClick('financials', financialsRef)}
-            className={activeSection === 'financials' ? 'active' : ''}
-          >
-            Financials
-          </li>
-          <li
-            onClick={() => handleSectionClick('priceMetrics', priceMetricsRef)}
-            className={activeSection === 'priceMetrics' ? 'active' : ''}
-          >
-            Price Metrics
-          </li>
-          <li
-            onClick={() => handleSectionClick('about', aboutRef)}
-            className={activeSection === 'about' ? 'active' : ''}
-          >
-            About
-          </li>
-          <li
-            onClick={() => handleSectionClick('report', reportRef)}
-            className={activeSection === 'report' ? 'active' : ''}
-          >
-            Report
-          </li>
-          <li
-            onClick={() => handleSectionClick('news', newsRef)}
-            className={activeSection === 'news' ? 'active' : ''}
-          >
-            News
-          </li>
-          <li
-            onClick={() => handleSectionClick('quarterlyEarnings', quarterlyEarningsRef)}
-            className={activeSection === 'quarterlyEarnings' ? 'active' : ''}
-          >
-            Quarterly Earnings
-          </li>
-          <li
-            onClick={() => handleSectionClick('annualCashFlow', annualCashFlowRef)}
-            className={activeSection === 'annualCashFlow' ? 'active' : ''}
-          >
-            Annual Cash Flow
-          </li>
-          <li
-            onClick={() => handleSectionClick('balanceSheet', balanceSheetRef)}
-            className={activeSection === 'balanceSheet' ? 'active' : ''}
-          >
-            Balance Sheet
-          </li>
-          <li
-            onClick={() => handleSectionClick('annualBalanceSheet', annualBalanceSheetRef)}
-            className={activeSection === 'annualBalanceSheet' ? 'active' : ''}
-          >
-            Annual Balance Sheet
-          </li>
-        </ul>
-      </div>
+      )}
 
       {/* Main Content Area */}
       <div className="stock-details-content">

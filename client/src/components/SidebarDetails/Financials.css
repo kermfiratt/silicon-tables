@@ -284,3 +284,11 @@
     font-size: 10px; /* Smaller font size for phone size */
   }
 }
+
+
+/* Desktop-Specific Styles (Only for screens > 1000px) */
+@media (min-width: 1800px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 graphs in a row for desktop size */
+  }
+}

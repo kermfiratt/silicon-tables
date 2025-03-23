@@ -6,10 +6,10 @@
   color: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin: 20px auto; /* Centered with consistent margins */
-  max-width: 300px; /* Default max-width for smaller screens */
   width: 90%; /* Responsive width */
   text-align: center;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-left: 5px;
   padding-top: 5px;
   height: 230px; /* Fixed height for the container */
   position: relative; /* Ensure relative positioning for child elements */
@@ -63,11 +63,12 @@
 /* Phone-Specific Styles (Only for screens <= 768px) */
 @media (max-width: 768px) {
   .cpi-container {
-    width: 90%; /* Reduced width for phone size */
+    width: 180%; /* Reduced width for phone size */
     max-width: none; /* Remove max-width for phone size */
     height: 225px; /* Same height as Employment component */
     padding: 15px; /* Reduced padding for phone size */
     margin: 10px auto; /* Centered with reduced margin for phone size */
+    align-items: center;
   }
 
   .cpi-header h2 {
@@ -79,12 +80,11 @@
   }
 }
 
-/* Large Screen Styles (For screens > 1200px) */
+/* Add this for larger screens */
 @media (min-width: 1200px) {
   .cpi-container {
-     /* Increase max-width for larger screens */
-    width: 90%; /* Responsive width for larger screens */
-    margin-left: auto; /* Keep margins consistent */
-    margin-right: auto;
+    max-width: 800px; /* Increase max-width for larger screens */
+    margin-left: 5px; /* Keep margins consistent */
+    width: 90%;
   }
 }

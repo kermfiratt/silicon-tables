@@ -11,7 +11,6 @@
   max-width: 1200px;
   margin-left: auto; /* Center the block horizontally */
   margin-right: auto; /* Center the block horizontally */
-  
 }
 
 .news-header-newyork {
@@ -127,14 +126,6 @@
 
   .tech-news-item p {
     font-size: 12px; /* Smaller font size for phone size */
-  }
-
-  .news-title {
-    display: block; /* Ensure title is on a new line for phone size */
-  }
-
-  .news-summary {
-    display: block; /* Ensure summary is on a new line for phone size */
   }
 
   .load-more-button,

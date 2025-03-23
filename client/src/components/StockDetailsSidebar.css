@@ -123,6 +123,11 @@
     height: auto; /* Auto height for phone size */
     padding: 10px; /* Reduced padding for phone size */
     box-shadow: none; /* Remove shadow for phone size */
+    display: none; /* Hide sidebar by default on phone size */
+  }
+
+  .stock-details-sidebar.visible {
+    display: block; /* Show sidebar when toggled */
   }
 
   .stock-details-content {
@@ -151,5 +156,16 @@
 
   .stock-details-sidebar ul li {
     font-size: 12px; /* Smaller font size for phone size */
+  }
+
+  .sidebar-toggle {
+    
+    background-color: #0d0f15;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
   }
 }

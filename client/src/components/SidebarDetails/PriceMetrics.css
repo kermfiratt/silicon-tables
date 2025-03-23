@@ -135,3 +135,25 @@
   text-align: center;
   margin: 1rem 0;
 }
+
+
+/* Company Name for Mobile */
+.pm-company-name-mobile {
+  display: none; /* Hidden by default */
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--pm-text);
+  text-align: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--pm-border);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Show only on phone-sized screens */
+@media (max-width: 600px) {
+  .pm-company-name-mobile {
+    display: block;
+  }
+}

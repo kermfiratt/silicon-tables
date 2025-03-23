@@ -49,7 +49,7 @@ const Home = ({ isSearchOpen, stocks, addStock, removeStock }) => {
         </div>
 
         {/* Employment and CPI Section */}
-        <div>
+        <div className='charts'>
           <Employement />
           <Cpi isSearchOpen={isSearchOpen} />
         </div>

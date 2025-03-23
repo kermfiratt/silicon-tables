@@ -98,7 +98,7 @@ const TechNews = () => {
                 <p className="news-summary">
                   {window.innerWidth <= 768
                     ? shortenText(item.summary, 70) // Shorten summary for phone size
-                    : item.summary.slice(0, 100) + '...'}
+                    : item.summary}
                 </p>
               </li>
             ))}
