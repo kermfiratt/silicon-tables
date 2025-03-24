@@ -28,7 +28,9 @@
   margin-bottom: 10px;
   text-align: center;
   transition: background-color 0.3s;
+  text-decoration: none;
 }
+
 
 .sidebar-item:hover, .search-bar:hover, .inactive-item:hover {
   background-color: #666; /* Hover efekti */
