@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaHome, FaUser, FaPhone, FaBook } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaHome } from 'react-icons/fa';
 import './Sidebar.css';
 import logo from '../logo.webp';
-import { FaCodeCompare, FaNoteSticky, FaPaperclip } from 'react-icons/fa6';
+import { FaCodeCompare, FaNoteSticky } from 'react-icons/fa6';
 
 const Sidebar = ({ toggleSearch }) => {
-  const [latestCompany, setLatestCompany] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const lastVisitedCompany = localStorage.getItem('latestCompany');
-    if (lastVisitedCompany) {
-      setLatestCompany(lastVisitedCompany);
-    }
-  }, []);
-
   const handleCompanyInfoClick = () => {
-    if (latestCompany) {
-      navigate(`/company/${latestCompany}`);
-    } else {
-      navigate(`/company/Apple`);
-    }
+    navigate('/company/TSLA'); // Always goes to Tesla, no latestCompany logic
   };
 
   const handleCompareClick = () => {
-    navigate('/compare'); // Navigate to Compare page
+    navigate('/compare');
   };
 
   const handleContactClick = () => {
-    navigate('/contact'); // Navigate to Contact page
+    navigate('/contact');
   };
 
   return (
