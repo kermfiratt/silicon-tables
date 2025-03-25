@@ -6,7 +6,7 @@ const Contact = () => {
         <div className="contact-container">
             <div className="contact-terms-content">
                 <h1>Minimum Viable Product (MVP) Disclaimer</h1>
-                <p><strong>Last Updated:</strong> [Insert Date]</p>
+                <p><strong>Last Updated:</strong> [ 26 MARCH 2025]</p>
 
                 <h2>1. Introduction</h2>
                 <p>
@@ -44,7 +44,7 @@ const Contact = () => {
                 <p className="contact-email">support@companymail.com</p>
             </div>
             <footer className="contact-footer">
-                &copy; 2025 companymail.com. All rights reserved.
+                &copy; 2025 support@finfact.io All rights reserved.
             </footer>
         </div>
     );

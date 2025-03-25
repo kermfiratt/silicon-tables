@@ -6,7 +6,6 @@ import Nonfarm from './Nonfarm';
 import TechNews from './TechNews';
 import Employement from './Employement';
 import Treasury from './Treasury';
-import Ticker from './Ticker';
 import Watchlist from './Watchlist';
 import StockCardContainer from './StockCardContainer';
 import Cpi from './Cpi';
@@ -60,11 +59,7 @@ const Home = ({ isSearchOpen, stocks, addStock, removeStock }) => {
         <TechNews />
       </div>
 
-      {/* Ticker Section */}
-      <div className="ticker-wrapper">
-        <Ticker />
-      </div>
-
+    
       {/* Watchlist Section */}
       <div>
         <Watchlist isSearchOpen={isSearchOpen} />
