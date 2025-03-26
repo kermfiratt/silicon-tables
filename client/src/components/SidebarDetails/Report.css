@@ -4,13 +4,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute; /* Covers the entire parent container */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #0d0f15; /* Semi-transparent black background */
-  z-index: 1000; /* Ensure it's on top of other content */
+  background-color: #0d0f15;
+  z-index: 1000;
 }
 
 /* Loading Spinner */
@@ -21,9 +21,9 @@
   display: inline-block;
   position: relative;
   border: 3px solid;
-  border-color: #FFF #FFF transparent transparent; /* White borders */
+  border-color: #FFF #FFF transparent transparent;
   box-sizing: border-box;
-  animation: rotation 1s linear infinite; /* Main rotation */
+  animation: rotation 1s linear infinite;
 }
 
 .loader::after,
@@ -37,19 +37,19 @@
   bottom: 0;
   margin: auto;
   border: 3px solid;
-  border-color: transparent transparent #007bff #007bff; /* Blue borders */
+  border-color: transparent transparent #007bff #007bff;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  animation: rotationBack 0.5s linear infinite; /* Reverse rotation */
+  animation: rotationBack 0.5s linear infinite;
   transform-origin: center center;
 }
 
 .loader::before {
   width: 32px;
   height: 32px;
-  border-color: #FFF #FFF transparent transparent; /* White borders */
-  animation: rotation 1.5s linear infinite; /* Faster rotation */
+  border-color: #FFF #FFF transparent transparent;
+  animation: rotation 1.5s linear infinite;
 }
 
 @keyframes rotation {
@@ -72,10 +72,10 @@
 
 /* Loading Text */
 .loading-text {
-  margin-top: 16px; /* Adjusted margin */
-  font-size: 18px; /* Reduced font size */
-  color: #007bff; /* Blue text */
-  font-weight: 500; /* Medium weight for a professional look */
+  margin-top: 16px;
+  font-size: clamp(14px, 2vw, 18px);
+  color: #007bff;
+  font-weight: 500;
 }
 
 /* Report Container */
@@ -86,58 +86,59 @@
   background-color: #0d0f15;
   color: #e6e6e6;
   min-height: 100vh;
-  padding: 20px;
+  padding: clamp(15px, 3vw, 30px);
   box-sizing: border-box;
   width: 100%;
 }
 
 .report-title {
-  font-size: 32px;
+  font-size: clamp(24px, 3vw, 32px);
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: clamp(15px, 2vw, 20px);
   text-align: center;
 }
 
 .report-blocks {
   display: flex;
-  gap: 15px; /* Gap between blocks */
+  gap: clamp(10px, 2vw, 20px);
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  max-width: 1200px; /* Limit maximum width for larger screens */
+  max-width: min(95vw, 1400px);
+  margin: 0 auto;
 }
 
 .report-block {
   background: #181c23;
-  padding: 15px;
-  border-radius: 10px;
-  flex: 1 1 30%; /* Allow blocks to grow and shrink, taking up 30% of the container width */
-  min-width: 280px; /* Slightly reduced minimum width */
-  max-width: calc(30% - 15px); /* Slightly reduced maximum width, accounting for the gap */
+  padding: clamp(12px, 2vw, 20px);
+  border-radius: clamp(8px, 1.5vw, 12px);
+  flex: 1 1 clamp(280px, 30%, 400px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-left: 5px solid #333;
+  border-left: clamp(3px, 0.5vw, 5px) solid #333;
+  min-height: clamp(300px, 40vw, 500px);
+  transition: all 0.3s ease;
 }
 
 .report-block h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: clamp(16px, 2vw, 22px);
+  margin-bottom: clamp(8px, 1vw, 12px);
   display: flex;
   align-items: center;
 }
 
 .report-block h2 .circle {
   display: inline-block;
-  width: 22px;
-  height: 22px;
+  width: clamp(20px, 2vw, 24px);
+  height: clamp(20px, 2vw, 24px);
   border-radius: 50%;
   background-color: #4caf50;
   color: white;
   text-align: center;
-  line-height: 22px;
-  margin-left: 8px;
-  font-size: 12px;
+  line-height: clamp(20px, 2vw, 24px);
+  margin-left: clamp(5px, 1vw, 10px);
+  font-size: clamp(10px, 1.5vw, 14px);
 }
 
 .report-block ul {
@@ -154,7 +155,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: clamp(5px, 1vw, 10px) 0;
   border-bottom: 1px solid #333;
 }
 
@@ -165,26 +166,27 @@
 .report-block ul li .metric {
   text-align: left;
   flex: 1;
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 16px);
+  padding-right: clamp(5px, 1vw, 10px);
 }
 
 .report-block ul li .value {
-  padding: 4px 8px;
-  border-radius: 5px;
+  padding: clamp(3px, 0.8vw, 6px) clamp(5px, 1vw, 10px);
+  border-radius: clamp(3px, 0.8vw, 6px);
   font-weight: bold;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 26px;
-  min-width: 80px;
+  height: auto;
+  min-width: clamp(60px, 10vw, 100px);
   white-space: nowrap;
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 16px);
 }
 
 /* Indebtedness Block */
 .report-block.indebtedness ul li .value {
-  min-width: 50px;
+  min-width: clamp(40px, 8vw, 60px);
 }
 
 .report-block ul li .value.green {
@@ -195,32 +197,35 @@
   background-color: #ff4d4d;
 }
 
+/* Responsive Design for Larger Screens */
+@media (min-width: 1200px) {
+  .report-blocks {
+    gap: 25px;
+  }
+  
+  .report-block {
+    padding: 25px;
+    min-height: 450px;
+  }
+}
+
 /* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
   .report-blocks {
     flex-direction: column;
     align-items: center;
+    width: 95%;
   }
 
   .report-block {
-    width: 100%; /* Full width on smaller screens */
+    width: 100%;
     max-width: 100%;
-    flex: 1 1 100%; /* Allow blocks to take full width on smaller screens */
+    flex: 1 1 auto;
+    min-height: auto;
+    margin-bottom: 15px;
   }
 
-  .report-title {
-    font-size: 28px;
-  }
-
-  .report-block h2 {
-    font-size: 18px;
-  }
-
-  .report-block ul li .metric {
-    font-size: 13px;
-  }
-
-  .report-block ul li .value {
-    font-size: 13px;
+  .report-block:last-child {
+    margin-bottom: 0;
   }
 }
