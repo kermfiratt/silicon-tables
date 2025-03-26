@@ -1,33 +1,37 @@
-/* Ultra-Professional Dark Theme */
+/* Ultra-Professional Dark Theme with Optimized Block Sizing */
 :root {
-  --pm-background: #0f172a; /* Dark background */
-  --pm-text: #f8fafc; /* Light text */
-  --pm-card-background: #1e293b; /* Dark card background */
-  --pm-border: #334155; /* Dark border */
-  --pm-accent: #60a5fa; /* Blue accent */
-  --pm-secondary: #34d399; /* Green accent */
-  --pm-error: #ef4444; /* Red error */
-  --pm-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Strong shadow */
+  --pm-background: #0f172a;
+  --pm-text: #f8fafc;
+  --pm-card-background: #1e293b;
+  --pm-border: #334155;
+  --pm-accent: #60a5fa;
+  --pm-secondary: #34d399;
+  --pm-error: #ef4444;
+  --pm-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  --pm-block-margin: 0.5rem;
+  --pm-block-gap: 1.5rem; /* Added for consistent gap */
 }
 
-/* Base Styles */
+/* Base Container - Full Page Coverage */
 .pm-container {
-  padding: 1.5rem;
+  padding: 1rem;
   background-color: var(--pm-background);
   border-radius: 12px;
-  box-shadow: var(--pm-shadow);
-  margin: 1rem auto;
-  max-width: 1200px;
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: var(--pm-text);
 }
 
 /* Section Title */
 .pm-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 600;
   color: var(--pm-text);
-  margin-bottom: 1.5rem;
+  margin: 0 0 1rem 0; /* Reduced from 1.5rem */
+  padding-top: 0.5rem;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -46,114 +50,168 @@
 
 /* Metrics Category */
 .pm-category {
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem; /* Reduced from 2.5rem */
 }
 
 .pm-category-title {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   font-weight: 600;
   color: var(--pm-text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem; /* Reduced from 0.75rem */
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--pm-border);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
-/* Metrics Blocks Grid */
+/* Metrics Blocks Grid - Dynamic Layout */
 .pm-blocks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--pm-block-gap); /* Updated to use variable */
+  width: 100%;
 }
 
-/* Individual Metric Block */
+/* Optimized Metric Block */
 .pm-block {
   background: var(--pm-card-background);
-  padding: 1rem;
+  padding: 0.5rem; /* Reduced from 0.75rem */
   border-radius: 8px;
   box-shadow: var(--pm-shadow);
-  text-align: left;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid var(--pm-accent);
+  border-left: 4px solid;
+  height: 100%;
+  min-height: 70px; /* Reduced from 80px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0; /* Removed individual block margin */
 }
 
 .pm-block:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .pm-block h4 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+  margin: 0 0 0.2rem 0; /* Reduced from 0.25rem */
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
   font-weight: 500;
   color: var(--pm-text);
+  line-height: 1.3;
 }
 
 .pm-block p {
-  font-size: 1.125rem;
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
   font-weight: 600;
   color: var(--pm-accent);
   margin: 0;
 }
 
-/* Special Block Styles */
-.pm-block-special {
-  background: var(--pm-card-background);
-  border-left: 4px solid var(--pm-secondary);
-}
-
-.pm-block-special h4 {
-  color: var(--pm-text);
-}
-
-.pm-block-special p {
-  color: var(--pm-);
-}
-
-/* Loading Overlay (Unchanged) */
+/* Loading Overlay (unchanged) */
 .pm-loading-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #0d0f15;
+  background-color: rgba(13, 15, 21, 0.9);
   z-index: 1000;
-  border-radius: 12px;
 }
 
-/* Error Message */
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid var(--pm-accent);
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pm-loading-text {
+  font-size: 0.95rem;
+  color: var(--pm-text);
+}
+
+/* Error Message (unchanged) */
 .pm-error-message {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--pm-error);
   text-align: center;
   margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--pm-card-background);
+  border-radius: 8px;
 }
 
-
-/* Company Name for Mobile */
+/* Company Name for Mobile (unchanged) */
 .pm-company-name-mobile {
-  display: none; /* Hidden by default */
-  font-size: 1.25rem;
+  display: none;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--pm-text);
   text-align: center;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--pm-border);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
 }
 
-/* Show only on phone-sized screens */
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .pm-blocks {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .pm-container {
+    padding: 0.75rem;
+  }
+  
+  .pm-blocks {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem; /* Consistent with base gap */
+  }
+  
+  .pm-block {
+    min-height: 65px; /* Reduced from 70px */
+    padding: 0.5rem; /* Consistent with base padding */
+  }
+}
+
 @media (max-width: 600px) {
   .pm-company-name-mobile {
     display: block;
+  }
+  
+  .pm-blocks {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .pm-block {
+    min-height: 70px; /* Adjusted from 75px */
+  }
+}
+
+@media (max-width: 400px) {
+  .pm-blocks {
+    grid-template-columns: 1fr;
+  }
+  
+  .pm-block {
+    min-height: 60px; /* Reduced from 65px */
   }
 }
