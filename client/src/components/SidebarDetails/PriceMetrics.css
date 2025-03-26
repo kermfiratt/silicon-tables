@@ -45,6 +45,15 @@
   line-height: 1.5;
 }
 
+/* Instruction text */
+.pm-click-instruction {
+  font-size: 0.9rem;
+  color: var(--pm-info);
+  text-align: center;
+  margin: -0.75rem 0 1.5rem 0;
+  font-style: italic;
+}
+
 /* Section Title Styles */
 .pm-title {
   font-size: 1.5rem;
@@ -249,34 +258,6 @@
   margin: 0;
 }
 
-/* Info Icon Styling */
-.pm-info-icon {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: var(--pm-info);
-  color: var(--pm-card-background);
-  border: none;
-  font-size: 0.65rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  padding: 0;
-  line-height: 1;
-  z-index: 10;
-}
-
-.pm-info-icon:hover {
-  background-color: var(--pm-valuation-color);
-  transform: scale(1.1);
-}
-
 /* Loading Overlay */
 .pm-loading-overlay {
   display: flex;
@@ -390,14 +371,6 @@
   .pm-explanation p {
     font-size: 0.8rem;
   }
-  
-  .pm-info-icon {
-    top: 6px;
-    right: 6px;
-    width: 16px;
-    height: 16px;
-    font-size: 0.6rem;
-  }
 }
 
 @media (max-width: 600px) {
@@ -430,10 +403,5 @@
   
   .pm-explanation p {
     font-size: 0.75rem;
-  }
-  
-  .pm-info-icon {
-    top: 5px;
-    right: 5px;
   }
 }

@@ -74,21 +74,11 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
     }
   };
 
-  const handleCardFlip = (metric, e) => {
-    e.stopPropagation();
+  const handleCardClick = (metric) => {
     setFlippedCards(prev => ({
       ...prev,
       [metric]: !prev[metric]
     }));
-  };
-
-  const handleCardClick = (metric) => {
-    if (flippedCards[metric]) {
-      setFlippedCards(prev => ({
-        ...prev,
-        [metric]: false
-      }));
-    }
   };
 
   if (loading) {
@@ -117,6 +107,7 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
         </div>
 
         <h3 className="pm-title">Price Metrics</h3>
+        <p className="pm-click-instruction">Click the metrics to see the explanations</p>
 
         {/* Valuation Metrics */}
         <div className="pm-category">
@@ -129,13 +120,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('MarketCapitalization', e)}
-                    aria-label="Market Cap explanation"
-                  >
-                    i
-                  </button>
                   <h4>Market Cap</h4>
                   <p>{formatValue(companyOverview.MarketCapitalization)}</p>
                 </div>
@@ -147,7 +131,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
               </div>
             </div>
             
-            {/* All other blocks follow the same pattern */}
             {/* Trailing P/E */}
             <div 
               className={`pm-block ${flippedCards.TrailingPE ? 'flipped' : ''}`} 
@@ -156,13 +139,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('TrailingPE', e)}
-                    aria-label="Trailing P/E explanation"
-                  >
-                    i
-                  </button>
                   <h4>Trailing P/E</h4>
                   <p>{companyOverview.TrailingPE || 'N/A'}</p>
                 </div>
@@ -182,13 +158,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('ForwardPE', e)}
-                    aria-label="Forward P/E explanation"
-                  >
-                    i
-                  </button>
                   <h4>Forward P/E</h4>
                   <p>{companyOverview.ForwardPE || 'N/A'}</p>
                 </div>
@@ -208,13 +177,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('PriceToSalesRatioTTM', e)}
-                    aria-label="Price to Sales explanation"
-                  >
-                    i
-                  </button>
                   <h4>Price to Sales (TTM)</h4>
                   <p>{companyOverview.PriceToSalesRatioTTM || 'N/A'}</p>
                 </div>
@@ -234,13 +196,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('PriceToBookRatio', e)}
-                    aria-label="Price to Book explanation"
-                  >
-                    i
-                  </button>
                   <h4>Price to Book</h4>
                   <p>{companyOverview.PriceToBookRatio || 'N/A'}</p>
                 </div>
@@ -260,13 +215,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('EVToRevenue', e)}
-                    aria-label="EV/Revenue explanation"
-                  >
-                    i
-                  </button>
                   <h4>EV/Revenue</h4>
                   <p>{companyOverview.EVToRevenue || 'N/A'}</p>
                 </div>
@@ -286,13 +234,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('EVToEBITDA', e)}
-                    aria-label="EV/EBITDA explanation"
-                  >
-                    i
-                  </button>
                   <h4>EV/EBITDA</h4>
                   <p>{companyOverview.EVToEBITDA || 'N/A'}</p>
                 </div>
@@ -317,13 +258,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('DividendPerShare', e)}
-                    aria-label="Dividend Per Share explanation"
-                  >
-                    i
-                  </button>
                   <h4>Dividend Per Share</h4>
                   <p>{companyOverview.DividendPerShare || 'N/A'}</p>
                 </div>
@@ -335,7 +269,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
               </div>
             </div>
 
-            {/* Other dividend blocks follow same pattern */}
             {/* Dividend Yield */}
             <div 
               className={`pm-block ${flippedCards.DividendYield ? 'flipped' : ''}`} 
@@ -344,13 +277,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('DividendYield', e)}
-                    aria-label="Dividend Yield explanation"
-                  >
-                    i
-                  </button>
                   <h4>Dividend Yield</h4>
                   <p>{companyOverview.DividendYield || 'N/A'}</p>
                 </div>
@@ -370,13 +296,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('DividendDate', e)}
-                    aria-label="Dividend Date explanation"
-                  >
-                    i
-                  </button>
                   <h4>Dividend Date</h4>
                   <p>{companyOverview.DividendDate || 'N/A'}</p>
                 </div>
@@ -396,13 +315,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('ExDividendDate', e)}
-                    aria-label="Ex-Dividend Date explanation"
-                  >
-                    i
-                  </button>
                   <h4>Ex-Dividend Date</h4>
                   <p>{companyOverview.ExDividendDate || 'N/A'}</p>
                 </div>
@@ -427,13 +339,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('ProfitMargin', e)}
-                    aria-label="Profit Margin explanation"
-                  >
-                    i
-                  </button>
                   <h4>Profit Margin</h4>
                   <p>{companyOverview.ProfitMargin || 'N/A'}</p>
                 </div>
@@ -445,7 +350,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
               </div>
             </div>
 
-            {/* Other profitability blocks follow same pattern */}
             {/* Operating Margin (TTM) */}
             <div 
               className={`pm-block ${flippedCards.OperatingMarginTTM ? 'flipped' : ''}`} 
@@ -454,13 +358,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('OperatingMarginTTM', e)}
-                    aria-label="Operating Margin explanation"
-                  >
-                    i
-                  </button>
                   <h4>Operating Margin (TTM)</h4>
                   <p>{companyOverview.OperatingMarginTTM || 'N/A'}</p>
                 </div>
@@ -480,13 +377,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('ReturnOnAssetsTTM', e)}
-                    aria-label="Return on Assets explanation"
-                  >
-                    i
-                  </button>
                   <h4>Return on Assets (TTM)</h4>
                   <p>{companyOverview.ReturnOnAssetsTTM || 'N/A'}</p>
                 </div>
@@ -506,13 +396,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('ReturnOnEquityTTM', e)}
-                    aria-label="Return on Equity explanation"
-                  >
-                    i
-                  </button>
                   <h4>Return on Equity (TTM)</h4>
                   <p>{companyOverview.ReturnOnEquityTTM || 'N/A'}</p>
                 </div>
@@ -537,13 +420,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('QuarterlyEarningsGrowthYOY', e)}
-                    aria-label="Quarterly Earnings Growth explanation"
-                  >
-                    i
-                  </button>
                   <h4>Quarterly Earnings Growth (YoY)</h4>
                   <p>{companyOverview.QuarterlyEarningsGrowthYOY || 'N/A'}</p>
                 </div>
@@ -563,13 +439,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('QuarterlyRevenueGrowthYOY', e)}
-                    aria-label="Quarterly Revenue Growth explanation"
-                  >
-                    i
-                  </button>
                   <h4>Quarterly Revenue Growth (YoY)</h4>
                   <p>{companyOverview.QuarterlyRevenueGrowthYOY || 'N/A'}</p>
                 </div>
@@ -594,13 +463,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystTargetPrice', e)}
-                    aria-label="Analyst Target Price explanation"
-                  >
-                    i
-                  </button>
                   <h4>Analyst Target Price</h4>
                   <p>{companyOverview.AnalystTargetPrice || 'N/A'}</p>
                 </div>
@@ -612,7 +474,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
               </div>
             </div>
 
-            {/* Other analyst rating blocks follow same pattern */}
             {/* Strong Buy */}
             <div 
               className={`pm-block ${flippedCards.AnalystRatingStrongBuy ? 'flipped' : ''}`} 
@@ -621,13 +482,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystRatingStrongBuy', e)}
-                    aria-label="Strong Buy explanation"
-                  >
-                    i
-                  </button>
                   <h4>Strong Buy</h4>
                   <p>{companyOverview.AnalystRatingStrongBuy || 'N/A'}</p>
                 </div>
@@ -647,13 +501,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystRatingBuy', e)}
-                    aria-label="Buy explanation"
-                  >
-                    i
-                  </button>
                   <h4>Buy</h4>
                   <p>{companyOverview.AnalystRatingBuy || 'N/A'}</p>
                 </div>
@@ -673,13 +520,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystRatingHold', e)}
-                    aria-label="Hold explanation"
-                  >
-                    i
-                  </button>
                   <h4>Hold</h4>
                   <p>{companyOverview.AnalystRatingHold || 'N/A'}</p>
                 </div>
@@ -699,13 +539,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystRatingSell', e)}
-                    aria-label="Sell explanation"
-                  >
-                    i
-                  </button>
                   <h4>Sell</h4>
                   <p>{companyOverview.AnalystRatingSell || 'N/A'}</p>
                 </div>
@@ -725,13 +558,6 @@ const PriceMetrics = forwardRef(({ symbol, refs, activeSection }, ref) => {
             >
               <div className="pm-block-inner">
                 <div className="pm-block-front">
-                  <button 
-                    className="pm-info-icon" 
-                    onClick={(e) => handleCardFlip('AnalystRatingStrongSell', e)}
-                    aria-label="Strong Sell explanation"
-                  >
-                    i
-                  </button>
                   <h4>Strong Sell</h4>
                   <p>{companyOverview.AnalystRatingStrongSell || 'N/A'}</p>
                 </div>

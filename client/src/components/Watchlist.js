@@ -7,12 +7,9 @@ const Watchlist = ({ isSearchOpen }) => {
   const ALPHA_VANTAGE_KEY = process.env.REACT_APP_ALPHA_VANTAGE_KEY;
   const [watchlist, setWatchlist] = useState([
     { symbol: 'AAPL' }, // Apple
-    { symbol: 'MSFT' }, // Microsoft
     { symbol: 'AMZN' }, // Amazon
-    { symbol: 'GOOGL' }, // Alphabet
     { symbol: 'META' }, // Meta
     { symbol: 'TSLA' }, // Tesla
-    { symbol: 'NVDA' }, // NVIDIA
   ]); // Default to Magnificent Seven
   const [stockData, setStockData] = useState({});
   const [latestDate, setLatestDate] = useState(null); // State to store the latest date

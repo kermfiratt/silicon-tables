@@ -15,13 +15,28 @@ import StockDetailsSidebar from './components/StockDetailsSidebar';
 function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [stocks, setStocks] = useState([]);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  // Default stocks
+  const defaultStocks = ['NVDA', 'GOOGL', 'MSFT'];
 
   // Load saved stocks from local storage on component mount
   useEffect(() => {
-    const savedStocks = JSON.parse(localStorage.getItem('savedStocks')) || [];
+    const savedStocks = JSON.parse(localStorage.getItem('savedStocks'));
     console.log('Loading stocks from local storage:', savedStocks); // Debugging
-    setStocks(savedStocks);
-  }, []);
+    
+    if (savedStocks && savedStocks.length > 0) {
+      setStocks(savedStocks);
+    } else {
+      // Only add default stocks if no saved stocks exist and we haven't initialized yet
+      if (!hasInitialized) {
+        const initialStocks = defaultStocks.map(symbol => ({ symbol }));
+        setStocks(initialStocks);
+        console.log('Setting default stocks:', initialStocks); // Debugging
+        setHasInitialized(true);
+      }
+    }
+  }, [hasInitialized]);
 
   // Save stocks to local storage whenever the `stocks` state changes
   useEffect(() => {
